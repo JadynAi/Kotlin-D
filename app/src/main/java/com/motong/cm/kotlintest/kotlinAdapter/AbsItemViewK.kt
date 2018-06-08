@@ -3,7 +3,6 @@ package com.laihua.framework.ui.adapter.kotlinAdapter
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import com.laihua.framework.utils.ViewHolderHelper
 
 /**
  *@version:
@@ -18,13 +17,10 @@ abstract class AbsItemViewK<D> {
 
     lateinit var rootView: View
 
-    lateinit var mHolderHelper: ViewHolderHelper
-
     lateinit var rAdapter: RAdapter<D>
 
     fun createViewHolder(ctx: Context, parent: ViewGroup?): RAdapter.ViewHolderK<D> {
         rootView = onCreateView(ctx, parent)
-        mHolderHelper = ViewHolderHelper(rootView)
         onCreate(ctx, parent)
         return RAdapter.ViewHolderK(this)
     }

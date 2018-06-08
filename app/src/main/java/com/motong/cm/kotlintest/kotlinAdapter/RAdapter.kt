@@ -5,6 +5,7 @@ import android.support.annotation.IdRes
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
+import android.view.View
 import android.view.ViewGroup
 import com.laihua.framework.utils.DataUtils
 
@@ -29,8 +30,15 @@ class RAdapter<D> private constructor(var ctx: Context,
         ItemMgr<D>()
     }
 
+    private lateinit var onBind: ViewHolderK<D>.() -> Unit
+
     init {
         putItemClasses(this.classes)
+    }
+
+    constructor(ctx: Context,
+                classes: ArrayList<Class<out AbsItemViewK<D>>>, onBind: ViewHolderK<D>.() -> Unit) : this(ctx, classes) {
+        this.onBind = onBind
     }
 
     var keyTags: SparseArray<Any> = SparseArray()
@@ -47,7 +55,9 @@ class RAdapter<D> private constructor(var ctx: Context,
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolderK<D> {
         val itemView = itemMgr.createItemView(viewType)
         itemView.rAdapter = this
-        return itemView.createViewHolder(ctx, parent)
+        val viewHolder = itemView.createViewHolder(ctx, parent)
+        viewHolder.onBind()
+        return viewHolder
     }
 
     override fun getItemCount(): Int {
@@ -73,6 +83,31 @@ class RAdapter<D> private constructor(var ctx: Context,
             return itemMgr.getItemType(data.getOrNull(position)?.hashCode())
         }
     }
+
+    //-----notify-------
+    fun notifyItemChangedSafe(position: Int) {
+        if (handleIndexOut(position)) {
+            return
+        }
+        notifyItemChanged(position)
+    }
+
+    fun notifyItemChangedSafe(position: Int, payload: Any) {
+        if (handleIndexOut(position)) {
+            return
+        }
+        notifyItemChanged(position, payload)
+    }
+
+    fun notifyItemRemovedSafe(position: Int) {
+        if (handleIndexOut(position)) {
+            return
+        }
+        notifyItemRemoved(position)
+        data.removeAt(position)
+    }
+
+    private fun handleIndexOut(position: Int): Boolean = position < 0 || position > data.lastIndex
 
     fun putItemClass(clazz: Class<AbsItemViewK<D>>) {
         itemMgr.putItemClass(clazz)
@@ -129,12 +164,24 @@ class RAdapter<D> private constructor(var ctx: Context,
 
     class ViewHolderK<D>(val item: AbsItemViewK<D>) : RecyclerView.ViewHolder(item.rootView) {
 
+        fun getItemData(): D {
+            return item?.rAdapter?.data[adapterPosition]
+        }
     }
 
     companion object {
 
         fun <D> create(ctx: Context, classes: ArrayList<Class<out AbsItemViewK<D>>>): RAdapter<D> =
                 RAdapter<D>(ctx, classes)
+
+        fun <D> create(ctx: Context, classes: ArrayList<Class<out AbsItemViewK<D>>>, onBind: ViewHolderK<D>.() -> Unit): RAdapter<D> =
+                RAdapter<D>(ctx, classes, onBind)
+    }
+}
+
+fun <D> RAdapter.ViewHolderK<D>.onClick(view: View, action: (d: D) -> Unit) {
+    view.setOnClickListener {
+        action(item.rAdapter.data[adapterPosition])
     }
 }
 
