@@ -1,4 +1,4 @@
-package com.laihua.framework.ui.adapter.kotlinAdapter
+package com.motong.cm.kotlintest.kotlinAdapter
 
 import android.content.Context
 import android.support.annotation.IdRes
@@ -7,7 +7,8 @@ import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
-import com.laihua.framework.utils.DataUtils
+import com.laihua.framework.ui.adapter.kotlinAdapter.AbsItemViewK
+import com.laihua.framework.ui.adapter.kotlinAdapter.ItemMgr
 
 /**
  *@version:
@@ -17,7 +18,7 @@ import com.laihua.framework.utils.DataUtils
  *@ChangeList:
  */
 class RAdapter<D> private constructor(var ctx: Context,
-                                      var classes: ArrayList<Class<out AbsItemViewK<D>>>) : RecyclerView.Adapter<RAdapter.ViewHolderK<D>>() {
+                                            var classes: ArrayList<Class<out AbsItemViewK<D>>>) : RecyclerView.Adapter<RAdapter.ViewHolderK<D>>() {
 
     var data: ArrayList<D> = ArrayList()
         set(value) {
@@ -52,10 +53,10 @@ class RAdapter<D> private constructor(var ctx: Context,
         return keyTags.get(key)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolderK<D> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderK<D> {
         val itemView = itemMgr.createItemView(viewType)
-        itemView.rAdapter = this
-        val viewHolder = itemView.createViewHolder(ctx, parent)
+        itemView.onCreateView(ctx, parent)
+        val viewHolder = ViewHolderK<D>(itemView, this)
         viewHolder.onBind()
         return viewHolder
     }
@@ -64,12 +65,12 @@ class RAdapter<D> private constructor(var ctx: Context,
         return data.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolderK<D>?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolderK<D>, position: Int) {
         holder?.item?.showItem(position, data.getOrNull(position))
     }
 
     override fun onBindViewHolder(holder: ViewHolderK<D>, position: Int, payloads: MutableList<Any>) {
-        if (DataUtils.isEmptyList(payloads)) {
+        if (payloads?.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads)
         } else {
             holder?.item?.showItem(position, data.getOrNull(position), payloads)
@@ -162,26 +163,26 @@ class RAdapter<D> private constructor(var ctx: Context,
         }
     }
 
-    class ViewHolderK<D>(val item: AbsItemViewK<D>) : RecyclerView.ViewHolder(item.rootView) {
+    class ViewHolderK<D>(val item: AbsItemViewK<in D>, val rAdapter: RAdapter<D>) : RecyclerView.ViewHolder(item.containerView) {
 
         fun getItemData(): D {
-            return item?.rAdapter?.data[adapterPosition]
+            return rAdapter?.data[adapterPosition]
         }
     }
 
     companion object {
 
-        fun <D> create(ctx: Context, classes: ArrayList<Class<out AbsItemViewK<D>>>): RAdapter<D> =
+        fun <D> create(ctx: Context, classes: ArrayList<Class<out AbsItemViewK<in D>>>): RAdapter<D> =
                 RAdapter<D>(ctx, classes)
 
-        fun <D> create(ctx: Context, classes: ArrayList<Class<out AbsItemViewK<D>>>, onBind: ViewHolderK<D>.() -> Unit): RAdapter<D> =
+        fun <D> create(ctx: Context, classes: ArrayList<Class<out AbsItemViewK<in D>>>, onBind: ViewHolderK<D>.() -> Unit): RAdapter<D> =
                 RAdapter<D>(ctx, classes, onBind)
     }
 }
 
 fun <D> RAdapter.ViewHolderK<D>.onClick(view: View, action: (d: D) -> Unit) {
     view.setOnClickListener {
-        action(item.rAdapter.data[adapterPosition])
+        action(rAdapter.data[adapterPosition])
     }
 }
 

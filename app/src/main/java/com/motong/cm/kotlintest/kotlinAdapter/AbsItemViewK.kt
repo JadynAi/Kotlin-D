@@ -3,6 +3,7 @@ package com.laihua.framework.ui.adapter.kotlinAdapter
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.extensions.LayoutContainer
 
 /**
  *@version:
@@ -11,20 +12,15 @@ import android.view.ViewGroup
  *@Since:2018/6/7
  *@ChangeList:
  */
-abstract class AbsItemViewK<D> {
+abstract class AbsItemViewK<in D> :LayoutContainer{
+
+    override val containerView: View?
+        get() = rootView
 
     var dataHashCode: Int = 0
 
-    lateinit var rootView: View
-
-    lateinit var rAdapter: RAdapter<D>
-
-    fun createViewHolder(ctx: Context, parent: ViewGroup?): RAdapter.ViewHolderK<D> {
-        rootView = onCreateView(ctx, parent)
-        onCreate(ctx, parent)
-        return RAdapter.ViewHolderK(this)
-    }
-
+    private lateinit  var rootView: View
+    
     abstract fun onCreateView(ctx: Context, parent: ViewGroup?): View
 
     abstract fun showItem(pos: Int, d: D?)
