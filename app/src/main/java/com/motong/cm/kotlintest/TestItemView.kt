@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.laihua.framework.ui.adapter.kotlinAdapter.AbsItemViewK
-import com.laihua.framework.ui.adapter.kotlinAdapter.inflate
 import kotlinx.android.synthetic.main.item_test.*
 
 /**
@@ -28,7 +27,7 @@ class TestItemView : AbsItemViewK<String>() {
 
 class TestItemView1 : AbsItemViewK<Int>() {
     override fun onCreateView(ctx: Context, parent: ViewGroup?): View {
-        return inflate(ctx, R.layout.item_test, parent)
+        return LayoutInflater.from(ctx).inflate(R.layout.item_test, parent, false)
     }
 
     override fun showItem(pos: Int, d: Int?) {
