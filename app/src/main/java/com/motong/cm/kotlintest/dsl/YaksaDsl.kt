@@ -62,6 +62,10 @@ class YaksaDsl(dataSet: MutableList<YaksaItem>) {
         dataSetChanged = true
     }
 
+    fun item(block: (Int) -> YaksaItem) {
+        
+    }
+
     /**
      * Use this method to add an item to Recyclerview.
      *

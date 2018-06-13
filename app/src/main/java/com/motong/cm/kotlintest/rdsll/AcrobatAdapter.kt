@@ -13,20 +13,23 @@ import kotlinx.android.extensions.LayoutContainer
  *@Since:2018/6/12
  *@ChangeList:
  */
-class AcrobatAdapter(private val ctx: Context, create: AcrobatAdapter.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder>() {
+class AcrobatAdapter<D>(private val ctx: Context, create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder>() {
+
+    private val acrobatMgr by lazy {
+        AcrobatMgr<D>()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AcroViewHolder {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getItemCount(): Int = acrobatMgr.items.size
 
     override fun onBindViewHolder(holder: AcroViewHolder, position: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    
 
     class AcroViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
