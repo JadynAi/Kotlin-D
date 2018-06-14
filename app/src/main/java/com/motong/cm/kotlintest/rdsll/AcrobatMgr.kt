@@ -37,16 +37,13 @@ class AcrobatMgr<D> {
         itemConfigSet.add(acrobatDSL)
     }
 
-    fun updateData(list: List<D?>): ArrayList<AcrobatItem<D>> {
+    fun newData(list: List<D?>): ArrayList<AcrobatItem<D>> {
         val newList = ArrayList<AcrobatItem<D>>()
-        data.clear()
         items.forEach {
             if (it is AcroLayoutItem<D>) {
                 newList.add(it)
-                data.add(null)
             }
         }
-        data.addAll(list)
         list?.forEachIndexed { index, d ->
             if (itemConfigSet.isEmpty()) {
                 throw RuntimeException("Item must config!")
@@ -64,5 +61,17 @@ class AcrobatMgr<D> {
             }
         }
         return newList
+    }
+
+    fun refreshData(list: List<D?>, newData: ArrayList<AcrobatItem<D>>) {
+        data.clear()
+        items.forEach {
+            if (it is AcroLayoutItem<D>) {
+                data.add(null)
+            }
+        }
+        data.addAll(list)
+        items.clear()
+        items.addAll(newData)
     }
 }

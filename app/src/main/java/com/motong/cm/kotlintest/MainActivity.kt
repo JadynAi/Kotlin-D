@@ -18,26 +18,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         recycler_view.layoutManager = LinearLayoutManager(this)
-        
-        val acrobatAdapter = AcrobatAdapter<String>(this) {
-            
+
+        val acrobatAdapter = AcrobatAdapter<String> {
+
             itemDSL {
                 resId(R.layout.item_test)
-                showItem { pos, view -> 
+                showItem { pos, view ->
                     view.item_tv.text = "头布局"
                 }
             }
-            
+
             itemConfig {
                 resId(R.layout.item_test)
                 showItem { d, pos, view ->
                     view.item_tv.text = d
                 }
-                
-                onViewAttach { pos, view -> 
-                    view?.item_tv?.setOnClickListener{
-                        Toast.makeText(this@MainActivity,"cecee",Toast.LENGTH_LONG).show()
+
+                onViewAttach { pos, view ->
+                    view?.item_tv?.setOnClickListener {
+                        Toast.makeText(this@MainActivity, "cecee", Toast.LENGTH_LONG).show()
                     }
                 }
 
@@ -58,6 +59,11 @@ class MainActivity : AppCompatActivity() {
 
         recycler_view.adapter = acrobatAdapter
         acrobatAdapter.setDataWithDiff(arrayListOf("1", "2", "3", "4"))
+
+        change_tv.setOnClickListener {
+            Toast.makeText(this@MainActivity, "Change", Toast.LENGTH_LONG).show()
+            acrobatAdapter.setDataWithDiff(arrayListOf("1", "2"))
+        }
     }
 }
 

@@ -1,6 +1,5 @@
 package com.motong.cm.kotlintest.rdsll
 
-import android.content.Context
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -15,7 +14,7 @@ import kotlinx.android.extensions.LayoutContainer
  *@Since:2018/6/12
  *@ChangeList:
  */
-class AcrobatAdapter<D>(private val ctx: Context, create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder>() {
+class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder>() {
 
     private val acrobatMgr by lazy {
         AcrobatMgr<D>()
@@ -41,12 +40,11 @@ class AcrobatAdapter<D>(private val ctx: Context, create: AcrobatMgr<D>.() -> Un
 
     fun setDataWithDiff(dataList: ArrayList<D>) {
         val diffCallBack = DiffCallback()
-        val updateData = acrobatMgr.updateData(dataList)
+        val updateData = acrobatMgr.newData(dataList)
         diffCallBack.setData(acrobatMgr.items, updateData)
-        acrobatMgr.items.clear()
-        acrobatMgr.items.addAll(updateData)
         val calculateDiff = DiffUtil.calculateDiff(diffCallBack)
         calculateDiff.dispatchUpdatesTo(this)
+        acrobatMgr.refreshData(dataList, updateData)
     }
 
     override fun onViewAttachedToWindow(holder: AcroViewHolder) {
