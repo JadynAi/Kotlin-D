@@ -13,21 +13,56 @@ class AcrobatMgr<D> {
         ArrayList<AcrobatItem<D>>()
     }
 
-    internal val itemConfigs: HashSet<AcrobatItem<D>> by lazy {
-        HashSet<AcrobatItem<D>>()
+    internal val itemConfigSet: HashSet<AcrobatDSL<D>> by lazy {
+        HashSet<AcrobatDSL<D>>()
     }
 
-    fun item(create: () -> AcrobatItem<D>) {
+    internal val data by lazy {
+        ArrayList<D?>()
+    }
+
+    fun item(create: () -> AcroLayoutItem<D>) {
         items.add(create())
+    }
+
+    fun itemDSL(create: AcroLayoutDSL<D>.() -> Unit) {
+        val acroLayoutDSL = AcroLayoutDSL<D>()
+        acroLayoutDSL.create()
+        items.add(acroLayoutDSL.build())
     }
 
     fun itemConfig(config: AcrobatDSL<D>.() -> Unit) {
         val acrobatDSL = AcrobatDSL<D>()
         acrobatDSL.config()
-        itemConfigs.add(acrobatDSL.build())
+        itemConfigSet.add(acrobatDSL)
     }
 
-    fun setData(list: List<D>) {
-
+    fun updateData(list: List<D?>): ArrayList<AcrobatItem<D>> {
+        val newList = ArrayList<AcrobatItem<D>>()
+        data.clear()
+        items.forEach {
+            if (it is AcroLayoutItem<D>) {
+                newList.add(it)
+                data.add(null)
+            }
+        }
+        data.addAll(list)
+        list?.forEachIndexed { index, d ->
+            if (itemConfigSet.isEmpty()) {
+                throw RuntimeException("Item must config!")
+            } else {
+                if (itemConfigSet.size == 1) {
+                    newList.add(itemConfigSet.first().clone().build())
+                } else {
+                    itemConfigSet.forEach {
+                        val build = it.build()
+                        if (build.isMeetData(d, index)) {
+                            newList.add(build)
+                        }
+                    }
+                }
+            }
+        }
+        return newList
     }
 }
