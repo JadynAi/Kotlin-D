@@ -7,12 +7,12 @@ import android.view.View
 import android.widget.Toast
 import com.motong.cm.kotlintest.rdsll.AcroLayoutItem
 import com.motong.cm.kotlintest.rdsll.AcrobatAdapter
+import com.motong.cm.kotlintest.rdsll.AcrobatDSL
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_test.view.*
 
 class MainActivity : AppCompatActivity() {
 
-    val d = ArrayList<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +23,25 @@ class MainActivity : AppCompatActivity() {
 
         val acrobatAdapter = AcrobatAdapter<String> {
 
+            itemDSL {
+                resId(R.layout.item_test)
+                showItem { pos, view ->
+                    view.item_tv.text = "头布局"
+                }
+            }
+
+            itemDSL {
+                resId(R.layout.item_test)
+                showItem { pos, view ->
+                    view.item_tv.text = "头布局"
+                }
+            }
+            itemDSL {
+                resId(R.layout.item_test)
+                showItem { pos, view ->
+                    view.item_tv.text = "头布局"
+                }
+            }
             itemDSL {
                 resId(R.layout.item_test)
                 showItem { pos, view ->
@@ -75,6 +94,13 @@ class TestDSL : AcroLayoutItem<String> {
     override fun getResId(): Int {
         return R.layout.item_test
     }
+}
+
+class ADsl : AcrobatDSL<String>() {
+    init {
+        resId = R.layout.item_test
+    }
+
 }
 
 

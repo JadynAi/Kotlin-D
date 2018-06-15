@@ -39,28 +39,31 @@ class AcrobatMgr<D> {
 
     fun newData(list: List<D?>): ArrayList<AcrobatItem<D>> {
         val newList = ArrayList<AcrobatItem<D>>()
-        items.forEach {
-            if (it is AcroLayoutItem<D>) {
-                newList.add(it)
-            }
+        items.takeWhile { it is AcroLayoutItem<D> }.forEach {
+            newList.add(it)
         }
         list?.forEachIndexed { index, d ->
-            if (itemConfigSet.isEmpty()) {
-                throw RuntimeException("Item must config!")
-            } else {
-                if (itemConfigSet.size == 1) {
-                    newList.add(itemConfigSet.first().clone().build())
-                } else {
-                    itemConfigSet.forEach {
-                        val build = it.build()
-                        if (build.isMeetData(d, index)) {
-                            newList.add(build)
-                        }
-                    }
-                }
-            }
+            newList.add(getMatchedItem(index, d))
         }
         return newList
+    }
+
+    private fun getMatchedItem(index: Int, d: D?): AcrobatItem<D> {
+        if (itemConfigSet.isEmpty()) {
+            throw RuntimeException("Item must config!")
+        } else {
+            if (itemConfigSet.size == 1) {
+                return itemConfigSet.first().clone().build()
+            } else {
+                itemConfigSet.forEach {
+                    val acrobatItem = it.build()
+                    if (acrobatItem.isMeetData(d, index)) {
+                        return acrobatItem
+                    }
+                }
+                throw RuntimeException("No match found item!")
+            }
+        }
     }
 
     fun refreshData(list: List<D?>, newData: ArrayList<AcrobatItem<D>>) {
