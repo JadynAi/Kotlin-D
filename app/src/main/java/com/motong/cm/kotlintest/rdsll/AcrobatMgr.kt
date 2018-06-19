@@ -13,8 +13,8 @@ class AcrobatMgr<D> {
         ArrayList<AcrobatItem<D>>()
     }
 
-    internal val itemConfigSet: HashSet<AcrobatDSL<D>> by lazy {
-        HashSet<AcrobatDSL<D>>()
+    internal val itemConfigSet: HashSet<AcrobatItem<D>> by lazy {
+        HashSet<AcrobatItem<D>>()
     }
 
     internal val data by lazy {
@@ -31,10 +31,14 @@ class AcrobatMgr<D> {
         items.add(acroLayoutDSL.build())
     }
 
-    fun itemConfig(config: AcrobatDSL<D>.() -> Unit) {
+    fun itemConfigDSL(config: AcrobatDSL<D>.() -> Unit) {
         val acrobatDSL = AcrobatDSL<D>()
         acrobatDSL.config()
-        itemConfigSet.add(acrobatDSL)
+        itemConfigSet.add(acrobatDSL.build())
+    }
+
+    fun itemConfig(config: () -> AcrobatItem<D>) {
+        itemConfigSet.add(config())
     }
 
     fun newData(list: List<D?>): ArrayList<AcrobatItem<D>> {
@@ -53,10 +57,10 @@ class AcrobatMgr<D> {
             throw RuntimeException("Item must config!")
         } else {
             if (itemConfigSet.size == 1) {
-                return itemConfigSet.first().clone().build()
+                return itemConfigSet.first().clone()
             } else {
                 itemConfigSet.forEach {
-                    val acrobatItem = it.build()
+                    val acrobatItem = it
                     if (acrobatItem.isMeetData(d, index)) {
                         return acrobatItem
                     }

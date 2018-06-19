@@ -10,18 +10,22 @@ import android.view.View
  *@Since:2018/6/14
  *@ChangeList:
  */
-interface AcroLayoutItem<D> : AcrobatItem<D> {
+abstract class AcroLayoutItem<D> : AcrobatItem<D> {
 
-    fun showItem(pos: Int, view: View)
+    abstract fun showItem(pos: Int, view: View)
+
+    open fun showItem(pos: Int, view: View, payloads: MutableList<Any>) {
+
+    }
 
     override fun isMeetData(d: D?, pos: Int): Boolean = false
 
-    override fun showItem(d: D?, pos: Int, view: View) {
+    override final fun showItem(d: D?, pos: Int, view: View) {
         showItem(pos, view)
     }
 
-    override fun onItemAttachWindow(pos: Int, itemView: View?) {
-
+    override final fun showItem(d: D?, pos: Int, view: View, payloads: MutableList<Any>) {
+        showItem(pos, view, payloads)
     }
 }
 
@@ -37,21 +41,13 @@ class AcroLayoutDSL<D> : AcrobatDSL<D>() {
         this.dataBind = dataBind
     }
 
-    override fun onViewAttach(viewAttach: (pos: Int, view: View?) -> Unit) {
-        this.viewAttach = viewAttach
-    }
-
     override fun build(): AcroLayoutItem<D> {
-        return object : AcroLayoutItem<D> {
+        return object : AcroLayoutItem<D>() {
             override fun showItem(pos: Int, view: View) {
                 dataBind(pos, view)
             }
 
             override fun getResId(): Int = resId
-
-            override fun onItemAttachWindow(pos: Int, itemView: View?) {
-                viewAttach(pos, itemView)
-            }
         }
     }
 }

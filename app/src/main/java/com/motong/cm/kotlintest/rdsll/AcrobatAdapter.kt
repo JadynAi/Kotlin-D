@@ -2,6 +2,7 @@ package com.motong.cm.kotlintest.rdsll
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,12 +26,14 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, redId: Int): AcroViewHolder {
+        Log.d("cece", "onCreateViewHolder ")
         return AcroViewHolder(LayoutInflater.from(parent.context).inflate(redId, parent, false))
     }
 
     override fun getItemCount(): Int = acrobatMgr.items.size
 
     override fun onBindViewHolder(holder: AcroViewHolder, position: Int) {
+        Log.d("cece", "onBindViewHolder ")
         acrobatMgr.items[position].showItem(acrobatMgr.data[position], position, holder.itemView)
     }
 
@@ -54,14 +57,7 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         calculateDiff.dispatchUpdatesTo(this)
         acrobatMgr.refreshData(dataList, updateData)
     }
-
-    override fun onViewAttachedToWindow(holder: AcroViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        if (holder.adapterPosition != RecyclerView.NO_POSITION) {
-            acrobatMgr.items[holder.adapterPosition].onItemAttachWindow(holder.adapterPosition, holder.itemView)
-        }
-    }
-
+    
     private class DiffCallback : DiffUtil.Callback() {
 
         private var mOldData: List<*>? = null
