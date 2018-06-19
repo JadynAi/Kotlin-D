@@ -8,6 +8,7 @@ import com.motong.cm.kotlintest.rdsll.AcrobatAdapter
 import com.motong.cm.kotlintest.rdsll.AcrobatItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_test.view.*
+import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         for (i in 0 until 500) {
             l.add(i)
         }
-
+        
         val acrobatAdapter = AcrobatAdapter<Int> {
 
             itemConfig {
@@ -33,6 +34,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 isMeetData { d, pos -> pos != 3 }
+            }
+        }.bindClick {
+            onClick {
+                toast("test" + adapterPosition)
             }
         }
         recycler_view.layoutManager = LinearLayoutManager(this)

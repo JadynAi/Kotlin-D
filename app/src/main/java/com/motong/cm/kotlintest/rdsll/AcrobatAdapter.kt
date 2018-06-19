@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.extensions.LayoutContainer
 
 /**
  *@version:
@@ -15,7 +14,7 @@ import kotlinx.android.extensions.LayoutContainer
  *@Since:2018/6/12
  *@ChangeList:
  */
-class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder>() {
+class AcrobatAdapter<D>(private var click: AcroViewHolder.() -> Unit = {}, create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder>() {
 
     private val acrobatMgr by lazy {
         AcrobatMgr<D>()
@@ -27,7 +26,9 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
 
     override fun onCreateViewHolder(parent: ViewGroup, redId: Int): AcroViewHolder {
         Log.d("cece", "onCreateViewHolder ")
-        return AcroViewHolder(LayoutInflater.from(parent.context).inflate(redId, parent, false))
+        val viewHolder = AcroViewHolder(LayoutInflater.from(parent.context).inflate(redId, parent, false))
+        viewHolder.click()
+        return viewHolder
     }
 
     override fun getItemCount(): Int = acrobatMgr.items.size
@@ -57,7 +58,12 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         calculateDiff.dispatchUpdatesTo(this)
         acrobatMgr.refreshData(dataList, updateData)
     }
-    
+
+    fun bindClick(click: AcroViewHolder.() -> Unit):AcrobatAdapter<D> {
+        this.click = click
+        return this
+    }
+
     private class DiffCallback : DiffUtil.Callback() {
 
         private var mOldData: List<*>? = null
@@ -91,7 +97,12 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         }
     }
 
-    class AcroViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    class AcroViewHolder(val containerView: View?) : RecyclerView.ViewHolder(containerView) {
 
+        fun onClick(click: (View) -> Unit) {
+            containerView?.setOnClickListener {
+                click(it)
+            }
+        }
     }
 }
