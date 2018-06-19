@@ -20,6 +20,10 @@ interface AcrobatItem<D> {
     fun isMeetData(d: D?, pos: Int): Boolean
 
     fun onItemAttachWindow(pos: Int, itemView: View?)
+
+    fun showItem(d: D?, pos: Int, view: View, payloads: MutableList<Any>) {
+
+    }
 }
 
 open class AcrobatDSL<D> : Cloneable {
@@ -28,6 +32,8 @@ open class AcrobatDSL<D> : Cloneable {
     protected var resId: Int = -1
 
     private var dataBind: (d: D?, pos: Int, view: View) -> Unit = { _: D?, _: Int, _: View -> Unit }
+
+    private var dataPayload: (d: D?, pos: Int, view: View, p: MutableList<Any>) -> Unit = { _: D?, _: Int, _: View, _: MutableList<Any> -> Unit }
 
     private var dataMeet: (d: D?, pos: Int) -> Boolean = { _: D?, _: Int -> false }
 
@@ -49,12 +55,26 @@ open class AcrobatDSL<D> : Cloneable {
         this.viewAttach = viewAttach
     }
 
+    fun showItemPayload(dataPayload: (d: D?, pos: Int, view: View, payloads: MutableList<Any>) -> Unit) {
+        this.dataPayload = dataPayload
+    }
+
     public override fun clone(): AcrobatDSL<D> {
         val acrobatDSL = AcrobatDSL<D>()
         acrobatDSL.resId = this.resId
         acrobatDSL.dataBind = this.dataBind
         acrobatDSL.dataMeet = this.dataMeet
+        acrobatDSL.dataPayload = this.dataPayload
         return acrobatDSL
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is AcrobatDSL<*>) {
+            other.dataPayload.equals(this@AcrobatDSL.dataPayload)
+            return true
+        } else {
+            return false
+        }
     }
 
     internal open fun build(): AcrobatItem<D> {
@@ -72,6 +92,10 @@ open class AcrobatDSL<D> : Cloneable {
 
             override fun showItem(d: D?, pos: Int, view: View) {
                 dataBind(d, pos, view)
+            }
+
+            override fun showItem(d: D?, pos: Int, view: View, payloads: MutableList<Any>) {
+                dataPayload(d, pos, view, payloads)
             }
         }
     }

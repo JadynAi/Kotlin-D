@@ -20,7 +20,7 @@ interface AcroLayoutItem<D> : AcrobatItem<D> {
         showItem(pos, view)
     }
 
-    override open fun onItemAttachWindow(pos: Int, itemView: View?) {
+    override fun onItemAttachWindow(pos: Int, itemView: View?) {
 
     }
 }
@@ -46,6 +46,7 @@ class AcroLayoutDSL<D> : AcrobatDSL<D>() {
             override fun showItem(pos: Int, view: View) {
                 dataBind(pos, view)
             }
+
             override fun getResId(): Int = resId
 
             override fun onItemAttachWindow(pos: Int, itemView: View?) {

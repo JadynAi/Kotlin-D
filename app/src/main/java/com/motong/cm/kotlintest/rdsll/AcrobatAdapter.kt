@@ -34,6 +34,14 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         acrobatMgr.items[position].showItem(acrobatMgr.data[position], position, holder.itemView)
     }
 
+    override fun onBindViewHolder(holder: AcroViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads?.isNotEmpty()) {
+            acrobatMgr.items[position].showItem(acrobatMgr.data[position], position, holder.itemView, payloads)
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
+    }
+
     override fun getItemViewType(position: Int): Int {
         return acrobatMgr.items[position].getResId()
     }
