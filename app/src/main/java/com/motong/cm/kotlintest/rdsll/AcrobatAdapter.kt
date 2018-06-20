@@ -2,7 +2,6 @@ package com.motong.cm.kotlintest.rdsll
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,7 @@ import android.view.ViewGroup
  *@Since:2018/6/12
  *@ChangeList:
  */
-class AcrobatAdapter<D>(private var click: AcroViewHolder.() -> Unit = {}, create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder>() {
+class AcrobatAdapter<D>(private var bind: AcroViewHolder<D>.() -> Unit = {}, create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder<D>>() {
 
     private val acrobatMgr by lazy {
         AcrobatMgr<D>()
@@ -24,43 +23,43 @@ class AcrobatAdapter<D>(private var click: AcroViewHolder.() -> Unit = {}, creat
         acrobatMgr.create()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, redId: Int): AcroViewHolder {
-        Log.d("cece", "onCreateViewHolder ")
-        val viewHolder = AcroViewHolder(LayoutInflater.from(parent.context).inflate(redId, parent, false))
-        viewHolder.click()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AcroViewHolder<D> {
+        val acrobatItem = acrobatMgr.items[viewType]
+        val view = LayoutInflater.from(parent.context).inflate(acrobatItem.getResId(), parent, false)
+        acrobatItem.onViewCreate(parent, view)
+        val viewHolder = AcroViewHolder(view, acrobatItem)
+        viewHolder.bind()
         return viewHolder
     }
 
-    override fun getItemCount(): Int = acrobatMgr.items.size
+    override fun getItemCount(): Int = acrobatMgr.data.size
 
-    override fun onBindViewHolder(holder: AcroViewHolder, position: Int) {
-        Log.d("cece", "onBindViewHolder ")
-        acrobatMgr.items[position].showItem(acrobatMgr.data[position], position, holder.itemView)
+    override fun onBindViewHolder(holder: AcroViewHolder<D>, position: Int) {
+        holder.acrobatItem.showItem(acrobatMgr.data[position], position, holder.itemView)
     }
 
-    override fun onBindViewHolder(holder: AcroViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: AcroViewHolder<D>, position: Int, payloads: MutableList<Any>) {
         if (payloads?.isNotEmpty()) {
-            acrobatMgr.items[position].showItem(acrobatMgr.data[position], position, holder.itemView, payloads)
+            holder.acrobatItem.showItem(acrobatMgr.data[position], position, holder.itemView, payloads)
         } else {
             super.onBindViewHolder(holder, position, payloads)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return acrobatMgr.items[position].getResId()
+        return acrobatMgr.getItemConfig(position)
     }
 
     fun setDataWithDiff(dataList: ArrayList<D>) {
         val diffCallBack = DiffCallback()
-        val updateData = acrobatMgr.newData(dataList)
-        diffCallBack.setData(acrobatMgr.items, updateData)
+        diffCallBack.setData(acrobatMgr.data, dataList)
         val calculateDiff = DiffUtil.calculateDiff(diffCallBack)
         calculateDiff.dispatchUpdatesTo(this)
-        acrobatMgr.refreshData(dataList, updateData)
+        acrobatMgr.setData(dataList)
     }
 
-    fun bindClick(click: AcroViewHolder.() -> Unit):AcrobatAdapter<D> {
-        this.click = click
+    fun bindEvent(click: AcroViewHolder<D>.() -> Unit): AcrobatAdapter<D> {
+        this.bind = click
         return this
     }
 
@@ -97,10 +96,10 @@ class AcrobatAdapter<D>(private var click: AcroViewHolder.() -> Unit = {}, creat
         }
     }
 
-    class AcroViewHolder(val containerView: View?) : RecyclerView.ViewHolder(containerView) {
+    class AcroViewHolder<D>(view: View, val acrobatItem: AcrobatItem<D>) : RecyclerView.ViewHolder(view) {
 
         fun onClick(click: (View) -> Unit) {
-            containerView?.setOnClickListener {
+            itemView?.setOnClickListener {
                 click(it)
             }
         }

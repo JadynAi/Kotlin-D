@@ -14,28 +14,36 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContentView(R.layout.activity_main)
 
         val l = ArrayList<Int>()
         for (i in 0 until 500) {
             l.add(i)
         }
-        
+
         val acrobatAdapter = AcrobatAdapter<Int> {
 
-            itemConfig {
-                Test()
+            itemDSL {
+                resId(R.layout.item_test)
+                showItem { d, pos, view ->
+                    view.item_tv.text = "ttt: " + d
+                }
+                isMeetData { d, pos ->
+                    pos == 1
+                }
             }
 
-            itemConfigDSL {
+            itemDSL {
                 resId(R.layout.item_test1)
                 showItem { d, pos, view ->
-                    view.item_tv.text = "dsl tes" + d
+                    view.item_tv.text = "cece: " + d
                 }
-
-                isMeetData { d, pos -> pos != 3 }
+                isMeetData { d, pos -> pos != 1 }
             }
-        }.bindClick {
+
+        }.bindEvent {
             onClick {
                 toast("test" + adapterPosition)
             }
@@ -44,6 +52,10 @@ class MainActivity : AppCompatActivity() {
         recycler_view.adapter = acrobatAdapter
 
         acrobatAdapter.setDataWithDiff(l)
+
+        change_tv.setOnClickListener {
+            acrobatAdapter.setDataWithDiff(arrayListOf(1, 2, 3, 4, 5, 5, 44, 444, 55))
+        }
     }
 }
 

@@ -2,6 +2,7 @@ package com.motong.cm.kotlintest.rdsll
 
 import android.support.annotation.LayoutRes
 import android.view.View
+import android.view.ViewGroup
 
 /**
  *@version:
@@ -10,10 +11,13 @@ import android.view.View
  *@Since:2018/6/13
  *@ChangeList:
  */
-interface AcrobatItem<D> : Cloneable {
+interface AcrobatItem<D> {
 
     @LayoutRes
     fun getResId(): Int
+
+    fun onViewCreate(parent: ViewGroup, view: View) {
+    }
 
     fun showItem(d: D?, pos: Int, view: View)
 
@@ -22,26 +26,11 @@ interface AcrobatItem<D> : Cloneable {
     fun showItem(d: D?, pos: Int, view: View, payloads: MutableList<Any>) {
 
     }
-
-    public override fun clone(): AcrobatItem<D> {
-        return object : AcrobatItem<D> {
-            override fun getResId(): Int = this@AcrobatItem.getResId()
-
-            override fun showItem(d: D?, pos: Int, view: View) {
-                this@AcrobatItem.showItem(d, pos, view)
-            }
-
-            override fun showItem(d: D?, pos: Int, view: View, payloads: MutableList<Any>) {
-                super.showItem(d, pos, view, payloads)
-                this@AcrobatItem.showItem(d, pos, view, payloads)
-            }
-
-            override fun isMeetData(d: D?, pos: Int): Boolean = this@AcrobatItem.isMeetData(d, pos)
-        }
-    }
 }
 
-open class AcrobatDSL<D> constructor(private inline var dataBind: (d: D?, pos: Int, view: View) -> Unit = { _: D?, _: Int, _: View -> Unit },
+open class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, view: View) -> Unit = { _, _ -> Unit },
+
+                                     private inline var dataBind: (d: D?, pos: Int, view: View) -> Unit = { _: D?, _: Int, _: View -> Unit },
 
                                      private inline var dataPayload: (d: D?, pos: Int, view: View, p: MutableList<Any>) -> Unit = { _: D?, _: Int, _: View, _: MutableList<Any> -> Unit },
 
@@ -52,6 +41,10 @@ open class AcrobatDSL<D> constructor(private inline var dataBind: (d: D?, pos: I
 
     open fun resId(@LayoutRes resId: Int) {
         this.resId = resId
+    }
+
+    fun onViewCreate(create: (parent: ViewGroup, view: View) -> Unit) {
+        this.create = create
     }
 
     fun showItem(dataBind: (d: D?, pos: Int, view: View) -> Unit) {
@@ -72,6 +65,11 @@ open class AcrobatDSL<D> constructor(private inline var dataBind: (d: D?, pos: I
                 return dataMeet(d, pos)
             }
 
+            override fun onViewCreate(parent: ViewGroup, view: View) {
+                super.onViewCreate(parent, view)
+                create(parent, view)
+            }
+
             override fun getResId(): Int = resId
 
             override fun showItem(d: D?, pos: Int, view: View) {
@@ -79,6 +77,7 @@ open class AcrobatDSL<D> constructor(private inline var dataBind: (d: D?, pos: I
             }
 
             override fun showItem(d: D?, pos: Int, view: View, payloads: MutableList<Any>) {
+                super.showItem(d, pos, view, payloads)
                 dataPayload(d, pos, view, payloads)
             }
         }
