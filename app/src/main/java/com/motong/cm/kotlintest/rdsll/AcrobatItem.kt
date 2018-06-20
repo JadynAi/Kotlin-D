@@ -11,7 +11,7 @@ import android.view.ViewGroup
  *@Since:2018/6/13
  *@ChangeList:
  */
-interface AcrobatItem<D> {
+interface AcrobatItem<in D> {
 
     @LayoutRes
     fun getResId(): Int
