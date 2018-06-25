@@ -28,7 +28,7 @@ interface AcrobatItem<in D> {
     }
 }
 
-open class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, view: View) -> Unit = { _, _ -> Unit },
+class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, view: View) -> Unit = { _, _ -> Unit },
 
                                      private inline var dataBind: (d: D?, pos: Int, view: View) -> Unit = { _: D?, _: Int, _: View -> Unit },
 
@@ -37,9 +37,9 @@ open class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGro
                                      private inline var dataMeet: (d: D?, pos: Int) -> Boolean = { _: D?, _: Int -> false }) {
 
     @LayoutRes
-    protected var resId: Int = -1
+    private var resId: Int = -1
 
-    open fun resId(@LayoutRes resId: Int) {
+    fun resId(@LayoutRes resId: Int) {
         this.resId = resId
     }
 

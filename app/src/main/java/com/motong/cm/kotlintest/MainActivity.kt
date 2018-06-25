@@ -21,8 +21,11 @@ class MainActivity : AppCompatActivity() {
                             toastS(this@MainActivity,"toast ")
                         }
                         
+                        dismissListener { 
+                            
+                        }
+                        
                     }.show()
-                    
                 }
             }
         }

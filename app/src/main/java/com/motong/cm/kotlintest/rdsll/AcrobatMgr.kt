@@ -17,7 +17,7 @@ class AcrobatMgr<D> {
         ArrayList<D?>()
     }
 
-    fun item(create: () -> AcroLayoutItem<D>) {
+    fun item(create: () -> AcrobatItem<D>) {
         items.add(create())
     }
 

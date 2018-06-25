@@ -20,7 +20,7 @@ inline fun <T> T.toastS(ctx: Context, string: String) {
     Toast.makeText(ctx, string, Toast.LENGTH_SHORT).show()
 }
 
-inline fun <T> T.askDialog(ctx: Context, title: String = "", init: AlertBuilder.() -> Unit): AlertBuilder {
+fun <T> T.askDialog(ctx: Context, title: String = "", init: AlertBuilder.() -> Unit): AlertBuilder {
     return AlertBuilder(ctx, title).apply(init)
 }
 
