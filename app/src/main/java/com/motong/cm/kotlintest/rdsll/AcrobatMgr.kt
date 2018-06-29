@@ -14,7 +14,7 @@ class AcrobatMgr<D> {
     }
 
     internal val data by lazy {
-        ArrayList<D?>()
+        ArrayList<D>()
     }
 
     fun item(create: () -> AcrobatItem<D>) {
@@ -27,7 +27,7 @@ class AcrobatMgr<D> {
         items.add(acrobatDSL.build())
     }
 
-    fun setData(list: List<D?>) {
+    fun setData(list: List<D>) {
         data.clear()
         data.addAll(list)
     }
@@ -35,6 +35,9 @@ class AcrobatMgr<D> {
     fun getItemConfig(position: Int): Int {
         if (items.isEmpty()) {
             throw RuntimeException("item must config")
+        }
+        if (items.size == 1) {
+            return 0
         }
         items.forEachIndexed { index, acrobatItem ->
             if (acrobatItem.isMeetData(data[position], position)) {

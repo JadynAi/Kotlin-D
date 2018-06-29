@@ -11,30 +11,32 @@ import android.view.ViewGroup
  *@Since:2018/6/13
  *@ChangeList:
  */
-interface AcrobatItem<in D> {
+abstract class AcrobatItem<in D> internal constructor(var click: ((Int) -> Unit)? = null){
 
     @LayoutRes
-    fun getResId(): Int
+    abstract fun getResId(): Int
 
-    fun onViewCreate(parent: ViewGroup, view: View) {
+    open fun onViewCreate(parent: ViewGroup, view: View) {
     }
 
-    fun showItem(d: D?, pos: Int, view: View)
+    abstract fun showItem(d: D, pos: Int, view: View)
 
-    fun isMeetData(d: D?, pos: Int): Boolean = true
+    open fun isMeetData(d: D, pos: Int): Boolean = true
 
-    fun showItem(d: D?, pos: Int, view: View, payloads: MutableList<Any>) {
+    open fun showItem(d: D, pos: Int, view: View, payloads: MutableList<Any>) {
 
     }
 }
 
 class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, view: View) -> Unit = { _, _ -> Unit },
 
-                                     private inline var dataBind: (d: D?, pos: Int, view: View) -> Unit = { _: D?, _: Int, _: View -> Unit },
+                                private inline var dataBind: (d: D, pos: Int, view: View) -> Unit = { _: D, _: Int, _: View -> Unit },
 
-                                     private inline var dataPayload: (d: D?, pos: Int, view: View, p: MutableList<Any>) -> Unit = { _: D?, _: Int, _: View, _: MutableList<Any> -> Unit },
+                                private inline var dataPayload: (d: D, pos: Int, view: View, p: MutableList<Any>) -> Unit = { _: D, _: Int, _: View, _: MutableList<Any> -> Unit },
 
-                                     private inline var dataMeet: (d: D?, pos: Int) -> Boolean = { _: D?, _: Int -> false }) {
+                                private inline var dataMeet: (d: D, pos: Int) -> Boolean = { _: D, _: Int -> false },
+                                
+                                private var click: ((Int) -> Unit)? = null) {
 
     @LayoutRes
     private var resId: Int = -1
@@ -47,21 +49,25 @@ class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, v
         this.create = create
     }
 
-    fun showItem(dataBind: (d: D?, pos: Int, view: View) -> Unit) {
+    fun showItem(dataBind: (d: D, pos: Int, view: View) -> Unit) {
         this.dataBind = dataBind
     }
 
-    fun isMeetData(dataMeet: (d: D?, pos: Int) -> Boolean) {
+    fun isMeetData(dataMeet: (d: D, pos: Int) -> Boolean) {
         this.dataMeet = dataMeet
     }
 
-    fun showItemPayload(dataPayload: (d: D?, pos: Int, view: View, payloads: MutableList<Any>) -> Unit) {
+    fun showItemPayload(dataPayload: (d: D, pos: Int, view: View, payloads: MutableList<Any>) -> Unit) {
         this.dataPayload = dataPayload
     }
 
+    fun onClick(event: (Int) -> Unit) {
+        this.click = event
+    }
+
     internal open fun build(): AcrobatItem<D> {
-        return object : AcrobatItem<D> {
-            override fun isMeetData(d: D?, pos: Int): Boolean {
+        return object : AcrobatItem<D>(this.click) {
+            override fun isMeetData(d: D, pos: Int): Boolean {
                 return dataMeet(d, pos)
             }
 
@@ -72,11 +78,11 @@ class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, v
 
             override fun getResId(): Int = resId
 
-            override fun showItem(d: D?, pos: Int, view: View) {
+            override fun showItem(d: D, pos: Int, view: View) {
                 dataBind(d, pos, view)
             }
 
-            override fun showItem(d: D?, pos: Int, view: View, payloads: MutableList<Any>) {
+            override fun showItem(d: D, pos: Int, view: View, payloads: MutableList<Any>) {
                 super.showItem(d, pos, view, payloads)
                 dataPayload(d, pos, view, payloads)
             }

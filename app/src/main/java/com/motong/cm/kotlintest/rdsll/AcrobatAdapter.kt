@@ -13,7 +13,7 @@ import android.view.ViewGroup
  *@Since:2018/6/12
  *@ChangeList:
  */
-class AcrobatAdapter<D>(private var bind: AcroViewHolder<D>.() -> Unit = {}, create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder<D>>() {
+class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder<D>>() {
 
     private val acrobatMgr by lazy {
         AcrobatMgr<D>()
@@ -23,11 +23,18 @@ class AcrobatAdapter<D>(private var bind: AcroViewHolder<D>.() -> Unit = {}, cre
         acrobatMgr.create()
     }
 
+    private var bind: AcroViewHolder<D>.() -> Unit = {}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AcroViewHolder<D> {
         val acrobatItem = acrobatMgr.items[viewType]
         val view = LayoutInflater.from(parent.context).inflate(acrobatItem.getResId(), parent, false)
         acrobatItem.onViewCreate(parent, view)
         val viewHolder = AcroViewHolder(view, acrobatItem)
+        acrobatItem.click?.apply {
+            viewHolder.itemView.setOnClickListener {
+                this(viewHolder.adapterPosition)
+            }
+        }
         viewHolder.bind()
         return viewHolder
     }
@@ -39,7 +46,7 @@ class AcrobatAdapter<D>(private var bind: AcroViewHolder<D>.() -> Unit = {}, cre
     }
 
     override fun onBindViewHolder(holder: AcroViewHolder<D>, position: Int, payloads: MutableList<Any>) {
-        if (payloads?.isNotEmpty()) {
+        if (payloads.isNotEmpty()) {
             holder.acrobatItem.showItem(acrobatMgr.data[position], position, holder.itemView, payloads)
         } else {
             super.onBindViewHolder(holder, position, payloads)
@@ -50,12 +57,13 @@ class AcrobatAdapter<D>(private var bind: AcroViewHolder<D>.() -> Unit = {}, cre
         return acrobatMgr.getItemConfig(position)
     }
 
-    fun setDataWithDiff(dataList: ArrayList<D>) {
+    fun setData(dataList: ArrayList<D>) :AcrobatAdapter<D>{
         val diffCallBack = DiffCallback()
         diffCallBack.setData(acrobatMgr.data, dataList)
         val calculateDiff = DiffUtil.calculateDiff(diffCallBack)
         calculateDiff.dispatchUpdatesTo(this)
         acrobatMgr.setData(dataList)
+        return this
     }
 
     fun bindEvent(click: AcroViewHolder<D>.() -> Unit): AcrobatAdapter<D> {
