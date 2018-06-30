@@ -1,4 +1,4 @@
-package com.motong.cm.kotlintest.rdsll
+package com.jadynai.kotlindiary.rdsll
 
 /**
  *@version:

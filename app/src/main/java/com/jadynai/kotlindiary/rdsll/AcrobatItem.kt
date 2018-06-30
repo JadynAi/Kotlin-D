@@ -1,4 +1,4 @@
-package com.motong.cm.kotlintest.rdsll
+package com.jadynai.kotlindiary.rdsll
 
 import android.support.annotation.LayoutRes
 import android.view.View
@@ -65,7 +65,7 @@ class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, v
         this.click = event
     }
 
-    internal open fun build(): AcrobatItem<D> {
+    internal fun build(): AcrobatItem<D> {
         return object : AcrobatItem<D>(this.click) {
             override fun isMeetData(d: D, pos: Int): Boolean {
                 return dataMeet(d, pos)

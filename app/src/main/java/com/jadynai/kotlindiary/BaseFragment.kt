@@ -1,4 +1,4 @@
-package com.motong.cm.kotlintest
+package com.jadynai.kotlindiary
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

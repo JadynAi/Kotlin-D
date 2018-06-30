@@ -1,4 +1,4 @@
-package com.motong.cm.kotlintest
+package com.jadynai.cm.kotlintest
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

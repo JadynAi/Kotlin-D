@@ -1,4 +1,4 @@
-package com.motong.cm.kotlintest
+package com.jadynai.cm.kotlintest
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.motong.cm.kotlintest.adapter
+package com.jadynai.kotlindiary.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -6,7 +6,7 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.motong.cm.kotlintest.adapter.ViewHolder.Companion.getViewHolder
+import com.jadynai.kotlindiary.adapter.ViewHolder.Companion.getViewHolder
 import kotlinx.android.extensions.LayoutContainer
 import java.util.*
 

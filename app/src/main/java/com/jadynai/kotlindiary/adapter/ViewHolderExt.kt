@@ -1,4 +1,4 @@
-package com.motong.cm.kotlintest.adapter
+package com.jadynai.kotlindiary.adapter
 
 import android.view.View
 import android.widget.ImageView

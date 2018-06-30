@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.motong.cm.kotlintest"
+        applicationId 'com.jadynai.cm.kotlintest'
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
@@ -21,6 +21,8 @@ android {
         }
     }
     buildToolsVersion '27.0.3'
+    productFlavors {
+    }
 }
 
 androidExtensions {
