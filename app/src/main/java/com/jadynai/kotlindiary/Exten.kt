@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.jadynai.cm.kotlintest.R
+import kotlinx.android.synthetic.main.dialog_diary.view.*
 
 /**
  *@version:
