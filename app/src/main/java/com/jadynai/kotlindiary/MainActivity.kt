@@ -5,8 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.jadynai.cm.kotlintest.R
-import com.jadynai.kotlindiary.rdsll.AcrobatAdapter
-import com.jadynai.kotlindiary.rdsll.AcrobatItem
+import com.jadynai.kotlindiary.utils.recyclerview.AcrobatAdapter
+import com.jadynai.kotlindiary.utils.recyclerview.AcrobatItem
 import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {

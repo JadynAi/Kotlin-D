@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary
+package com.jadynai.kotlindiary.utils
 
 import android.app.Dialog
 import android.content.Context
@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.dialog_diary.view.*
 
 /**
  *@version:
- *@FileDescription:
+ *@FileDescription: 通用工具文件
  *@Author:jing
  *@Since:2018/6/20
  *@ChangeList:
@@ -21,7 +21,7 @@ inline fun <T> T.toastS(ctx: Context, string: String) {
     Toast.makeText(ctx, string, Toast.LENGTH_SHORT).show()
 }
 
-fun <T> T.askDialog(ctx: Context, title: String = "", init: AlertBuilder.() -> Unit): AlertBuilder {
+inline fun commonDialog(ctx: Context, title: String = "", init: AlertBuilder.() -> Unit): AlertBuilder {
     return AlertBuilder(ctx, title).apply(init)
 }
 
