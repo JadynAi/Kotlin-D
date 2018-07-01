@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.jadynai.cm.kotlintest.R
+import com.jadynai.kotlindiary.base.BaseApplication
 import kotlinx.android.synthetic.main.dialog_diary.view.*
 
 /**
@@ -17,8 +18,8 @@ import kotlinx.android.synthetic.main.dialog_diary.view.*
  *@Since:2018/6/20
  *@ChangeList:
  */
-inline fun <T> T.toastS(ctx: Context, string: String) {
-    Toast.makeText(ctx, string, Toast.LENGTH_SHORT).show()
+fun <T> T.toastS(string: String) {
+    Toast.makeText(BaseApplication.instance, string, Toast.LENGTH_SHORT).show()
 }
 
 inline fun commonDialog(ctx: Context, title: String = "", init: AlertBuilder.() -> Unit): AlertBuilder {

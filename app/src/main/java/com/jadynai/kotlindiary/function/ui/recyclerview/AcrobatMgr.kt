@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.utils.recyclerview
+package com.jadynai.kotlindiary.function.ui.recyclerview
 
 /**
  *@version:

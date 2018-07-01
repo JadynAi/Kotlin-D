@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.rdsll
+package com.jadynai.kotlindiary.function.ui.recyclerview
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView

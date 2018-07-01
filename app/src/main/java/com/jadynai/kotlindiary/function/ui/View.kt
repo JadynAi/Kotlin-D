@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.utils
+package com.jadynai.kotlindiary.function.ui
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
