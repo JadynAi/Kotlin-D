@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -86,24 +87,30 @@ inline fun View.pressColor(normalColor: Int, pressColor: Int) {
     this.background = getPressDrawable(ColorDrawable(pressColor), ColorDrawable(normalColor))
 }
 
-inline fun View.event() {
-    this.setOnTouchListener { v, event -> 
-        android.view.GestureDetector(this.context,object :GestureDetector.SimpleOnGestureListener(){
-            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                android.util.Log.d("event", "onSingleTapConfirmed ")
-                return super.onSingleTapConfirmed(e)
-            }
+inline fun View.event(noinline click: (() -> Unit)? = null, noinline doubleTap: (() -> Unit)? = null,
+                      noinline longPress: (() -> Unit)? = null) {
+    this.isLongClickable = true
+    val gestureDetector = GestureDetector(this.context, object : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            Log.d("event", "onSingleTapConfirmed ")
+            click?.apply { this() }
+            return false
+        }
 
-            override fun onDoubleTap(e: MotionEvent?): Boolean {
-                android.util.Log.d("event", "onDoubleTap ")
-                return super.onDoubleTap(e)
-            }
+        override fun onDoubleTap(e: MotionEvent?): Boolean {
+            Log.d("event", "onDoubleTap ")
+            doubleTap?.apply { this() }
+            return false
+        }
 
-            override fun onLongPress(e: MotionEvent?) {
-                super.onLongPress(e)
-                android.util.Log.d("event", "onLongPress ")
-            }
-        })
-        true
+        override fun onLongPress(e: MotionEvent?) {
+            super.onLongPress(e)
+            Log.d("event", "onLongPress ")
+            longPress?.apply { this() }
+        }
+    })
+
+    this.setOnTouchListener { v, event ->
+        gestureDetector.onTouchEvent(event)
     }
 }

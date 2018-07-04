@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.jadynai.kotlindiary.function.ui.event
 
 /**
  *@version:
@@ -30,10 +31,10 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         val view = LayoutInflater.from(parent.context).inflate(acrobatItem.getResId(), parent, false)
         acrobatItem.onViewCreate(parent, view)
         val viewHolder = AcroViewHolder(view, acrobatItem)
-        acrobatItem.click?.apply {
-            viewHolder.itemView.setOnClickListener {
-                this(viewHolder.adapterPosition)
-            }
+        if (acrobatItem.hasEvent()) {
+            view.event({ acrobatItem.click?.apply { this((viewHolder.adapterPosition)) } },
+                    { acrobatItem.doubleTap?.apply { this(viewHolder.adapterPosition) } },
+                    { acrobatItem.longPress?.apply { this(viewHolder.adapterPosition) } })
         }
         viewHolder.bind()
         return viewHolder
@@ -57,7 +58,7 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         return acrobatMgr.getItemConfig(position)
     }
 
-    fun setData(dataList: ArrayList<D>) : AcrobatAdapter<D> {
+    fun setData(dataList: ArrayList<D>): AcrobatAdapter<D> {
         val diffCallBack = DiffCallback()
         diffCallBack.setData(acrobatMgr.data, dataList)
         val calculateDiff = DiffUtil.calculateDiff(diffCallBack)

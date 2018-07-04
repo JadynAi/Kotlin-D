@@ -7,7 +7,9 @@
     <TextView
         android:id="@+id/item_tv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="left"
+        android:padding="10dp"
         />
 
 </LinearLayout>

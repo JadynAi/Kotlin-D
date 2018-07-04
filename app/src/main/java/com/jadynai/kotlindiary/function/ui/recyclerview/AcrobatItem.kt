@@ -11,7 +11,9 @@ import android.view.ViewGroup
  *@Since:2018/6/13
  *@ChangeList:
  */
-abstract class AcrobatItem<in D> internal constructor(var click: ((Int) -> Unit)? = null){
+abstract class AcrobatItem<in D> internal constructor(var click: ((Int) -> Unit)? = null,
+                                                      var doubleTap: ((Int) -> Unit)? = null,
+                                                      var longPress: ((Int) -> Unit)? = null) {
 
     @LayoutRes
     abstract fun getResId(): Int
@@ -26,6 +28,8 @@ abstract class AcrobatItem<in D> internal constructor(var click: ((Int) -> Unit)
     open fun showItem(d: D, pos: Int, view: View, payloads: MutableList<Any>) {
 
     }
+
+    fun hasEvent() = click != null || doubleTap != null || longPress != null
 }
 
 class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, view: View) -> Unit = { _, _ -> Unit },
@@ -35,8 +39,12 @@ class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, v
                                 private inline var dataPayload: (d: D, pos: Int, view: View, p: MutableList<Any>) -> Unit = { _: D, _: Int, _: View, _: MutableList<Any> -> Unit },
 
                                 private inline var dataMeet: (d: D, pos: Int) -> Boolean = { _: D, _: Int -> false },
-                                
-                                private var click: ((Int) -> Unit)? = null) {
+
+                                private inline var click: ((Int) -> Unit)? = null,
+
+                                private inline var doubleTap: ((Int) -> Unit)? = null,
+
+                                private inline var longP: ((Int) -> Unit)? = null) {
 
     @LayoutRes
     private var resId: Int = -1
@@ -65,8 +73,16 @@ class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, v
         this.click = event
     }
 
+    fun onDoubleTap(dT: (Int) -> Unit) {
+        this.doubleTap = dT
+    }
+
+    fun longPress(lp: (Int) -> Unit) {
+        this.longP = lp
+    }
+
     internal fun build(): AcrobatItem<D> {
-        return object : AcrobatItem<D>(this.click) {
+        return object : AcrobatItem<D>(this.click, this.doubleTap, this.longP) {
             override fun isMeetData(d: D, pos: Int): Boolean {
                 return dataMeet(d, pos)
             }
