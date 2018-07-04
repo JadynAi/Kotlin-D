@@ -87,13 +87,13 @@ inline fun View.pressColor(normalColor: Int, pressColor: Int) {
     this.background = getPressDrawable(ColorDrawable(pressColor), ColorDrawable(normalColor))
 }
 
-inline fun View.event(noinline click: (() -> Unit)? = null, noinline doubleTap: (() -> Unit)? = null,
+inline fun View.event(noinline click: ((View) -> Unit)? = null, noinline doubleTap: (() -> Unit)? = null,
                       noinline longPress: (() -> Unit)? = null) {
     this.isLongClickable = true
     val gestureDetector = GestureDetector(this.context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
             Log.d("event", "onSingleTapConfirmed ")
-            click?.apply { this() }
+            click?.apply { this(this@event) }
             return false
         }
 
