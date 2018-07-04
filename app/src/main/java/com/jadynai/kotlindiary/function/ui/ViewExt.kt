@@ -1,7 +1,11 @@
 package com.jadynai.kotlindiary.function.ui
 
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.support.annotation.DrawableRes
+import android.support.v4.content.ContextCompat
 import android.view.View
 import com.jadynai.kotlindiary.base.BaseApplication
 
@@ -15,6 +19,10 @@ import com.jadynai.kotlindiary.base.BaseApplication
 inline fun dip2px(dpValue: Float): Int {
     val scale = BaseApplication.instance.resources.displayMetrics.density
     return (dpValue * scale + 0.5f).toInt()
+}
+
+inline fun getDrawable(resId: Int): Drawable {
+    return ContextCompat.getDrawable(BaseApplication.instance, resId)!!
 }
 
 fun View.setViewVisible(show: Boolean) {
@@ -75,4 +83,12 @@ class RoundDrawable {
         gradientDrawable.cornerRadius = cornerRadius.toFloat()
         return gradientDrawable
     }
+}
+
+inline fun View.press(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
+    this.background = getPressDrawable(normalRes, pressRes)
+}
+
+inline fun View.pressColor(normalColor: Int, pressColor: Int) {
+    this.background = getPressDrawable(ColorDrawable(pressColor), ColorDrawable(normalColor))
 }
