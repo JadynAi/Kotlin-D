@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import com.jadynai.kotlindiary.base.BaseApplication
 
@@ -58,23 +60,14 @@ fun View.computeHeightWithW(ratio: Float) {
 /*
 * View设置圆角矩形背景，默认2dp，白色solid
 * */
-fun View.round(drawable: RoundDrawable.() -> Unit) {
-    val roundDrawable = RoundDrawable()
-    roundDrawable.drawable()
+fun View.round(r: Float = 2f, color: Int = Color.WHITE) {
+    val roundDrawable = RoundDrawable(r, color)
     this.background = roundDrawable.build()
 }
 
-class RoundDrawable {
-    private var cornerRadius = dip2px(2f)
-    private var solidColor: Int = Color.WHITE
+class RoundDrawable(r: Float = 2f, private var solidColor: Int = Color.WHITE) {
 
-    fun cornerR(r: Float) {
-        cornerRadius = dip2px(r)
-    }
-
-    fun solid(color: Int) {
-        solidColor = color
-    }
+    private var cornerRadius = dip2px(r)
 
     fun build(): GradientDrawable {
         val gradientDrawable = GradientDrawable()
@@ -91,4 +84,26 @@ inline fun View.press(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
 
 inline fun View.pressColor(normalColor: Int, pressColor: Int) {
     this.background = getPressDrawable(ColorDrawable(pressColor), ColorDrawable(normalColor))
+}
+
+inline fun View.event() {
+    this.setOnTouchListener { v, event -> 
+        android.view.GestureDetector(this.context,object :GestureDetector.SimpleOnGestureListener(){
+            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                android.util.Log.d("event", "onSingleTapConfirmed ")
+                return super.onSingleTapConfirmed(e)
+            }
+
+            override fun onDoubleTap(e: MotionEvent?): Boolean {
+                android.util.Log.d("event", "onDoubleTap ")
+                return super.onDoubleTap(e)
+            }
+
+            override fun onLongPress(e: MotionEvent?) {
+                super.onLongPress(e)
+                android.util.Log.d("event", "onLongPress ")
+            }
+        })
+        true
+    }
 }

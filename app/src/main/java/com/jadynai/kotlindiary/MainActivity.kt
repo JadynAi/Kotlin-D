@@ -59,6 +59,8 @@ class MainActivity : AppCompatActivity() {
         Glide.with(this).load("http://p15.qhimg.com/bdm/720_444_0/t01b12dfd7f42342197.jpg")
                 .apply(RequestOptions.bitmapTransform(RoundCorner(leftTop = 20f)))
                 .into(img)
+        
+        
     }
 }
 
