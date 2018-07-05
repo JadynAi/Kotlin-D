@@ -39,17 +39,17 @@ class RecyclerViewActivity : AppCompatActivity() {
                     pos == 1
                 }
 
-                onClick {
-                    toastS("单击")
-                }
-
-                onDoubleTap {
-                    toastS("双击")
-                }
-
-                longPress {
-                    toastS("长按")
-                }
+//                onClick {
+//                    toastS("单击")
+//                }
+//
+//                onDoubleTap {
+//                    toastS("双击")
+//                }
+//
+//                longPress {
+//                    toastS("长按")
+//                }
             }
 
             itemDSL {
@@ -58,20 +58,32 @@ class RecyclerViewActivity : AppCompatActivity() {
                     view.item_tv.text = "cece: " + d
                 }
                 isMeetData { d, pos -> pos != 1 }
-
-                onClick {
-                    toastS("单击" + it)
-                }
-
-                onDoubleTap {
-                    toastS("双击" + it)
-                }
-
-                longPress {
-                    toastS("长按" + it)
-                }
+//
+//                onClick {
+//                    toastS("单击" + it)
+//                }
+//
+//                onDoubleTap {
+//                    toastS("双击" + it)
+//                }
+//
+//                longPress {
+//                    toastS("长按" + it)
+//                }
             }
 
+        }.bindEvent { 
+            onClick { 
+                toastS("wai bu click")
+            }
+            
+            onDoubleTap { 
+                toastS("waibu double")
+            }
+            
+            longPress { 
+                toastS("wai bu long")
+            }
         }
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.adapter = acrobatAdapter
