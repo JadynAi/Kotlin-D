@@ -29,9 +29,13 @@ inline fun getPressDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: 
     return getPressDrawable(getDrawable(normalRes), getDrawable(pressRes))
 }
 
-inline fun getPressDrawable(nor: Drawable, press: Drawable): StateListDrawable {
+inline fun getPressDrawable(nor: Drawable?, press: Drawable?): StateListDrawable {
     val sd = StateListDrawable()
-    sd.addState(intArrayOf(R.attr.state_pressed), press)
-    sd.addState(intArrayOf(), nor)
+    press?.apply {
+        sd.addState(intArrayOf(R.attr.state_pressed), this)
+    }
+    nor?.apply {
+        sd.addState(intArrayOf(), this)
+    }
     return sd
 }
