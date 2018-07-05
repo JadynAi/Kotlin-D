@@ -24,8 +24,12 @@ inline fun dip2px(dpValue: Float): Int {
     return (dpValue * scale + 0.5f).toInt()
 }
 
-inline fun getDrawable(resId: Int): Drawable {
-    return ContextCompat.getDrawable(BaseApplication.instance, resId)!!
+inline fun getDrawable(resId: Int): Drawable? {
+    return try {
+        ContextCompat.getDrawable(BaseApplication.instance, resId)
+    } catch (e: Exception) {
+        null
+    }
 }
 
 fun View.setViewVisible(show: Boolean) {

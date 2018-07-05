@@ -14,7 +14,7 @@ import com.jadynai.kotlindiary.utils.parseColor
  *@Since:2018/7/4
  *@ChangeList:
  */
-inline fun getSelectDrawable(@DrawableRes selectRes: Int, @DrawableRes normalRes: Int): StateListDrawable {
+inline fun getSelectDrawable(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int): StateListDrawable {
     val sd = StateListDrawable()
     sd.addState(intArrayOf(R.attr.state_selected), getDrawable(selectRes))
     sd.addState(intArrayOf(), getDrawable(normalRes))
@@ -29,9 +29,13 @@ inline fun getPressDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: 
     return getPressDrawable(getDrawable(normalRes), getDrawable(pressRes))
 }
 
-inline fun getPressDrawable(nor: Drawable, press: Drawable): StateListDrawable {
+inline fun getPressDrawable(nor: Drawable?, press: Drawable?): StateListDrawable {
     val sd = StateListDrawable()
-    sd.addState(intArrayOf(R.attr.state_pressed), press)
-    sd.addState(intArrayOf(), nor)
+    press?.apply {
+        sd.addState(intArrayOf(R.attr.state_pressed), this)
+    }
+    nor?.apply {
+        sd.addState(intArrayOf(), this)
+    }
     return sd
 }

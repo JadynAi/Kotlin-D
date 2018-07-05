@@ -24,5 +24,4 @@ inline fun parseColor(colorS: String, @ColorInt defColor: Int): Int {
     } catch (e: Exception) {
         defColor
     }
-
 }

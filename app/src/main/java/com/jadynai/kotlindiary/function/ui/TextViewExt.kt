@@ -21,19 +21,19 @@ inline fun TextView.drawable(textDrawable: TextDrawable.() -> Unit) {
 
 class TextDrawable(var dl: Drawable? = null, var dt: Drawable? = null, var dr: Drawable? = null, var db: Drawable? = null) {
 
-    fun drawLeft(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int) {
+    fun drawLeft(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1) {
         dl = getPressDrawable(normalRes, selectRes)
     }
 
-    fun drawTop(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int) {
+    fun drawTop(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1) {
         dt = getPressDrawable(normalRes, selectRes)
     }
 
-    fun drawRight(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int) {
+    fun drawRight(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1) {
         dr = getPressDrawable(normalRes, selectRes)
     }
 
-    fun drawBottom(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int) {
+    fun drawBottom(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1) {
         db = getPressDrawable(normalRes, selectRes)
     }
 }
