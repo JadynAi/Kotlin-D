@@ -7,9 +7,9 @@ import com.jadynai.cm.kotlintest.R
 import com.jadynai.kotlindiary.function.ui.recyclerview.AcrobatAdapter
 import com.jadynai.kotlindiary.function.ui.recyclerview.AcrobatItem
 import com.jadynai.kotlindiary.function.ui.recyclerview.linear
-import com.jadynai.kotlindiary.utils.toastS
 import kotlinx.android.synthetic.main.activity_recycler_view.*
 import kotlinx.android.synthetic.main.item_test.view.*
+import kotlinx.android.synthetic.main.item_test1.view.*
 
 /**
  *@version:
@@ -36,9 +36,15 @@ class RecyclerViewActivity : AppCompatActivity() {
                 showItem { d, pos, view ->
                     view.item_tv.text = "数据Item: " + d
                 }
-                onClick { 
-                    toastS("单击")
+                isMeetData { d, pos -> pos != 1 }
+            }
+
+            itemDSL {
+                resId(R.layout.item_test1)
+                showItem { d, pos, view ->
+                    view.item_tv1.text = "另一种样式" + d
                 }
+                isMeetData { d, pos -> pos == 1 }
             }
         }.setData(data)
         recycler_view.adapter = acrobatAdapter

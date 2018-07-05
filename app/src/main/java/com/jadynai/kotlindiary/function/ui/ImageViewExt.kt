@@ -12,8 +12,7 @@ import android.widget.ImageView
  *@ChangeList:
  */
 inline fun ImageView.clickSelect(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int, noinline click: (View) -> Unit) {
-    val sd = getSelectDrawable(selectRes, normalRes)
-    this.setImageDrawable(sd)
+    select(normalRes, selectRes)
     this.setOnClickListener {
         this.isSelected = !this.isSelected
         click(it)
@@ -22,5 +21,10 @@ inline fun ImageView.clickSelect(@DrawableRes normalRes: Int, @DrawableRes selec
 
 inline fun ImageView.pressSrc(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
     val sd = getPressDrawable(normalRes, pressRes)
-    this.setImageDrawable(sd)
+    setImageDrawable(sd)
+}
+
+fun ImageView.select(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int) {
+    val sd = getSelectDrawable(selectRes, normalRes)
+    setImageDrawable(sd)
 }
