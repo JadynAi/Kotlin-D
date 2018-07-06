@@ -1,4 +1,4 @@
 # Kotlin-D
-![](https://mmbiz.qpic.cn/mmbiz_jpg/jqw9LvhdsxIbwwvUTEOQI6hmuZjTVGqscGM34NibDXjMur1y5hDtkJCJGDXbqYwTRdpwBcBibjaAoDib2Q1sDPMtA/0?wx_fmt=jpeg)
+![](https://mmbiz.qpic.cn/mmbiz_gif/jqw9LvhdsxJRdy8tPr5s35tNYfwkbEefXtjr2FDSNozBjibibWRe1TH1h31gfOjWsNL2570IlgPdecfBPLicD7Rhg/0?wx_fmt=gif)
 
 **D!**
