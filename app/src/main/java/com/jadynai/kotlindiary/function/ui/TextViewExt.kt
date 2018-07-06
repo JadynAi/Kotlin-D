@@ -4,6 +4,8 @@ import android.R
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
+import android.support.annotation.FloatRange
+import android.util.TypedValue
 import android.widget.TextView
 
 /**
@@ -54,4 +56,8 @@ inline fun TextView.checkedTextColor(normalColor: Int, pressColor: Int) {
     val list = ColorStateList(arrayOf(intArrayOf(R.attr.state_checked),
             intArrayOf()), intArrayOf(pressColor, normalColor))
     this.setTextColor(list)
+}
+
+inline fun TextView.updateTextSize(@FloatRange(from = 1.0) size: Float) {
+    setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
 }

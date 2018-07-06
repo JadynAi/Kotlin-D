@@ -25,6 +25,6 @@ inline fun ImageView.pressSrc(@DrawableRes normalRes: Int, @DrawableRes pressRes
 }
 
 fun ImageView.select(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int) {
-    val sd = getSelectDrawable(selectRes, normalRes)
+    val sd = getSelectDrawable(normalRes, selectRes)
     setImageDrawable(sd)
 }
