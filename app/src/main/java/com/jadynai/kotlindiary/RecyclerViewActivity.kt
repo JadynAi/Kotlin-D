@@ -7,9 +7,9 @@ import com.jadynai.cm.kotlintest.R
 import com.jadynai.kotlindiary.function.ui.recyclerview.AcrobatAdapter
 import com.jadynai.kotlindiary.function.ui.recyclerview.AcrobatItem
 import com.jadynai.kotlindiary.function.ui.recyclerview.linear
+import com.jadynai.kotlindiary.utils.toastS
 import kotlinx.android.synthetic.main.activity_recycler_view.*
 import kotlinx.android.synthetic.main.item_test.view.*
-import kotlinx.android.synthetic.main.item_test1.view.*
 
 /**
  *@version:
@@ -29,31 +29,45 @@ class RecyclerViewActivity : AppCompatActivity() {
         }
 
         recycler_view.linear()
-
+        
         val acrobatAdapter = AcrobatAdapter<Int> {
             itemDSL {
                 resId(R.layout.item_test)
                 showItem { d, pos, view ->
                     view.item_tv.text = "数据Item: " + d
                 }
-                isMeetData { d, pos -> pos != 1 }
-            }
-
-            itemDSL {
-                resId(R.layout.item_test1)
-                showItem { d, pos, view ->
-                    view.item_tv1.text = "另一种样式" + d
+                showItemPayload { d, pos, view, payloads -> 
+                    
                 }
-                isMeetData { d, pos -> pos == 1 }
             }
-        }.setData(data)
+        }.setData(data).bindEvent { 
+            onClick { 
+                toastS("外部单击")
+            }
+            
+            onDoubleTap { 
+                toastS("外部双击")
+            }
+            
+            longPress { 
+                toastS("外部长按")
+            }
+        }
         recycler_view.adapter = acrobatAdapter
-
+        
         change_tv.setOnClickListener {
             acrobatAdapter.setData(arrayListOf(1, 2, 3, 4, 5, 5, 44, 444, 55))
         }
     }
 }
+
+//itemDSL {
+//    resId(R.layout.item_test1)
+//    showItem { d, pos, view ->
+//        view.item_tv1.text = "另一种样式" + d
+//    }
+//    isMeetData { d, pos -> pos == 1 }
+//}
 
 
 class Test : AcrobatItem<Int>() {

@@ -31,12 +31,13 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         val view = LayoutInflater.from(parent.context).inflate(acrobatItem.getResId(), parent, false)
         acrobatItem.onViewCreate(parent, view)
         val viewHolder = AcroViewHolder(view, acrobatItem)
-        viewHolder.bind()
         if (acrobatItem.hasEvent()) {
             view.event({ acrobatItem.click?.apply { this((viewHolder.adapterPosition)) } },
                     { acrobatItem.doubleTap?.apply { this(viewHolder.adapterPosition) } },
                     { acrobatItem.longPress?.apply { this(viewHolder.adapterPosition) } })
         }
+        viewHolder.bind()
+        viewHolder.doBindEvent()
         return viewHolder
     }
 
@@ -106,17 +107,37 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
     }
 
     class AcroViewHolder<D>(view: View, val acrobatItem: AcrobatItem<D>) : RecyclerView.ViewHolder(view) {
+        private var click: ((Int) -> Unit)? = null
+        private var doubleTap: ((Int) -> Unit)? = null
+        private var longPress: ((Int) -> Unit)? = null
 
         fun onClick(c: (Int) -> Unit) {
-            acrobatItem.click = c
+            if (acrobatItem.hasEvent()) {
+                throw IllegalStateException("item has inner event!!!")
+            }
+            click = c
         }
 
         fun onDoubleTap(d: (Int) -> Unit) {
-            acrobatItem.doubleTap = d
+            if (acrobatItem.hasEvent()) {
+                throw IllegalStateException("item has inner event!!!")
+            }
+            doubleTap = d
         }
 
         fun longPress(l: (Int) -> Unit) {
-            acrobatItem.longPress = l
+            if (acrobatItem.hasEvent()) {
+                throw IllegalStateException("item has inner event!!!")
+            }
+            longPress = l
+        }
+
+        internal inline fun doBindEvent() {
+            if (click != null || doubleTap != null || longPress != null) {
+                itemView.event({ click?.apply { this((adapterPosition)) } },
+                        { doubleTap?.apply { this(adapterPosition) } },
+                        { longPress?.apply { this(adapterPosition) } })
+            }
         }
     }
 }
