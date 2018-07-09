@@ -15,7 +15,7 @@ import android.widget.TextView
  *@Since:2018/7/4
  *@ChangeList:
  */
-inline fun TextView.drawable(textDrawable: TextDrawable.() -> Unit) {
+fun TextView.drawable(textDrawable: TextDrawable.() -> Unit) {
     val d = TextDrawable()
     d.textDrawable()
     this.setCompoundDrawablesWithIntrinsicBounds(d.dl, d.dt, d.dr, d.db)
@@ -40,24 +40,24 @@ class TextDrawable(var dl: Drawable? = null, var dt: Drawable? = null, var dr: D
     }
 }
 
-inline fun TextView.pressTextColor(normalColor: Int, pressColor: Int) {
+fun TextView.pressTextColor(normalColor: Int, pressColor: Int) {
     val list = ColorStateList(arrayOf(intArrayOf(R.attr.state_pressed),
             intArrayOf()), intArrayOf(pressColor, normalColor))
     this.setTextColor(list)
 }
 
-inline fun TextView.selectTextColor(normalColor: Int, pressColor: Int) {
+fun TextView.selectTextColor(normalColor: Int, pressColor: Int) {
     val list = ColorStateList(arrayOf(intArrayOf(R.attr.state_selected),
             intArrayOf()), intArrayOf(pressColor, normalColor))
     this.setTextColor(list)
 }
 
-inline fun TextView.checkedTextColor(normalColor: Int, pressColor: Int) {
+fun TextView.checkedTextColor(normalColor: Int, pressColor: Int) {
     val list = ColorStateList(arrayOf(intArrayOf(R.attr.state_checked),
             intArrayOf()), intArrayOf(pressColor, normalColor))
     this.setTextColor(list)
 }
 
-inline fun TextView.updateTextSize(@FloatRange(from = 1.0) size: Float) {
+fun TextView.updateTextSize(@FloatRange(from = 1.0) size: Float) {
     setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
 }

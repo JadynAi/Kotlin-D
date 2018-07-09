@@ -19,12 +19,12 @@ import com.jadynai.kotlindiary.base.BaseApplication
  *@Since:2018/6/30
  *@ChangeList:
  */
-inline fun dip2px(dpValue: Float): Int {
+fun dip2px(dpValue: Float): Int {
     val scale = BaseApplication.instance.resources.displayMetrics.density
     return (dpValue * scale + 0.5f).toInt()
 }
 
-inline fun getDrawable(resId: Int): Drawable? {
+fun getDrawable(resId: Int): Drawable? {
     return try {
         ContextCompat.getDrawable(BaseApplication.instance, resId)
     } catch (e: Exception) {
@@ -83,16 +83,16 @@ class RoundDrawable(r: Float = 2f, private var solidColor: Int = Color.WHITE) {
     }
 }
 
-inline fun View.press(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
+fun View.press(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
     this.background = getPressDrawable(normalRes, pressRes)
 }
 
-inline fun View.pressColor(normalColor: Int, pressColor: Int) {
+fun View.pressColor(normalColor: Int, pressColor: Int) {
     this.background = getPressDrawable(ColorDrawable(pressColor), ColorDrawable(normalColor))
 }
 
-inline fun View.event(noinline click: ((View) -> Unit)? = null, noinline doubleTap: (() -> Unit)? = null,
-                      noinline longPress: (() -> Unit)? = null) {
+fun View.event(click: ((View) -> Unit)? = null, doubleTap: (() -> Unit)? = null,
+               longPress: (() -> Unit)? = null) {
     this.isLongClickable = true
     val gestureDetector = GestureDetector(this.context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
