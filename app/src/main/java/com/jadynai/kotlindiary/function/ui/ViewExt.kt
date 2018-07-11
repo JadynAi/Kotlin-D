@@ -32,7 +32,7 @@ fun getDrawable(resId: Int): Drawable? {
     }
 }
 
-fun View.setViewVisible(show: Boolean) {
+fun View.setVisible(show: Boolean) {
     if (show) {
         this.visibility = View.VISIBLE
     } else {
@@ -116,5 +116,11 @@ fun View.event(click: ((View) -> Unit)? = null, doubleTap: (() -> Unit)? = null,
 
     this.setOnTouchListener { v, event ->
         gestureDetector.onTouchEvent(event)
+    }
+}
+
+fun setVisible(visible: Boolean, vararg views: View) {
+    for (view in views) {
+        view.setVisible(visible)
     }
 }

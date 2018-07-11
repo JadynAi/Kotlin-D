@@ -2,10 +2,10 @@ package com.jadynai.kotlindiary.function.ui
 
 import android.R
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
-import android.support.annotation.FloatRange
-import android.util.TypedValue
+import android.text.TextUtils
 import android.widget.TextView
 
 /**
@@ -58,6 +58,10 @@ fun TextView.checkedTextColor(normalColor: Int, pressColor: Int) {
     this.setTextColor(list)
 }
 
-fun TextView.updateTextSize(@FloatRange(from = 1.0) size: Float) {
-    setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
+fun TextView.generateHexColor(): String {
+    val a = Integer.toHexString(Color.alpha(currentTextColor))
+    val r = Integer.toHexString(Color.red(currentTextColor))
+    val g = Integer.toHexString(Color.green(currentTextColor))
+    val b = Integer.toHexString(Color.blue(currentTextColor))
+    return TextUtils.concat("#", a, r, g, b).toString()
 }
