@@ -44,6 +44,15 @@ fun View.click(click: (View) -> Unit) {
     this.setOnClickListener(click)
 }
 
+//多View同一个点击事件设定
+fun doClick(click: (View) -> Unit, vararg views: View) {
+    for (view in views) {
+        view.click {
+            click(it)
+        }
+    }
+}
+
 //View根据高计算宽
 fun View.computeWidthWithH(ratio: Float) {
     this.post {

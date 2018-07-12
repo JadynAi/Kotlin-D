@@ -11,9 +11,9 @@ import android.view.ViewGroup
  *@Since:2018/6/13
  *@ChangeList:
  */
-abstract class AcrobatItem<in D> internal constructor(var click: ((Int) -> Unit)? = null,
-                                                      var doubleTap: ((Int) -> Unit)? = null,
-                                                      var longPress: ((Int) -> Unit)? = null) {
+abstract class AcrobatItem<D> internal constructor(var click: ((d: D, pos: Int) -> Unit)? = null,
+                                                   var doubleTap: ((d: D, pos: Int) -> Unit)? = null,
+                                                   var longPress: ((d: D, pos: Int) -> Unit)? = null) {
 
     @LayoutRes
     abstract fun getResId(): Int
@@ -40,11 +40,11 @@ class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, v
 
                                 private inline var dataMeet: (d: D, pos: Int) -> Boolean = { _: D, _: Int -> false },
 
-                                private inline var click: ((Int) -> Unit)? = null,
+                                private inline var click: ((d: D, pos: Int) -> Unit)? = null,
 
-                                private inline var doubleTap: ((Int) -> Unit)? = null,
+                                private inline var doubleTap: ((d: D, pos: Int) -> Unit)? = null,
 
-                                private inline var longP: ((Int) -> Unit)? = null) {
+                                private inline var longP: ((d: D, pos: Int) -> Unit)? = null) {
 
     @LayoutRes
     private var resId: Int = -1
@@ -69,15 +69,15 @@ class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, v
         this.dataPayload = dataPayload
     }
 
-    fun onClick(event: (Int) -> Unit) {
+    fun onClick(event: (d: D, pos: Int) -> Unit) {
         this.click = event
     }
 
-    fun onDoubleTap(dT: (Int) -> Unit) {
+    fun onDoubleTap(dT: (d: D, pos: Int) -> Unit) {
         this.doubleTap = dT
     }
 
-    fun longPress(lp: (Int) -> Unit) {
+    fun longPress(lp: (d: D, pos: Int) -> Unit) {
         this.longP = lp
     }
 

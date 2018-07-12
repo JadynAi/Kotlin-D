@@ -3,6 +3,8 @@ package com.jadynai.kotlindiary.utils
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.support.annotation.ColorRes
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +20,11 @@ import kotlinx.android.synthetic.main.dialog_diary.view.*
  *@Since:2018/6/20
  *@ChangeList:
  */
-fun <T> T.toastS(string: String) {
+fun toastS(string: String) {
     Toast.makeText(BaseApplication.instance, string, Toast.LENGTH_SHORT).show()
 }
+
+fun getResColor(@ColorRes id: Int) = ContextCompat.getColor(BaseApplication.instance, id)
 
 inline fun commonDialog(ctx: Context, title: String = "", init: AlertBuilder.() -> Unit): AlertBuilder {
     return AlertBuilder(ctx, title).apply(init)

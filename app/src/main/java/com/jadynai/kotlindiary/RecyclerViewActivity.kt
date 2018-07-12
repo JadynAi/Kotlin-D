@@ -36,25 +36,18 @@ class RecyclerViewActivity : AppCompatActivity() {
             itemDSL {
                 resId(R.layout.item_test)
                 showItem { d, pos, view ->
-                    view.item_tv.text = "Item文本"
+                    view.item_tv.text = "Item文本$d"
                 }
                 showItemPayload { d, pos, view, payloads ->
                     view.item_progress.progress = dddd
                 }
-            }
-        }.setData(data).bindEvent {
-            onClick {
-                toastS("外部单击")
-            }
 
-            onDoubleTap {
-                toastS("外部双击")
-            }
+                onClick { d, pos ->
+                    toastS("cece$d")
+                }
 
-            longPress {
-                toastS("外部长按")
             }
-        }
+        }.setData(data)
         recycler_view.adapter = acrobatAdapter
 
         change_tv.setOnClickListener {

@@ -32,9 +32,9 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         acrobatItem.onViewCreate(parent, view)
         val viewHolder = AcroViewHolder(view, acrobatItem)
         if (acrobatItem.hasEvent()) {
-            view.event({ acrobatItem.click?.apply { this((viewHolder.adapterPosition)) } },
-                    { acrobatItem.doubleTap?.apply { this(viewHolder.adapterPosition) } },
-                    { acrobatItem.longPress?.apply { this(viewHolder.adapterPosition) } })
+            view.event({ acrobatItem.click?.apply { this(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition) } },
+                    { acrobatItem.doubleTap?.apply { this(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition) } },
+                    { acrobatItem.longPress?.apply { this(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition) } })
         }
         viewHolder.bind()
         viewHolder.doBindEvent()
@@ -132,7 +132,7 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
             longPress = l
         }
 
-        internal inline fun doBindEvent() {
+        internal fun doBindEvent() {
             if (click != null || doubleTap != null || longPress != null) {
                 itemView.event({ click?.apply { this((adapterPosition)) } },
                         { doubleTap?.apply { this(adapterPosition) } },
