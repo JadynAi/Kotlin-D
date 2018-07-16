@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.support.annotation.ColorRes
+import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +27,16 @@ fun toastS(string: String) {
 }
 
 fun getResColor(@ColorRes id: Int) = ContextCompat.getColor(BaseApplication.instance, id)
+
+fun getResDrawable(@DrawableRes id: Int) = ContextCompat.getDrawable(BaseApplication.instance, id)
+
+fun getS(@StringRes id: Int): String {
+    return try {
+        BaseApplication.instance.resources.getText(id).toString()
+    } catch (e: Exception) {
+        ""
+    }
+}
 
 inline fun commonDialog(ctx: Context, title: String = "", init: AlertBuilder.() -> Unit): AlertBuilder {
     return AlertBuilder(ctx, title).apply(init)
