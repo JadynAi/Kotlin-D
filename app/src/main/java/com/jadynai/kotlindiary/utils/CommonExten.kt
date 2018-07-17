@@ -32,7 +32,15 @@ fun getResDrawable(@DrawableRes id: Int) = ContextCompat.getDrawable(BaseApplica
 
 fun getS(@StringRes id: Int): String {
     return try {
-        BaseApplication.instance.resources.getText(id).toString()
+        BaseApplication.instance.getString(id)
+    } catch (e: Exception) {
+        ""
+    }
+}
+
+fun getS(@StringRes id: Int, vararg formatArgs: Any): String {
+    return try {
+        BaseApplication.instance.getString(id, *formatArgs)
     } catch (e: Exception) {
         ""
     }
