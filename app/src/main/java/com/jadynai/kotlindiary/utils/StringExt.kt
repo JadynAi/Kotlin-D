@@ -13,8 +13,8 @@ import android.text.TextPaint
  *@Since:2018/7/4
  *@ChangeList:
  */
- fun parseColor(fontColor: String): Int {
-    return parseColor(fontColor, Color.BLACK)
+ fun parseColor(color: String): Int {
+    return parseColor(color, Color.BLACK)
 }
 
  fun parseColor(colorS: String, @ColorInt defColor: Int): Int {

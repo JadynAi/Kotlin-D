@@ -3,6 +3,7 @@ package com.jadynai.kotlindiary.utils
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Resources
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
@@ -22,6 +23,33 @@ import kotlinx.android.synthetic.main.dialog_diary.view.*
  *@Since:2018/6/20
  *@ChangeList:
  */
+
+private val MIN_WVGA_HEIGHT = 700
+private val WVGA_HEIGHT = 800
+private val MIN_HD_HEIGHT = 1180
+private val HD_HEIGHT = 1280
+
+fun resources(): Resources = BaseApplication.instance.resources
+
+val phonePixels: IntArray
+    get() {
+        val metrics = resources().displayMetrics
+        val curWidth = metrics.widthPixels
+        var curHeight = metrics.heightPixels
+        if (curHeight in MIN_WVGA_HEIGHT..WVGA_HEIGHT) {
+            curHeight = WVGA_HEIGHT
+        }
+        if (curHeight in MIN_HD_HEIGHT..HD_HEIGHT) {
+            curHeight = HD_HEIGHT
+        }
+        return intArrayOf(curWidth, curHeight)
+    }
+
+fun dip2px(dpValue: Float): Int {
+    val scale = resources().displayMetrics.density
+    return (dpValue * scale + 0.5f).toInt()
+}
+
 fun toastS(string: String) {
     Toast.makeText(BaseApplication.instance, string, Toast.LENGTH_SHORT).show()
 }
@@ -44,6 +72,16 @@ fun getS(@StringRes id: Int, vararg formatArgs: Any): String {
     } catch (e: Exception) {
         ""
     }
+}
+
+fun computeDisWithScreenW(denominator: Int, member: Int): Int {
+    val ratio = denominator.toFloat() / member.toFloat()
+    return (phonePixels[0] / ratio + 0.5f).toInt()
+}
+
+fun computeDisWithPhoneHeight(denominator: Int, member: Int): Int {
+    val ratio = denominator.toFloat() / member.toFloat()
+    return (phonePixels[1] / ratio + 0.5f).toInt()
 }
 
 inline fun commonDialog(ctx: Context, title: String = "", init: AlertBuilder.() -> Unit): AlertBuilder {

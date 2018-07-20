@@ -5,12 +5,12 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import com.jadynai.kotlindiary.base.BaseApplication
+import com.jadynai.kotlindiary.utils.dip2px
+import com.jadynai.kotlindiary.utils.getResDrawable
 
 /**
  *@version:
@@ -19,32 +19,26 @@ import com.jadynai.kotlindiary.base.BaseApplication
  *@Since:2018/6/30
  *@ChangeList:
  */
-fun dip2px(dpValue: Float): Int {
-    val scale = BaseApplication.instance.resources.displayMetrics.density
-    return (dpValue * scale + 0.5f).toInt()
-}
-
 fun getDrawable(resId: Int): Drawable? {
     return try {
-        ContextCompat.getDrawable(BaseApplication.instance, resId)
+        getResDrawable(resId)
     } catch (e: Exception) {
         null
     }
 }
 
 fun View.setVisible(show: Boolean) {
-    if (show) {
-        this.visibility = View.VISIBLE
-    } else {
-        this.visibility = View.GONE
-    }
+    visibility = if (show) View.VISIBLE else View.GONE
+}
+
+fun View.toggleVisible() {
+    visibility == if (visibility == View.VISIBLE) View.GONE else View.VISIBLE
 }
 
 fun View.click(click: (View) -> Unit) {
     this.setOnClickListener(click)
 }
 
-//多View同一个点击事件设定
 fun doClick(click: (View) -> Unit, vararg views: View) {
     for (view in views) {
         view.click {
@@ -72,14 +66,23 @@ fun View.computeHeightWithW(ratio: Float) {
 }
 
 /*
-* View设置圆角矩形背景，默认2dp，白色solid
+* View设置以高度为准的圆角矩形
 * */
-fun View.round(r: Float = 2f, color: Int = Color.WHITE) {
-    val roundDrawable = RoundDrawable(r, color)
+fun View.roundHeight(solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+    post {
+        round(height * 0.5f, solidColor, strokeW, strokeColor)
+    }
+}
+
+fun View.round(r: Float = 2f, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+    val roundDrawable = RoundDrawable(r, solidColor, strokeW, strokeColor)
     this.background = roundDrawable.build()
 }
 
-class RoundDrawable(r: Float = 2f, private var solidColor: Int = Color.WHITE) {
+class RoundDrawable(r: Float = 2f,
+                    private var solidColor: Int = Color.WHITE,
+                    private val strokeW: Float = 0f,
+                    private val strokeColor: Int = Color.TRANSPARENT) {
 
     private var cornerRadius = dip2px(r)
 
@@ -87,6 +90,7 @@ class RoundDrawable(r: Float = 2f, private var solidColor: Int = Color.WHITE) {
         val gradientDrawable = GradientDrawable()
         gradientDrawable.shape = GradientDrawable.RECTANGLE
         gradientDrawable.setColor(this.solidColor)
+        gradientDrawable.setStroke(dip2px(strokeW), strokeColor)
         gradientDrawable.cornerRadius = cornerRadius.toFloat()
         return gradientDrawable
     }
@@ -96,8 +100,24 @@ fun View.press(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
     this.background = getPressDrawable(normalRes, pressRes)
 }
 
+fun View.press(normal: Drawable, press: Drawable) {
+    this.background = getPressDrawable(normal, press)
+}
+
 fun View.pressColor(normalColor: Int, pressColor: Int) {
-    this.background = getPressDrawable(ColorDrawable(pressColor), ColorDrawable(normalColor))
+    this.background = getPressDrawable(ColorDrawable(normalColor), ColorDrawable(pressColor))
+}
+
+fun View.checked(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
+    this.background = getCheckedDrawable(normalRes, pressRes)
+}
+
+fun View.checked(normal: Drawable, press: Drawable) {
+    this.background = getCheckedDrawable(normal, press)
+}
+
+fun View.checkedColor(normalColor: Int, checkedColor: Int) {
+    this.background = getCheckedDrawable(ColorDrawable(normalColor), ColorDrawable(checkedColor))
 }
 
 fun View.event(click: ((View) -> Unit)? = null, doubleTap: (() -> Unit)? = null,
@@ -125,11 +145,5 @@ fun View.event(click: ((View) -> Unit)? = null, doubleTap: (() -> Unit)? = null,
 
     this.setOnTouchListener { v, event ->
         gestureDetector.onTouchEvent(event)
-    }
-}
-
-fun setVisible(visible: Boolean, vararg views: View) {
-    for (view in views) {
-        view.setVisible(visible)
     }
 }
