@@ -11,14 +11,14 @@ import android.support.v7.widget.RecyclerView
  *@Since:2018/7/4
  *@ChangeList:
  */
-inline fun RecyclerView.linearHor() {
+fun RecyclerView.linearHor() {
     this.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
 }
 
-inline fun RecyclerView.linear() {
+fun RecyclerView.linear() {
     this.layoutManager = LinearLayoutManager(this.context)
 }
 
-inline fun RecyclerView.grid(spanCount: Int) {
+fun RecyclerView.grid(spanCount: Int) {
     this.layoutManager = GridLayoutManager(this.context, spanCount)
 }

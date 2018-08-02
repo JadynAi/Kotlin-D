@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import com.jadynai.kotlindiary.utils.dip2px
 import com.jadynai.kotlindiary.utils.getResDrawable
 
@@ -19,7 +20,7 @@ import com.jadynai.kotlindiary.utils.getResDrawable
  *@Since:2018/6/30
  *@ChangeList:
  */
-fun getDrawable(resId: Int): Drawable? {
+fun getResDrawable(resId: Int): Drawable? {
     return try {
         getResDrawable(resId)
     } catch (e: Exception) {
@@ -63,6 +64,13 @@ fun View.computeHeightWithW(ratio: Float) {
         params.height = (this.width * ratio).toInt()
         this.layoutParams = params
     }
+}
+
+fun View.updateWH(width: Int = layoutParams.width, height: Int = layoutParams.height) {
+    val params = layoutParams
+    params.width = width
+    params.height = height
+    layoutParams = params
 }
 
 /*
@@ -146,4 +154,9 @@ fun View.event(click: ((View) -> Unit)? = null, doubleTap: (() -> Unit)? = null,
     this.setOnTouchListener { v, event ->
         gestureDetector.onTouchEvent(event)
     }
+}
+
+fun ViewGroup.clipChild(isClip: Boolean) {
+    clipToPadding = isClip
+    clipChildren = false
 }

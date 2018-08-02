@@ -17,8 +17,8 @@ import com.jadynai.kotlindiary.utils.parseColor
  */
 fun getSelectDrawable(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int): StateListDrawable {
     val sd = StateListDrawable()
-    sd.addState(intArrayOf(R.attr.state_selected), getDrawable(selectRes))
-    sd.addState(intArrayOf(), getDrawable(normalRes))
+    sd.addState(intArrayOf(R.attr.state_selected), getResDrawable(selectRes))
+    sd.addState(intArrayOf(), getResDrawable(normalRes))
     return sd
 }
 
@@ -27,7 +27,7 @@ fun getPressDrawable(normalRes: String, pressColor: String): StateListDrawable {
 }
 
 fun getPressDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int): StateListDrawable {
-    return getPressDrawable(getDrawable(normalRes), getDrawable(pressRes))
+    return getPressDrawable(getResDrawable(normalRes), getResDrawable(pressRes))
 }
 
 fun getPressDrawable(nor: Drawable?, press: Drawable?): StateListDrawable {
@@ -46,7 +46,7 @@ fun getCheckedDrawable(normalRes: String, checkedColor: String): StateListDrawab
 }
 
 fun getCheckedDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int): StateListDrawable {
-    return getCheckedDrawable(getDrawable(normalRes), getDrawable(pressRes))
+    return getCheckedDrawable(getResDrawable(normalRes), getResDrawable(pressRes))
 }
 
 fun getCheckedDrawable(nor: Drawable?, checked: Drawable?): StateListDrawable {

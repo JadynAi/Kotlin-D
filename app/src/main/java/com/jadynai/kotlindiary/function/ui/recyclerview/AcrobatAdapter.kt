@@ -68,6 +68,17 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         return this
     }
 
+    fun getData() = acrobatMgr.data.clone() as ArrayList<D>
+
+    fun notifyItemRemove(pos: Int) {
+        val data = getData()
+        if (pos < 0 || pos > data.lastIndex) {
+            return
+        }
+        data.removeAt(pos)
+        setData(data)
+    }
+
     fun bindEvent(click: AcroViewHolder<D>.() -> Unit): AcrobatAdapter<D> {
         this.bind = click
         return this

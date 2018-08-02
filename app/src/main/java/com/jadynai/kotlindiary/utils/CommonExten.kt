@@ -58,11 +58,11 @@ fun getResColor(@ColorRes id: Int) = ContextCompat.getColor(BaseApplication.inst
 
 fun getResDrawable(@DrawableRes id: Int) = ContextCompat.getDrawable(BaseApplication.instance, id)
 
-fun getS(@StringRes id: Int): String {
+fun getS(@StringRes id: Int, defS: String = ""): String {
     return try {
         BaseApplication.instance.getString(id)
     } catch (e: Exception) {
-        ""
+        defS
     }
 }
 
@@ -71,6 +71,14 @@ fun getS(@StringRes id: Int, vararg formatArgs: Any): String {
         BaseApplication.instance.getString(id, *formatArgs)
     } catch (e: Exception) {
         ""
+    }
+}
+
+fun parseInt(s: String?, def: Int = 0): Int {
+    return try {
+        Integer.parseInt(s)
+    } catch (e: Exception) {
+        def
     }
 }
 
