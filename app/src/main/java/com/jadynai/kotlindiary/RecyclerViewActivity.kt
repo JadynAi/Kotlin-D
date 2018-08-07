@@ -1,7 +1,6 @@
 package com.jadynai.kotlindiary
 
 import android.os.Bundle
-import android.os.SystemClock
 import android.support.v7.app.AppCompatActivity
 import com.jadynai.cm.kotlintest.R
 import com.jadynai.kotlindiary.function.ui.recyclerview.AcrobatAdapter
@@ -28,8 +27,6 @@ class RecyclerViewActivity : AppCompatActivity() {
             data.add(i)
         }
 
-        var dddd = 0
-
         recycler_view.linear()
 
         val acrobatAdapter = AcrobatAdapter<Int> {
@@ -38,10 +35,6 @@ class RecyclerViewActivity : AppCompatActivity() {
                 showItem { d, pos, view ->
                     view.item_tv.text = "Item文本$d"
                 }
-                showItemPayload { d, pos, view, payloads ->
-                    view.item_progress.progress = dddd
-                }
-
                 onClick { d, pos ->
                     toastS("cece$d")
                 }
@@ -51,17 +44,7 @@ class RecyclerViewActivity : AppCompatActivity() {
         recycler_view.adapter = acrobatAdapter
 
         change_tv.setOnClickListener {
-            //            acrobatAdapter.setData(arrayListOf(1, 2, 3, 4, 5, 5, 44, 444, 55))
-
-            Thread {
-                for (i in 1..1000) {
-                    dddd = i
-                    SystemClock.sleep(200)
-                    this@RecyclerViewActivity.runOnUiThread {
-                        acrobatAdapter.notifyItemChanged(1, 2)
-                    }
-                }
-            }.start()
+            acrobatAdapter.setData(arrayListOf())
         }
     }
 }

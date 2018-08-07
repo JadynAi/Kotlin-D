@@ -24,6 +24,8 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         acrobatMgr.create()
     }
 
+    var emptyEvent: (() -> Unit)? = null
+
     private var bind: AcroViewHolder<D>.() -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AcroViewHolder<D> {
@@ -60,6 +62,11 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
     }
 
     fun setData(dataList: ArrayList<D>): AcrobatAdapter<D> {
+        if (dataList.isEmpty()) {
+            emptyEvent?.apply {
+                this()
+            }
+        }
         val diffCallBack = DiffCallback()
         diffCallBack.setData(acrobatMgr.data, dataList)
         val calculateDiff = DiffUtil.calculateDiff(diffCallBack)
@@ -70,18 +77,20 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
 
     fun getData() = acrobatMgr.data.clone() as ArrayList<D>
 
-    fun notifyItemRemove(pos: Int) {
-        val data = getData()
-        if (pos < 0 || pos > data.lastIndex) {
-            return
-        }
-        data.removeAt(pos)
-        setData(data)
-    }
-
     fun bindEvent(click: AcroViewHolder<D>.() -> Unit): AcrobatAdapter<D> {
         this.bind = click
         return this
+    }
+
+    fun notifyItemRemove(pos: Int) {
+        val data = getData()
+        if (data.isNotEmpty()) {
+            if (pos < 0 || pos > data.lastIndex) {
+                return
+            }
+            data.removeAt(pos)
+            setData(data)
+        }
     }
 
     private class DiffCallback : DiffUtil.Callback() {
@@ -95,25 +104,19 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         }
 
         override fun getOldListSize(): Int {
-            mOldData?.apply {
-                return size
-            }
-            return 0
+            return mOldData?.size ?: 0
         }
 
         override fun getNewListSize(): Int {
-            mNewData?.apply {
-                return size
-            }
-            return 0
+            return mNewData?.size ?: 0
         }
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return mOldData?.get(oldItemPosition) === mNewData?.get(newItemPosition)
+            return mOldData?.get(oldItemPosition)?.equals(mNewData?.get(newItemPosition)) ?: false
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return mOldData?.get(oldItemPosition) == mNewData?.get(newItemPosition)
+            return mOldData?.get(oldItemPosition)?.equals(mNewData?.get(newItemPosition)) ?: false
         }
     }
 
