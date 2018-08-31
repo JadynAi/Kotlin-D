@@ -15,3 +15,18 @@ fun <T> List<T>.getSafe(index: Int): T {
 fun <T> List<T>.indexOfSafe(t: T): Int {
     return if (indexOf(t) < 0) 0 else indexOf(t)
 }
+
+fun <T> List<T>?.isValid(): Boolean {
+    return this != null && isNotEmpty()
+}
+
+fun String?.isValid(): Boolean {
+    return this != null && isNotBlank()
+}
+
+fun <T> ArrayList<T>.removeAtSafe(index: Int) {
+    if (index < 0 || index > lastIndex) {
+        return
+    }
+    removeAt(index)
+}

@@ -60,6 +60,25 @@ fun getCheckedDrawable(nor: Drawable?, checked: Drawable?): StateListDrawable {
     return sd
 }
 
+fun getSelectedDrawable(normalRes: String, checkedColor: String): StateListDrawable {
+    return getSelectedDrawable(ColorDrawable(parseColor(normalRes)), ColorDrawable(parseColor(checkedColor)))
+}
+
+fun getSelectedDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int): StateListDrawable {
+    return getSelectedDrawable(getResDrawable(normalRes), getResDrawable(pressRes))
+}
+
+fun getSelectedDrawable(nor: Drawable?, checked: Drawable?): StateListDrawable {
+    val sd = StateListDrawable()
+    checked?.apply {
+        sd.addState(intArrayOf(R.attr.state_selected), this)
+    }
+    nor?.apply {
+        sd.addState(intArrayOf(), this)
+    }
+    return sd
+}
+
 fun ovalDrawable(solidColor: Int, w: Int, h: Int): GradientDrawable {
     val drawable = GradientDrawable()
     drawable.shape = GradientDrawable.OVAL

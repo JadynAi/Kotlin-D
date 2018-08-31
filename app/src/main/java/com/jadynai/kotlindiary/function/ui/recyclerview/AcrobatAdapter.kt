@@ -26,6 +26,8 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
 
     var emptyEvent: (() -> Unit)? = null
 
+    var itemCompare: ((D, D) -> Boolean)? = null
+
     private var bind: AcroViewHolder<D>.() -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AcroViewHolder<D> {
@@ -67,8 +69,7 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
                 this()
             }
         }
-        val diffCallBack = DiffCallback()
-        diffCallBack.setData(acrobatMgr.data, dataList)
+        val diffCallBack = DiffCallback(acrobatMgr.data, dataList)
         val calculateDiff = DiffUtil.calculateDiff(diffCallBack)
         calculateDiff.dispatchUpdatesTo(this)
         acrobatMgr.setData(dataList)
@@ -79,6 +80,11 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
 
     fun bindEvent(click: AcroViewHolder<D>.() -> Unit): AcrobatAdapter<D> {
         this.bind = click
+        return this
+    }
+
+    fun itemCompareRule(rule: (D, D) -> Boolean): AcrobatAdapter<D> {
+        this.itemCompare = rule
         return this
     }
 
@@ -93,30 +99,28 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         }
     }
 
-    private class DiffCallback : DiffUtil.Callback() {
-
-        private var mOldData: List<*>? = null
-        private var mNewData: List<*>? = null
-
-        fun setData(oldData: List<*>, newData: List<*>) {
-            mOldData = oldData
-            mNewData = newData
-        }
+    private inner class DiffCallback(private var mOldData: List<D>,
+                                     private var mNewData: List<D>) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int {
-            return mOldData?.size ?: 0
+            return mOldData.size
         }
 
         override fun getNewListSize(): Int {
-            return mNewData?.size ?: 0
+            return mNewData.size
         }
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return mOldData?.get(oldItemPosition)?.equals(mNewData?.get(newItemPosition)) ?: false
+            val old = mOldData.get(oldItemPosition)
+            val new = mNewData.get(newItemPosition)
+            itemCompare?.apply {
+                return invoke(old, new)
+            }
+            return old.toString().equals(new.toString())
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return mOldData?.get(oldItemPosition)?.equals(mNewData?.get(newItemPosition)) ?: false
+            return mOldData.get(oldItemPosition).toString().equals(mNewData.get(newItemPosition).toString())
         }
     }
 

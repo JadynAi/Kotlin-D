@@ -23,8 +23,13 @@ class RecyclerViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_recycler_view)
 
         val data = ArrayList<Int>()
-        for (i in 0 until 10) {
+        for (i in 10 until 20) {
             data.add(i)
+        }
+
+        val newData = ArrayList<Int>()
+        for (i in 0 until 20) {
+            newData.add(i)
         }
 
         recycler_view.linear()
@@ -44,7 +49,7 @@ class RecyclerViewActivity : AppCompatActivity() {
         recycler_view.adapter = acrobatAdapter
 
         change_tv.setOnClickListener {
-            acrobatAdapter.setData(arrayListOf())
+            acrobatAdapter.setData(newData)
         }
     }
 }

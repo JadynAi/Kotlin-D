@@ -128,6 +128,18 @@ fun View.checkedColor(normalColor: Int, checkedColor: Int) {
     this.background = getCheckedDrawable(ColorDrawable(normalColor), ColorDrawable(checkedColor))
 }
 
+fun View.selected(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
+    this.background = getSelectedDrawable(normalRes, pressRes)
+}
+
+fun View.selected(normal: Drawable, press: Drawable) {
+    this.background = getSelectedDrawable(normal, press)
+}
+
+fun View.selectedColor(normalColor: Int, checkedColor: Int) {
+    this.background = getSelectedDrawable(ColorDrawable(normalColor), ColorDrawable(checkedColor))
+}
+
 fun View.event(click: ((View) -> Unit)? = null, doubleTap: (() -> Unit)? = null,
                longPress: (() -> Unit)? = null) {
     this.isLongClickable = true
