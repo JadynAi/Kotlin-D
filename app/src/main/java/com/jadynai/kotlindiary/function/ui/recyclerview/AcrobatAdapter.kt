@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jadynai.kotlindiary.function.ui.event
+import com.jadynai.kotlindiary.utils.TooFastChecker
 
 /**
  *@version:
@@ -30,15 +31,35 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
 
     private var bind: AcroViewHolder<D>.() -> Unit = {}
 
+    private val tooFastChecker by lazy {
+        TooFastChecker()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AcroViewHolder<D> {
         val acrobatItem = acrobatMgr.items[viewType]
         val view = LayoutInflater.from(parent.context).inflate(acrobatItem.getResId(), parent, false)
         acrobatItem.onViewCreate(parent, view)
         val viewHolder = AcroViewHolder(view, acrobatItem)
         if (acrobatItem.hasEvent()) {
-            view.event({ acrobatItem.click?.apply { this(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition) } },
-                    { acrobatItem.doubleTap?.apply { this(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition) } },
-                    { acrobatItem.longPress?.apply { this(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition) } })
+            view.event({
+                acrobatItem.click?.apply {
+                    if (viewHolder.adapterPosition >= 0 && !tooFastChecker.isTooFast) {
+                        invoke(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition)
+                    }
+                }
+            }, {
+                acrobatItem.doubleTap?.apply {
+                    if (viewHolder.adapterPosition >= 0 && !tooFastChecker.isTooFast) {
+                        invoke(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition)
+                    }
+                }
+            }, {
+                acrobatItem.longPress?.apply {
+                    if (viewHolder.adapterPosition >= 0 && !tooFastChecker.isTooFast) {
+                        invoke(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition)
+                    }
+                }
+            })
         }
         viewHolder.bind()
         viewHolder.doBindEvent()
@@ -76,7 +97,7 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         return this
     }
 
-    fun getData() = acrobatMgr.data.clone() as ArrayList<D>
+    fun getData() = acrobatMgr.data
 
     fun bindEvent(click: AcroViewHolder<D>.() -> Unit): AcrobatAdapter<D> {
         this.bind = click
@@ -89,13 +110,16 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
     }
 
     fun notifyItemRemove(pos: Int) {
-        val data = getData()
+        val data = acrobatMgr.data
         if (data.isNotEmpty()) {
             if (pos < 0 || pos > data.lastIndex) {
                 return
             }
             data.removeAt(pos)
-            setData(data)
+            notifyDataSetChanged()
+            if (data.isEmpty()) {
+                emptyEvent?.invoke()
+            }
         }
     }
 
@@ -120,7 +144,9 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return mOldData.get(oldItemPosition).toString().equals(mNewData.get(newItemPosition).toString())
+            val old = mOldData.get(oldItemPosition)
+            val new = mNewData.get(newItemPosition)
+            return old.toString().equals(new.toString())
         }
     }
 

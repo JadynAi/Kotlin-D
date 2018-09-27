@@ -172,3 +172,19 @@ fun ViewGroup.clipChild(isClip: Boolean) {
     clipToPadding = isClip
     clipChildren = false
 }
+
+fun clearViewStatus(v: View?) {
+    v?.apply {
+        setAlpha(1f)
+        setScaleY(1f)
+        setScaleX(1f)
+        setTranslationY(0f)
+        setTranslationX(0f)
+        setRotation(0f)
+        setRotationY(0f)
+        setRotationX(0f)
+        setPivotY((v.measuredHeight / 2).toFloat())
+        setPivotX((v.measuredWidth / 2).toFloat())
+        v.animate().setInterpolator(null).startDelay = 0
+    }
+}
