@@ -11,14 +11,16 @@ import android.view.ViewGroup
  *@Since:2018/6/13
  *@ChangeList:
  */
-abstract class AcrobatItem<D> internal constructor(var click: ((d: D, pos: Int) -> Unit)? = null,
-                                                   var doubleTap: ((d: D, pos: Int) -> Unit)? = null,
-                                                   var longPress: ((d: D, pos: Int) -> Unit)? = null) {
+abstract class AcrobatItem<D>(var click: ((d: D, pos: Int) -> Unit)? = null,
+                              var doubleTap: ((d: D, pos: Int) -> Unit)? = null,
+                              var longPress: ((d: D, pos: Int) -> Unit)? = null) {
+
+    constructor() : this(null, null, null)
 
     @LayoutRes
     abstract fun getResId(): Int
 
-    open fun onViewCreate(parent: ViewGroup, view: View) {
+    open fun onViewCreate(parent: ViewGroup, view: View, viewHolder: AcrobatAdapter.AcroViewHolder<D>) {
     }
 
     abstract fun showItem(d: D, pos: Int, view: View)
@@ -32,7 +34,7 @@ abstract class AcrobatItem<D> internal constructor(var click: ((d: D, pos: Int) 
     fun hasEvent() = click != null || doubleTap != null || longPress != null
 }
 
-class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, view: View) -> Unit = { _, _ -> Unit },
+class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, view: View, viewHolder: AcrobatAdapter.AcroViewHolder<D>) -> Unit = { _, _, _ -> Unit },
 
                                 private inline var dataBind: (d: D, pos: Int, view: View) -> Unit = { _: D, _: Int, _: View -> Unit },
 
@@ -53,7 +55,7 @@ class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, v
         this.resId = resId
     }
 
-    fun onViewCreate(create: (parent: ViewGroup, view: View) -> Unit) {
+    fun onViewCreate(create: (parent: ViewGroup, view: View, viewHolder: AcrobatAdapter.AcroViewHolder<D>) -> Unit) {
         this.create = create
     }
 
@@ -87,9 +89,9 @@ class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, v
                 return dataMeet(d, pos)
             }
 
-            override fun onViewCreate(parent: ViewGroup, view: View) {
-                super.onViewCreate(parent, view)
-                create(parent, view)
+            override fun onViewCreate(parent: ViewGroup, view: View, viewHolder: AcrobatAdapter.AcroViewHolder<D>) {
+                super.onViewCreate(parent, view, viewHolder)
+                create(parent, view, viewHolder)
             }
 
             override fun getResId(): Int = resId

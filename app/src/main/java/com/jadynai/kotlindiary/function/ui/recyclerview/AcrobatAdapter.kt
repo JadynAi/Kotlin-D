@@ -38,7 +38,6 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AcroViewHolder<D> {
         val acrobatItem = acrobatMgr.items[viewType]
         val view = LayoutInflater.from(parent.context).inflate(acrobatItem.getResId(), parent, false)
-        acrobatItem.onViewCreate(parent, view)
         val viewHolder = AcroViewHolder(view, acrobatItem)
         if (acrobatItem.hasEvent()) {
             view.event({
@@ -63,6 +62,7 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         }
         viewHolder.bind()
         viewHolder.doBindEvent()
+        acrobatItem.onViewCreate(parent, view, viewHolder)
         return viewHolder
     }
 
@@ -97,7 +97,11 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         return this
     }
 
-    fun getData() = acrobatMgr.data
+    fun getData(): ArrayList<D> {
+        val list = arrayListOf<D>()
+        list.addAll(acrobatMgr.data)
+        return list
+    }
 
     fun bindEvent(click: AcroViewHolder<D>.() -> Unit): AcrobatAdapter<D> {
         this.bind = click

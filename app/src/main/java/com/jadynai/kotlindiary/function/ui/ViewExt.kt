@@ -4,12 +4,14 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.StateListDrawable
 import android.support.annotation.DrawableRes
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import com.jadynai.kotlindiary.utils.dip2px
 import com.jadynai.kotlindiary.utils.getResDrawable
 
@@ -114,6 +116,27 @@ fun View.press(normal: Drawable, press: Drawable) {
 
 fun View.pressColor(normalColor: Int, pressColor: Int) {
     this.background = getPressDrawable(ColorDrawable(normalColor), ColorDrawable(pressColor))
+}
+
+//-----checkBox之类的设置button的drawable
+fun CompoundButton.checkedButton(normal: Drawable, press: Drawable, drawableHandle: (StateListDrawable) -> Unit = {}) {
+    val checkedDrawable = getCheckedDrawable(normal, press)
+    drawableHandle.invoke(checkedDrawable)
+    this.buttonDrawable = checkedDrawable
+}
+
+fun CompoundButton.checkedButton(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int,
+                                 drawableHandle: (StateListDrawable) -> Unit = {}) {
+    val checkedDrawable = getCheckedDrawable(normalRes, pressRes)
+    drawableHandle.invoke(checkedDrawable)
+    this.buttonDrawable = checkedDrawable
+}
+
+fun CompoundButton.checkedColorButton(normalColor: Int, checkedColor: Int,
+                                      drawableHandle: (StateListDrawable) -> Unit = {}) {
+    val checkedDrawable = getCheckedDrawable(ColorDrawable(normalColor), ColorDrawable(checkedColor))
+    drawableHandle.invoke(checkedDrawable)
+    this.buttonDrawable = checkedDrawable
 }
 
 fun View.checked(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
