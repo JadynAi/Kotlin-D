@@ -1,7 +1,7 @@
 package com.jadynai.kotlindiary.function.ui
 
+import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
-import android.view.View
 import android.widget.ImageView
 
 /**
@@ -11,11 +11,11 @@ import android.widget.ImageView
  *@Since:2018/7/4
  *@ChangeList:
  */
-fun ImageView.clickSelect(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int, click: (View) -> Unit) {
+fun ImageView.clickSelect(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int, click: (Boolean) -> Unit= {}) {
     select(normalRes, selectRes)
     this.setOnClickListener {
         this.isSelected = !this.isSelected
-        click(it)
+        click(isSelected)
     }
 }
 
@@ -25,6 +25,11 @@ fun ImageView.pressSrc(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) 
 }
 
 fun ImageView.select(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int) {
-    val sd = getSelectDrawable(normalRes, selectRes)
+    val sd = getSelectedDrawable(normalRes, selectRes)
+    setImageDrawable(sd)
+}
+
+fun ImageView.select(normal: Drawable, press: Drawable) {
+    val sd = getSelectedDrawable(normal, press)
     setImageDrawable(sd)
 }

@@ -1,5 +1,6 @@
 package com.jadynai.kotlindiary.function.ui
 
+import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -11,6 +12,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
 import com.jadynai.kotlindiary.utils.dip2px
 import com.jadynai.kotlindiary.utils.getResDrawable
@@ -210,4 +212,9 @@ fun clearViewStatus(v: View?) {
         setPivotX((v.measuredWidth / 2).toFloat())
         v.animate().setInterpolator(null).startDelay = 0
     }
+}
+
+fun View.hideSoftKeyboard() {
+    val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
 }
