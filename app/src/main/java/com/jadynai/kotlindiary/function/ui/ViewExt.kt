@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.support.annotation.DrawableRes
+import android.support.constraint.ConstraintLayout
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -70,6 +71,22 @@ fun View.computeHeightWithW(ratio: Float) {
     }
 }
 
+fun View.setHeightWithW(wRatio: Float, hRatio: Float) {
+    val params = layoutParams
+    if (params is ConstraintLayout.LayoutParams) {
+        params.dimensionRatio = "W : $wRatio:$hRatio"
+        layoutParams = params
+    }
+}
+
+fun View.setWidthWithH(wRatio: Float, hRatio: Float) {
+    val params = layoutParams
+    if (params is ConstraintLayout.LayoutParams) {
+        params.dimensionRatio = "H : $wRatio:$hRatio"
+        layoutParams = params
+    }
+}
+
 fun View.updateWH(width: Int = layoutParams.width, height: Int = layoutParams.height) {
     val params = layoutParams
     params.width = width
@@ -82,13 +99,19 @@ fun View.updateWH(width: Int = layoutParams.width, height: Int = layoutParams.he
 * */
 fun View.roundHeight(solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
     post {
-        round(height * 0.5f, solidColor, strokeW, strokeColor)
+        roundInternal(height * 0.5f, solidColor, strokeW, strokeColor)
     }
 }
 
 fun View.round(r: Float = 2f, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+    roundInternal(dip2px(r).toFloat(), solidColor, strokeW, strokeColor)
+}
+
+fun View.roundInternal(r: Float = dip2px(2f).toFloat(), solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
     val roundDrawable = RoundDrawable(r, solidColor, strokeW, strokeColor)
     this.background = roundDrawable.build()
+    //避免子View影响到背景
+    this.clipToOutline = true
 }
 
 class RoundDrawable(r: Float = 2f,
