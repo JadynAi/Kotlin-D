@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.function.ui
+package com.jadyn.ai.kotlin_d.function.ui
 
 import android.R
 import android.content.res.ColorStateList

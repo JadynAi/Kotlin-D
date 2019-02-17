@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.function.ui.recyclerview.anim;
+package com.jadyn.ai.kotlin_d.function.ui.recyclerview.anim;
 
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;

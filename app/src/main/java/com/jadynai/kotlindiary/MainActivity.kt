@@ -3,8 +3,8 @@ package com.jadynai.kotlindiary
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.jadyn.ai.kotlin_d.function.ui.event
 import com.jadynai.cm.kotlintest.R
-import com.jadynai.kotlindiary.function.ui.event
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

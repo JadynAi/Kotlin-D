@@ -3,11 +3,10 @@ package com.jadynai.kotlindiary
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.jadynai.cm.kotlintest.R
-import com.jadynai.kotlindiary.function.ui.recyclerview.AcrobatAdapter
-import com.jadynai.kotlindiary.function.ui.recyclerview.linear
-import com.jadynai.kotlindiary.utils.toastS
+import com.jadyn.ai.kotlin_d.function.ui.recyclerview.AcrobatAdapter
+import com.jadyn.ai.kotlin_d.function.ui.recyclerview.linear
+import com.jadyn.ai.kotlin_d.utils.toastS
 import kotlinx.android.synthetic.main.activity_recycler_view.*
-import kotlinx.android.synthetic.main.item_test.view.*
 
 /**
  *@version:

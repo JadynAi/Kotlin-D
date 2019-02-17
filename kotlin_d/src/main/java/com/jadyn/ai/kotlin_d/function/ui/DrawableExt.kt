@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.function.ui
+package com.jadyn.ai.kotlin_d.function.ui
 
 import android.R
 import android.graphics.drawable.ColorDrawable
@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.support.annotation.DrawableRes
-import com.jadynai.kotlindiary.utils.parseColor
+import com.jadyn.ai.kotlin_d.utils.parseColor
 
 /**
  *@version:

@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.base
+package com.jadyn.ai.kotlin_d.base
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

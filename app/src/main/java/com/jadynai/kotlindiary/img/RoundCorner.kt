@@ -1,10 +1,10 @@
-package com.jadynai.kotlindiary.function.img
+package com.jadynai.kotlindiary.img
 
 import android.graphics.*
 import com.bumptech.glide.load.Key
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
-import com.jadynai.kotlindiary.utils.dip2px
+import com.jadyn.ai.kotlin_d.utils.dip2px
 import java.security.MessageDigest
 
 

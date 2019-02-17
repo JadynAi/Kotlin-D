@@ -1,17 +1,17 @@
-package com.jadynai.kotlindiary.function.ui.recyclerview
+package com.jadyn.ai.kotlin_d.function.ui.recyclerview
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.jadynai.kotlindiary.function.ui.event
-import com.jadynai.kotlindiary.utils.TooFastChecker
+import com.jadyn.ai.kotlin_d.function.ui.event
+import com.jadyn.ai.kotlin_d.utils.TooFastChecker
 
 /**
  *@version:
- *@FileDescription:
- *@Author:jing
+ *@FileDescription: RecyclerView Adapter
+ *@Author:AiLo
  *@Since:2018/6/12
  *@ChangeList:
  */

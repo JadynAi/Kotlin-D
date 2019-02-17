@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.function.ui.recyclerview
+package com.jadyn.ai.kotlin_d.function.ui.recyclerview
 
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager

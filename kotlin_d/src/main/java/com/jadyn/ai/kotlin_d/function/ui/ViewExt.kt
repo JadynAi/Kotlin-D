@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.function.ui
+package com.jadyn.ai.kotlin_d.function.ui
 
 import android.app.Activity
 import android.graphics.Color
@@ -15,8 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
-import com.jadynai.kotlindiary.utils.dip2px
-import com.jadynai.kotlindiary.utils.getResDrawable
+import com.jadyn.ai.kotlin_d.utils.dip2px
 
 /**
  *@version:

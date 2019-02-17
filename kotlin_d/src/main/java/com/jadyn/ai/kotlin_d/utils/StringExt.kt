@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.utils
+package com.jadyn.ai.kotlin_d.utils
 
 import android.graphics.Color
 import android.support.annotation.ColorInt

@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.function.ui.recyclerview.anim
+package com.jadyn.ai.kotlin_d.function.ui.recyclerview.anim
 
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPropertyAnimatorListener
@@ -7,7 +7,7 @@ import android.support.v7.widget.SimpleItemAnimator
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
-import com.jadynai.kotlindiary.function.ui.clearViewStatus
+import com.jadyn.ai.kotlin_d.function.ui.clearViewStatus
 import java.util.*
 
 
