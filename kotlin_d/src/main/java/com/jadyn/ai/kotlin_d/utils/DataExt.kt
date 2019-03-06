@@ -1,5 +1,8 @@
 package com.jadyn.ai.kotlin_d.utils
 
+import java.nio.charset.Charset
+import java.util.*
+
 /**
  *@version:
  *@FileDescription:
@@ -22,6 +25,10 @@ fun <T> List<T>?.isValid(): Boolean {
 
 fun String?.isValid(): Boolean {
     return this != null && isNotBlank()
+}
+
+fun String.toGBK(): ByteArray {
+    return toByteArray(Charset.forName("GBK"))
 }
 
 fun <T> ArrayList<T>.removeAtSafe(index: Int) {
