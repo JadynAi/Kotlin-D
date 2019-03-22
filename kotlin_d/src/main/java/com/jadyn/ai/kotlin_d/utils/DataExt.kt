@@ -23,6 +23,15 @@ fun <T> List<T>?.isValid(): Boolean {
     return this != null && isNotEmpty()
 }
 
+fun <T> List<T>?.findIndex(predicate: (T) -> Boolean): Int {
+    this?.apply {
+        find(predicate)?.let {
+            return this.indexOfSafe(it)
+        }
+    }
+    return 0
+}
+
 fun String?.isValid(): Boolean {
     return this != null && isNotBlank()
 }

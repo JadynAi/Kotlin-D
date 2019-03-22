@@ -8,6 +8,9 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.support.annotation.DrawableRes
 import android.support.constraint.ConstraintLayout
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -240,3 +243,56 @@ fun View.hideSoftKeyboard() {
     val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
 }
+
+fun measureText(text: String, width: Int, textPaint: TextPaint): IntArray {
+    val ints = IntArray(2)
+    if (text.isNullOrBlank()) {
+        ints[0] = 0
+        ints[1] = 0
+        return ints
+    }
+    val staticLayout = StaticLayout(text, textPaint, width, Layout.Alignment.ALIGN_NORMAL, 1f, 0f, true)
+    ints[0] = width
+    ints[1] = staticLayout.height
+    return ints
+}
+
+/**
+ * @param text      测量的文字
+ * @param textPaint 绘制文字的画笔
+ * @return 特定画笔画出的文字的宽高
+ */
+fun measureText(text: String, textPaint: TextPaint): IntArray {
+    val ints = IntArray(2)
+    if (text.isNullOrBlank()) {
+        ints[0] = 0
+        ints[1] = 0
+        return ints
+    }
+    val arr = text.trim { it <= ' ' }.split("\n".toRegex())
+            .dropLastWhile { it.isEmpty() }.toTypedArray()
+    var maxLength = 0f
+    for (s in arr) {
+        maxLength = Math.max(maxLength, textPaint.measureText(s))
+    }
+    val width = (maxLength + 2.5f).toInt()
+    val staticLayout = StaticLayout(text, textPaint, width, Layout.Alignment.ALIGN_NORMAL,
+            1f, 0f, true)
+    ints[0] = width
+    ints[1] = staticLayout.height
+    return ints
+}
+//
+//fun TabLayout.choose(index: Int) {
+//    if (index < 0 || index >= this.tabCount) {
+//        return
+//    }
+//    try {
+//        val clazz = this.javaClass
+//        val method = clazz.getDeclaredMethod("selectTab", TabLayout.Tab::class.java)
+//        method.isAccessible = true
+//        method.invoke(this, this.getTabAt(index))
+//    } catch (e: Exception) {
+//        Logger.t("choose").d("error $e")
+//    }
+//}
