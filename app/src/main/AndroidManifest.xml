@@ -3,6 +3,7 @@
     package="com.jadynai.cm.kotlintest">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -20,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.jadynai.kotlindiary.RecyclerViewActivity"/>
+        <activity android:name="com.jadynai.kotlindiary.TestFontActivity"/>
     </application>
 
 </manifest>

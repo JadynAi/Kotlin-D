@@ -105,6 +105,15 @@ fun View.roundHeight(solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeC
     }
 }
 
+/**
+ * 四个角，r的size必须为4
+ * */
+fun View.roundArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+    roundInternalArray(r.map {
+        dip2px(it).toFloat()
+    }.toFloatArray(), solidColor, strokeW, strokeColor)
+}
+
 fun View.round(r: Float = 2f, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
     roundInternal(dip2px(r).toFloat(), solidColor, strokeW, strokeColor)
 }
@@ -116,20 +125,50 @@ fun View.roundInternal(r: Float = dip2px(2f).toFloat(), solidColor: Int = Color.
     this.clipToOutline = true
 }
 
-class RoundDrawable(r: Float = 2f,
+fun View.roundInternalArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+    val roundDrawable = RoundDrawable(r, solidColor, strokeW, strokeColor)
+    this.background = roundDrawable.build()
+    //避免子View影响到背景
+    this.clipToOutline = true
+}
+
+class RoundDrawable(private val rArray: FloatArray,
                     private var solidColor: Int = Color.WHITE,
                     private val strokeW: Float = 0f,
                     private val strokeColor: Int = Color.TRANSPARENT) {
 
-    private var cornerRadius = dip2px(r)
+    constructor(r: Float = dip2px(2f).toFloat(),
+                solidColor: Int = Color.WHITE, strokeW: Float = 0f,
+                strokeColor: Int = Color.TRANSPARENT) : this(floatArrayOf(r, r, r, r), solidColor,
+            strokeW, strokeColor)
+
+    init {
+        if (rArray.size != 4) {
+            throw IllegalArgumentException("round corner size must is 4!!!")
+        }
+    }
 
     fun build(): GradientDrawable {
         val gradientDrawable = GradientDrawable()
         gradientDrawable.shape = GradientDrawable.RECTANGLE
         gradientDrawable.setColor(this.solidColor)
         gradientDrawable.setStroke(dip2px(strokeW), strokeColor)
-        gradientDrawable.cornerRadius = cornerRadius.toFloat()
+        gradientDrawable.cornerRadii = floatArrayOf(
+                rArray[0], rArray[0],
+                rArray[1], rArray[1],
+                rArray[2], rArray[2],
+                rArray[3], rArray[3]
+        )
         return gradientDrawable
+    }
+}
+
+fun pressColorAll(normalColor: Int, pressColor: Int, vararg views: View) {
+    if (views.isEmpty()) {
+        return
+    }
+    views.forEach {
+        it.pressColor(normalColor, pressColor)
     }
 }
 

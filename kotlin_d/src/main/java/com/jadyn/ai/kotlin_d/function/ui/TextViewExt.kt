@@ -11,6 +11,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
+import com.jadyn.ai.kotlin_d.utils.toGBK
 
 /**
  *@version:
