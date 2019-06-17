@@ -6,11 +6,16 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'com.android.library'
+
+apply plugin: 'com.novoda.bintray-release'
+
+version = "1.0.0"
+
 android {
     compileSdkVersion 27
-
-
-
+    resourcePrefix  "kotd"
+    
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 27
@@ -42,4 +47,53 @@ dependencies {
 
     api "io.reactivex.rxjava2:rxjava:2.1.12"
     api "io.reactivex.rxjava2:rxandroid:2.0.2"
+}
+
+//生成源文件
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+//生成Javadoc文档
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+//文档打包成jar
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+//拷贝javadoc文件
+task copyDoc(type: Copy) {
+    from "${buildDir}/docs/"
+    into "docs"
+}
+
+//上传到JCenter所需要的源码文件
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+//解决 JavaDoc 中文注释生成失败的问题
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
+
+//发布到 Bintray
+publish {
+
+    userOrg = 'ailoiii'          
+    groupId = 'com.jadynai.ai'   
+    artifactId = 'Kotlin_D'       
+    publishVersion = '1.0.0'    
+    desc = '1.0版本发布' 
+    website = 'https://github.com/JadynAi/Kotlin-D'    
 }
