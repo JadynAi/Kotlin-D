@@ -9,7 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/kotlin_d" />
+            <option value="$PROJECT_DIR$/kotlinD" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

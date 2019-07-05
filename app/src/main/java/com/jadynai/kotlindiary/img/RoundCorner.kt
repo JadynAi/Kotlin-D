@@ -4,7 +4,7 @@ import android.graphics.*
 import com.bumptech.glide.load.Key
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
-import com.jadyn.ai.kotlin_d.utils.dip2px
+import com.jadyn.ai.kotlind.utils.dip2px
 import java.security.MessageDigest
 
 
