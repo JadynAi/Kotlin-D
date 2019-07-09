@@ -1,6 +1,7 @@
 package com.jadyn.ai.kotlind.utils
 
 import android.graphics.Bitmap
+import android.media.Image
 import android.util.Log
 import android.util.Size
 import java.io.*
@@ -60,7 +61,7 @@ fun BitmapLru?.lruToBitmap(): Bitmap? {
     return null
 }
 
-fun Bitmap.saveAll(dir: String) {
+fun Bitmap.saveLossLess(dir: String) {
     val file = File(dir)
     if (file.exists()) {
         return
@@ -72,7 +73,7 @@ fun Bitmap.saveAll(dir: String) {
     file.writeBytes(byteArray)
 }
 
-fun getBitmapAll(dir: String, size: Size): Bitmap? {
+fun getBitmapLossLess(dir: String, size: Size): Bitmap? {
     val f = File(dir)
     if (!f.exists()) {
         return null
@@ -118,5 +119,19 @@ fun getUndamagedBitmap(dir: String, size: Size): Bitmap? {
         file.close()
     }
     Log.d("getUndamagedBitmap", "getUndamagedBitmap dir $dir cost $cost")
+    return bitmap
+}
+
+fun Image.genBitmap(): Bitmap {
+    val planes = planes
+    val width = width
+    val height = height
+    val buffer = planes[0].buffer
+    val data = ByteArray(buffer.remaining())
+    buffer.get(data)
+
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(data))
+    close()
     return bitmap
 }

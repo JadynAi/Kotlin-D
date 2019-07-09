@@ -16,6 +16,13 @@ fun <T> List<T>.getSafe(index: Int): T {
     return get(i)
 }
 
+fun <T> List<T>.getSafeNull(index: Int): T? {
+    if (index < 0 || index > lastIndex) {
+        return null
+    }
+    return get(index)
+}
+
 fun <T> List<T>.indexOfSafe(t: T): Int {
     return if (indexOf(t) < 0) 0 else indexOf(t)
 }
@@ -52,6 +59,24 @@ val <D> ConcurrentLinkedDeque<D>.firstSafe: D?
     get() {
         return try {
             first
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+val <D> ConcurrentLinkedDeque<D>.popSafe: D?
+    get() {
+        return try {
+            pop()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+val <D> ConcurrentLinkedDeque<D>.lastSafe: D?
+    get() {
+        return try {
+            last
         } catch (e: Exception) {
             null
         }

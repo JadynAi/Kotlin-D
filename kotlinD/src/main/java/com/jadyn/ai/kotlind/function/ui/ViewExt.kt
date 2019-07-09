@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
 import com.jadyn.ai.kotlind.utils.dip2px
+import com.jadyn.ai.kotlind.utils.screenWidth
 
 /**
  *@version:
@@ -61,6 +62,15 @@ fun View.computeWidthWithH(ratio: Float) {
         val params = this.layoutParams
         params.width = (this.height * ratio).toInt()
         this.layoutParams = params
+    }
+}
+
+//根据屏幕宽来计算宽
+fun View.computeWidthWithScreenW(ratio: Float) {
+    post {
+        val params = this.layoutParams
+        params.width = (screenWidth * ratio).toInt()
+        layoutParams = params
     }
 }
 
@@ -150,15 +160,20 @@ class RoundDrawable(private val rArray: FloatArray,
 
     fun build(): GradientDrawable {
         val gradientDrawable = GradientDrawable()
+        gradientDrawable.mutate()
         gradientDrawable.shape = GradientDrawable.RECTANGLE
         gradientDrawable.setColor(this.solidColor)
         gradientDrawable.setStroke(dip2px(strokeW), strokeColor)
-        gradientDrawable.cornerRadii = floatArrayOf(
-                rArray[0], rArray[0],
-                rArray[1], rArray[1],
-                rArray[2], rArray[2],
-                rArray[3], rArray[3]
-        )
+        if (rArray[0] == rArray[1] && rArray[2] == rArray[3] && rArray[1] == rArray[2]) {
+            gradientDrawable.cornerRadius = rArray[0]
+        } else {
+            gradientDrawable.cornerRadii = floatArrayOf(
+                    rArray[0], rArray[0],
+                    rArray[1], rArray[1],
+                    rArray[2], rArray[2],
+                    rArray[3], rArray[3]
+            )
+        }
         return gradientDrawable
     }
 }
@@ -209,8 +224,10 @@ fun View.checked(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
     this.background = getCheckedDrawable(normalRes, pressRes)
 }
 
-fun View.checked(normal: Drawable, press: Drawable) {
-    this.background = getCheckedDrawable(normal, press)
+fun View.checked(normal: Drawable, press: Drawable, drawableHandle: (StateListDrawable) -> Unit = {}) {
+    val checkedDrawable = getCheckedDrawable(normal, press)
+    drawableHandle.invoke(checkedDrawable)
+    this.background = checkedDrawable
 }
 
 fun View.checkedColor(normalColor: Int, checkedColor: Int) {
@@ -229,30 +246,35 @@ fun View.selectedColor(normalColor: Int, checkedColor: Int) {
     this.background = getSelectedDrawable(ColorDrawable(normalColor), ColorDrawable(checkedColor))
 }
 
-fun View.event(click: ((View) -> Unit)? = null, doubleTap: (() -> Unit)? = null,
-               longPress: (() -> Unit)? = null) {
+fun View.event(click: ((View) -> Unit)? = null, doubleTap: ((MotionEvent?) -> Unit)? = null,
+               longPress: ((MotionEvent?) -> Unit)? = null, onTouch: ((MotionEvent) -> Unit)? = null) {
     this.isLongClickable = true
     val gestureDetector = GestureDetector(this.context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
             Log.d("event", "onSingleTapConfirmed ")
-            click?.apply { this(this@event) }
+            click?.apply {
+                invoke(this@event)
+            }
             return false
         }
 
         override fun onDoubleTap(e: MotionEvent?): Boolean {
             Log.d("event", "onDoubleTap ")
-            doubleTap?.apply { this() }
+            doubleTap?.apply {
+                invoke(e)
+            }
             return false
         }
 
         override fun onLongPress(e: MotionEvent?) {
             super.onLongPress(e)
             Log.d("event", "onLongPress ")
-            longPress?.apply { this() }
+            longPress?.apply { invoke(e) }
         }
     })
 
     this.setOnTouchListener { v, event ->
+        onTouch?.invoke(event)
         gestureDetector.onTouchEvent(event)
     }
 }
@@ -262,21 +284,6 @@ fun ViewGroup.clipChild(isClip: Boolean) {
     clipChildren = false
 }
 
-fun clearViewStatus(v: View?) {
-    v?.apply {
-        setAlpha(1f)
-        setScaleY(1f)
-        setScaleX(1f)
-        setTranslationY(0f)
-        setTranslationX(0f)
-        setRotation(0f)
-        setRotationY(0f)
-        setRotationX(0f)
-        setPivotY((v.measuredHeight / 2).toFloat())
-        setPivotX((v.measuredWidth / 2).toFloat())
-        v.animate().setInterpolator(null).startDelay = 0
-    }
-}
 
 fun View.hideSoftKeyboard() {
     val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
