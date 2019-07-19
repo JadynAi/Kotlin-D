@@ -1,11 +1,12 @@
 package com.jadyn.ai.kotlind.function.ui
 
-import android.R
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.support.annotation.DrawableRes
+import android.support.v4.content.ContextCompat
+import com.jadyn.ai.kotlind.base.BaseApplication
 import com.jadyn.ai.kotlind.utils.parseColor
 
 /**
@@ -26,7 +27,7 @@ fun getPressDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int): S
 fun getPressDrawable(nor: Drawable?, press: Drawable?): StateListDrawable {
     val sd = StateListDrawable()
     press?.apply {
-        sd.addState(intArrayOf(R.attr.state_pressed), this)
+        sd.addState(intArrayOf(android.R.attr.state_pressed), this)
     }
     nor?.apply {
         sd.addState(intArrayOf(), this)
@@ -45,7 +46,7 @@ fun getCheckedDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int):
 fun getCheckedDrawable(nor: Drawable?, checked: Drawable?): StateListDrawable {
     val sd = StateListDrawable()
     checked?.apply {
-        sd.addState(intArrayOf(R.attr.state_checked), this)
+        sd.addState(intArrayOf(android.R.attr.state_checked), this)
     }
     nor?.apply {
         sd.addState(intArrayOf(), this)
@@ -64,7 +65,7 @@ fun getSelectedDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int)
 fun getSelectedDrawable(nor: Drawable?, checked: Drawable?): StateListDrawable {
     val sd = StateListDrawable()
     checked?.apply {
-        sd.addState(intArrayOf(R.attr.state_selected), this)
+        sd.addState(intArrayOf(android.R.attr.state_selected), this)
     }
     nor?.apply {
         sd.addState(intArrayOf(), this)
@@ -78,4 +79,12 @@ fun ovalDrawable(solidColor: Int, w: Int, h: Int): GradientDrawable {
     drawable.setSize(w, h)
     drawable.setColor(solidColor)
     return drawable
+}
+
+fun getResDrawable(resId: Int): Drawable? {
+    return try {
+        ContextCompat.getDrawable(BaseApplication.instance, resId)
+    } catch (e: Exception) {
+        null
+    }
 }

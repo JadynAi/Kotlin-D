@@ -2,9 +2,11 @@ package com.jadyn.ai.kotlind.utils
 
 import android.graphics.Color
 import android.support.annotation.ColorInt
+import android.support.annotation.StringRes
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
+import com.jadyn.ai.kotlind.base.BaseApplication
 
 /**
  *@version:
@@ -56,4 +58,28 @@ fun measureText(text: String?, textPaint: TextPaint): IntArray {
     ints[0] = width
     ints[1] = staticLayout.height
     return ints
+}
+
+fun getS(@StringRes id: Int, defS: String = ""): String {
+    return try {
+        BaseApplication.instance.getString(id)
+    } catch (e: Exception) {
+        defS
+    }
+}
+
+fun getS(@StringRes id: Int, vararg formatArgs: Any): String {
+    return try {
+        BaseApplication.instance.getString(id, *formatArgs)
+    } catch (e: Exception) {
+        ""
+    }
+}
+
+fun parseInt(s: String?, def: Int = 0): Int {
+    return try {
+        Integer.parseInt(s)
+    } catch (e: Exception) {
+        def
+    }
 }

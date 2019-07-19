@@ -3,8 +3,6 @@ package com.jadyn.ai.kotlind.utils
 import android.content.res.Resources
 import android.graphics.Rect
 import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.view.ViewTreeObserver
 import android.view.Window
@@ -59,32 +57,6 @@ fun toastS(string: String) {
 }
 
 fun getResColor(@ColorRes id: Int) = ContextCompat.getColor(BaseApplication.instance, id)
-
-fun getResDrawable(@DrawableRes id: Int) = ContextCompat.getDrawable(BaseApplication.instance, id)
-
-fun getS(@StringRes id: Int, defS: String = ""): String {
-    return try {
-        BaseApplication.instance.getString(id)
-    } catch (e: Exception) {
-        defS
-    }
-}
-
-fun getS(@StringRes id: Int, vararg formatArgs: Any): String {
-    return try {
-        BaseApplication.instance.getString(id, *formatArgs)
-    } catch (e: Exception) {
-        ""
-    }
-}
-
-fun parseInt(s: String?, def: Int = 0): Int {
-    return try {
-        Integer.parseInt(s)
-    } catch (e: Exception) {
-        def
-    }
-}
 
 fun computeDisWithScreenW(denominator: Int, member: Int): Int {
     val ratio = denominator.toFloat() / member.toFloat()

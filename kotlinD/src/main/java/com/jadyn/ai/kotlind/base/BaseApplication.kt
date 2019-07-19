@@ -9,7 +9,7 @@ import android.app.Application
  *@Since:2018/6/30
  *@ChangeList:
  */
-class BaseApplication : Application() {
+open class BaseApplication : Application() {
     
     companion object {
         lateinit var instance: Application

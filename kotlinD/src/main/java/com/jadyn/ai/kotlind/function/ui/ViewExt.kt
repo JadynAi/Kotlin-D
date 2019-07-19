@@ -28,20 +28,17 @@ import com.jadyn.ai.kotlind.utils.screenWidth
  *@Since:2018/6/30
  *@ChangeList:
  */
-fun getResDrawable(resId: Int): Drawable? {
-    return try {
-        getResDrawable(resId)
-    } catch (e: Exception) {
-        null
+
+fun View?.setVisible(show: Boolean) {
+    this?.apply {
+        visibility = if (show) View.VISIBLE else View.GONE
     }
 }
 
-fun View.setVisible(show: Boolean) {
-    visibility = if (show) View.VISIBLE else View.GONE
-}
-
-fun View.toggleVisible() {
-    visibility == if (visibility == View.VISIBLE) View.GONE else View.VISIBLE
+fun View?.toggleVisible() {
+    this?.apply {
+        visibility = if (visibility == View.VISIBLE) View.GONE else View.VISIBLE
+    }
 }
 
 fun View.click(click: (View) -> Unit) {
