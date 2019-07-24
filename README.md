@@ -30,13 +30,13 @@ allprojects {
 Module的gradle配置如下：
 
 ```
-api 'com.jadynai.ai.kotlind:KotlinD:1.0.2'
+api 'com.jadynai.ai.kotlind:KotlinD:1.0.4'
 ```
 
 ### 如何使用
 
 #### Recyclerview
-`AcrobatAdapter`是为Recyclerview提供的适配器，使用DSL模式构建。可以灵活配置多Item样式，仅用两三行代码为为Item添加单击、长按、双击事件[使用文档](https://ailoli.me/2018/07/05/kotlin-adapter/)
+`AcrobatAdapter`是为Recyclerview提供的适配器，使用DSL模式构建。可以灵活配置多Item样式，仅用两三行代码为为Item添加单击、长按、双击事件[使用文档](https://jadynai.github.io/2018/07/05/kotlin-adapter/)
 
 #### 各色Drawable
 不需要为各种View添加Drawable，而去写一些烦扰的Drawable.xml或者Selector.xml文件，只需在代码中一键配置，轻松快捷。
