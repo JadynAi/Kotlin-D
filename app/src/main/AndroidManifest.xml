@@ -25,7 +25,9 @@
             </intent-filter>
         </activity>
         <activity android:name="com.jadynai.kotlindiary.RecyclerViewActivity"/>
-        <activity android:name="com.jadynai.kotlindiary.show.ShowActivity"/>
+        <activity android:name="com.jadynai.kotlindiary.show.ShowActivity"
+            android:process=":remote"
+            />
 
         <service
             android:name="com.jadynai.kotlindiary.binder.MessengerService"

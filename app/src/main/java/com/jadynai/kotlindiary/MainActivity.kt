@@ -3,6 +3,7 @@ package com.jadynai.kotlindiary
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.event
@@ -21,7 +22,24 @@ class MainActivity : AppCompatActivity() {
         show_tv.click {
             start<ShowActivity>()
         }
+
+        
+        ClazzText::class.java.newInstance()
     }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("cece", "main : onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("cece", "main : onStop")
+    }
+}
+
+class ClazzText{
+    
 }
 
 

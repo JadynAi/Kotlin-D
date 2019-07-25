@@ -20,5 +20,9 @@ class ShowActivity : AppCompatActivity() {
         setContentView(R.layout.activity_show)
 
         iv_show.pressSrc(R.drawable.cat, R.drawable.cat)
+
+        IntArray(0)
+        
+        arrayListOf<Int>().sort()
     }
 }

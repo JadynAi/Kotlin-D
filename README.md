@@ -34,9 +34,26 @@ api 'com.jadynai.ai.kotlind:KotlinD:1.0.4'
 ```
 
 ### 如何使用
+#### 使用准备
+使用前，请将你的项目中的Application继承`com.jadyn.ai.kotlind.base.BaseApplication`。
+
+```
+open class BaseApplication : Application() {
+    
+    companion object {
+        lateinit var instance: Application
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+    }
+}
+```
+这是一个非常简单的类，只对外提供了一个`Application`对象。在类似于`getDrawable`或者`getColor`这类方法会用到。
 
 #### Recyclerview
-`AcrobatAdapter`是为Recyclerview提供的适配器，使用DSL模式构建。可以灵活配置多Item样式，仅用两三行代码为为Item添加单击、长按、双击事件[使用文档](https://jadynai.github.io/2018/07/05/kotlin-adapter/)
+`AcrobatAdapter`是为Recyclerview提供的适配器，使用DSL模式构建。可以灵活配置多Item样式，仅用两三行代码为为Item添加单击、长按、双击事件[使用文档](https://ailo.fun/2018/07/05/2018-07-05-kotlin-adapter/)
 
 #### 各色Drawable
 不需要为各种View添加Drawable，而去写一些烦扰的Drawable.xml或者Selector.xml文件，只需在代码中一键配置，轻松快捷。
