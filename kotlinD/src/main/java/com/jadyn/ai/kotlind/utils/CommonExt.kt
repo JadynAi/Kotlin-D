@@ -18,25 +18,12 @@ import com.jadyn.ai.kotlind.base.BaseApplication
  *@ChangeList:
  */
 
-private val MIN_WVGA_HEIGHT = 700
-private val WVGA_HEIGHT = 800
-private val MIN_HD_HEIGHT = 1180
-private val HD_HEIGHT = 1280
-
 fun resources(): Resources = BaseApplication.instance.resources
 
 val phonePixels: IntArray
     get() {
         val metrics = resources().displayMetrics
-        val curWidth = metrics.widthPixels
-        var curHeight = metrics.heightPixels
-        if (curHeight in MIN_WVGA_HEIGHT..WVGA_HEIGHT) {
-            curHeight = WVGA_HEIGHT
-        }
-        if (curHeight in MIN_HD_HEIGHT..HD_HEIGHT) {
-            curHeight = HD_HEIGHT
-        }
-        return intArrayOf(curWidth, curHeight)
+        return intArrayOf(metrics.widthPixels, metrics.heightPixels)
     }
 
 val screenWidth by lazy { 

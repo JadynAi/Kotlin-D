@@ -28,6 +28,9 @@
         <activity android:name="com.jadynai.kotlindiary.show.ShowActivity"
             android:process=":remote"
             />
+        <activity android:name="com.jadynai.kotlindiary.thread.ThreadActivity"
+            android:screenOrientation="portrait"
+            />
 
         <service
             android:name="com.jadynai.kotlindiary.binder.MessengerService"

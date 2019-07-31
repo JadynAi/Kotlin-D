@@ -41,7 +41,7 @@ fun createFloatBuffer(array: FloatArray): FloatBuffer {
             .asFloatBuffer()
 
     // 将Dalvik的内存数据复制到Native内存中
-    buffer.put(array)
+    buffer.put(array).position(0)
     return buffer
 }
 
