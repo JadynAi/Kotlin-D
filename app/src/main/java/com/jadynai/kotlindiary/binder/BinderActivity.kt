@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.os.Message
 import android.os.Messenger
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.jadynai.cm.kotlintest.R
 
 class BinderActivity : AppCompatActivity() {

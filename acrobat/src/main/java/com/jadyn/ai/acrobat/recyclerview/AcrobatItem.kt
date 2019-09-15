@@ -1,6 +1,6 @@
-package com.jadyn.ai.kotlind.function.ui.recyclerview
+package com.jadyn.ai.acrobat.recyclerview
 
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 import android.view.View
 import android.view.ViewGroup
 

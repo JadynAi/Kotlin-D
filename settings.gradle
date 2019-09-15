@@ -1,1 +1,1 @@
-include ':app', ':kotlinD'
+include ':app', ':kotlinD', ':acrobat'

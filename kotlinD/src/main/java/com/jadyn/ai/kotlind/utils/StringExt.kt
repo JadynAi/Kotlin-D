@@ -1,11 +1,11 @@
 package com.jadyn.ai.kotlind.utils
 
 import android.graphics.Color
-import android.support.annotation.ColorInt
-import android.support.annotation.StringRes
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
+import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
 import com.jadyn.ai.kotlind.base.BaseApplication
 
 /**

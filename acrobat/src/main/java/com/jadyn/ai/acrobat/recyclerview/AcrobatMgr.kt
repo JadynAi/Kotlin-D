@@ -1,4 +1,4 @@
-package com.jadyn.ai.kotlind.function.ui.recyclerview
+package com.jadyn.ai.acrobat.recyclerview
 
 /**
  *@version:

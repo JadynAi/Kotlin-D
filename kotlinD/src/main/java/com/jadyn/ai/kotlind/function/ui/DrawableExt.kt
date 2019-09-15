@@ -4,8 +4,8 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import com.jadyn.ai.kotlind.base.BaseApplication
 import com.jadyn.ai.kotlind.utils.parseColor
 

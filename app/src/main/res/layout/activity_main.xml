@@ -31,4 +31,40 @@
         android:text="Show Drawable"
         />
 
+    <TextView
+        android:id="@+id/thread_tv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Thread"
+        />
+
+    <TextView
+        android:id="@+id/view_tv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="View"
+        />
+
+    <TextView
+        android:id="@+id/design_mode_tv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Design Mode"
+        />
+
 </LinearLayout>

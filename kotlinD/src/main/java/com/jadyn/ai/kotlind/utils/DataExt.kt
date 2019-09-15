@@ -2,7 +2,6 @@ package com.jadyn.ai.kotlind.utils
 
 import java.nio.charset.Charset
 import java.util.*
-import java.util.concurrent.ConcurrentLinkedDeque
 
 /**
  *@version:
@@ -55,7 +54,7 @@ fun <T> ArrayList<T>.removeAtSafe(index: Int) {
     removeAt(index)
 }
 
-val <D> ConcurrentLinkedDeque<D>.firstSafe: D?
+val <D> Deque<D>.firstSafe: D?
     get() {
         return try {
             first
@@ -64,7 +63,7 @@ val <D> ConcurrentLinkedDeque<D>.firstSafe: D?
         }
     }
 
-val <D> ConcurrentLinkedDeque<D>.popSafe: D?
+val <D> Deque<D>.popSafe: D?
     get() {
         return try {
             pop()
@@ -73,10 +72,28 @@ val <D> ConcurrentLinkedDeque<D>.popSafe: D?
         }
     }
 
-val <D> ConcurrentLinkedDeque<D>.lastSafe: D?
+val <D> Deque<D>.lastSafe: D?
     get() {
         return try {
             last
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+val <D> Queue<D>.firstSafe: D?
+    get() {
+        return try {
+            peek()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+val <D> Queue<D>.pollSafe: D?
+    get() {
+        return try {
+            poll()
         } catch (e: Exception) {
             null
         }

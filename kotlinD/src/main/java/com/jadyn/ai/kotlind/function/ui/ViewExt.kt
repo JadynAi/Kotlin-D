@@ -6,8 +6,6 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
-import android.support.annotation.DrawableRes
-import android.support.constraint.ConstraintLayout
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
@@ -18,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
+import androidx.annotation.DrawableRes
 import com.jadyn.ai.kotlind.utils.dip2px
 import com.jadyn.ai.kotlind.utils.screenWidth
 
@@ -80,21 +79,21 @@ fun View.computeHeightWithW(ratio: Float) {
     }
 }
 
-fun View.setHeightWithW(wRatio: Float, hRatio: Float) {
-    val params = layoutParams
-    if (params is ConstraintLayout.LayoutParams) {
-        params.dimensionRatio = "W : $wRatio:$hRatio"
-        layoutParams = params
-    }
-}
-
-fun View.setWidthWithH(wRatio: Float, hRatio: Float) {
-    val params = layoutParams
-    if (params is ConstraintLayout.LayoutParams) {
-        params.dimensionRatio = "H : $wRatio:$hRatio"
-        layoutParams = params
-    }
-}
+//fun View.setHeightWithW(wRatio: Float, hRatio: Float) {
+//    val params = layoutParams
+//    if (params is ConstraintLayout.LayoutParams) {
+//        params.dimensionRatio = "W : $wRatio:$hRatio"
+//        layoutParams = params
+//    }
+//}
+//
+//fun View.setWidthWithH(wRatio: Float, hRatio: Float) {
+//    val params = layoutParams
+//    if (params is ConstraintLayout.LayoutParams) {
+//        params.dimensionRatio = "H : $wRatio:$hRatio"
+//        layoutParams = params
+//    }
+//}
 
 fun View.updateWH(width: Int = layoutParams.width, height: Int = layoutParams.height) {
     val params = layoutParams

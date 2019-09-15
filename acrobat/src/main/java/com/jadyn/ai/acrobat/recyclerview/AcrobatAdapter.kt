@@ -1,10 +1,10 @@
-package com.jadyn.ai.kotlind.function.ui.recyclerview
+package com.jadyn.ai.acrobat.recyclerview
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.jadyn.ai.kotlind.function.ui.event
 import com.jadyn.ai.kotlind.utils.TooFastChecker
 

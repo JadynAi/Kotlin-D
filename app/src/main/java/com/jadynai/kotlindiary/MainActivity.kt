@@ -2,13 +2,20 @@ package com.jadynai.kotlindiary
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.event
 import com.jadynai.cm.kotlintest.R
+import com.jadynai.kotlindiary.designMode.DesignModeActivity
 import com.jadynai.kotlindiary.show.ShowActivity
+import com.jadynai.kotlindiary.thread.ThreadActivity
+import com.jadynai.kotlindiary.view.ViewActivity
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -23,8 +30,30 @@ class MainActivity : AppCompatActivity() {
             start<ShowActivity>()
         }
 
-        
-        ClazzText::class.java.newInstance()
+        thread_tv.click {
+            start<ThreadActivity>()
+        }
+
+        view_tv.click {
+            start<ViewActivity>()
+        }
+
+        fun test() {
+            View(this)
+            test()
+        }
+
+        design_mode_tv.click {
+            for (i in 1..10) {
+                Thread.sleep(1000)
+            }
+            start<DesignModeActivity>()
+            
+            Observable.just("")
+
+            AndroidSchedulers.from(Looper.myLooper())
+        }
+
     }
 
     override fun onPause() {
@@ -36,10 +65,6 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
         Log.d("cece", "main : onStop")
     }
-}
-
-class ClazzText{
-    
 }
 
 

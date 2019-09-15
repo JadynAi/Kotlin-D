@@ -2,8 +2,8 @@ package com.jadyn.ai.kotlind.utils
 
 import android.content.res.Resources
 import android.graphics.Rect
-import android.support.annotation.ColorRes
-import android.support.v4.content.ContextCompat
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager

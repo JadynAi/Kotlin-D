@@ -4,13 +4,13 @@ import android.R
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
 import android.text.InputFilter
 import android.text.Spanned
 import android.text.TextUtils
 import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import com.jadyn.ai.kotlind.utils.toGBK
 
 /**

@@ -1,8 +1,8 @@
-package com.jadyn.ai.kotlind.function.ui.recyclerview
+package com.jadyn.ai.acrobat.recyclerview
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.widget.GridLayoutManager
+import androidx.appcompat.widget.LinearLayoutManager
+import androidx.appcompat.widget.RecyclerView
 
 /**
  *@version:

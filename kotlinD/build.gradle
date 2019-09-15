@@ -9,15 +9,15 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.novoda.bintray-release' // 添加bintray插件
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -30,14 +30,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation "com.android.support:recyclerview-v7:$support_version"
-    implementation "com.android.support:appcompat-v7:$support_version"
-
-    api "io.reactivex.rxjava2:rxjava:2.1.12"
-    api "io.reactivex.rxjava2:rxandroid:2.0.2"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
 }
 
 //发布到 Bintray
@@ -47,7 +41,7 @@ publish {
     repoName = 'maven'
     groupId = 'com.jadynai.ai.kotlind'   
     artifactId = 'KotlinD'       
-    publishVersion = '1.0.5'    
-    desc = '1.0.5 update some tools' 
+    publishVersion = '1.0.6'    
+    desc = '1.0.6 remove Recyclerview adapter and BaseFragment' 
     website = 'https://github.com/JadynAi/Kotlin-D'    
 }

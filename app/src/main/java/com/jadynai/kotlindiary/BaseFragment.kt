@@ -1,22 +1,22 @@
-package com.jadyn.ai.kotlind.base
+package com.jadynai.kotlindiary
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-abstract class BaseFragment : Fragment(){
+abstract class BaseFragment : androidx.fragment.app.Fragment() {
     lateinit var mRootView: View
     private var isVisibleToUsers = false
     private var isOnCreateView = false
     private var isSetUserVisibleHint = false
     private var isHiddenChanged = false
     private var isFirstResume = false
-    
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         isOnCreateView = true
-        mRootView = LayoutInflater.from(activity).inflate(getResId(), null, false)
+        mRootView = LayoutInflater.from(context).inflate(getResId(), null, false)
         return mRootView
     }
 
@@ -41,7 +41,7 @@ abstract class BaseFragment : Fragment(){
         isSetUserVisibleHint = false
         setVisibleToUser(false)
     }
-    
+
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         isSetUserVisibleHint = true
@@ -53,7 +53,7 @@ abstract class BaseFragment : Fragment(){
         isHiddenChanged = true
         setVisibleToUser(!hidden)
     }
-    
+
     private fun setVisibleToUser(isVisibleToUser: Boolean) {
         if (!isOnCreateView) {
             return
