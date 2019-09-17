@@ -1,10 +1,9 @@
 package com.jadynai.kotlindiary.view
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Choreographer
+import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.click
-import com.jadyn.ai.acrobat.recyclerview.AcrobatAdapter
 import com.jadynai.cm.kotlintest.R
 import kotlinx.android.synthetic.main.activity_view.*
 import org.jetbrains.anko.toast
@@ -44,25 +43,5 @@ class ViewActivity : AppCompatActivity() {
             }
             parent_3.invalidate()
         }
-
-        recycler_1.layoutManager = CuManager()
-        val data = arrayListOf<String>()
-        for (i in 0..100) {
-            data.add(i.toString())
-        }
-        val data1 = AcrobatAdapter<String> {
-            itemDSL {
-                resId(R.layout.item_test)
-                showItem { d, pos, view ->
-                    view.item_tv.text = d
-                }
-            }
-        }.setData(data)
-        recycler_1.adapter = data1
-
-        recycler_1.postDelayed({
-            data.add(0, "ffff")
-            data1.notifyItemInserted(0)
-        }, 3000)
     }
 }

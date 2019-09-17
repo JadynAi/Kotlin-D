@@ -3,10 +3,10 @@ package com.jadynai.kotlindiary
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.acrobat.recyclerview.AcrobatAdapter
-import com.jadyn.ai.acrobat.recyclerview.linear
 import com.jadyn.ai.kotlind.utils.toastS
 import com.jadynai.cm.kotlintest.R
 import kotlinx.android.synthetic.main.activity_recycler_view.*
+import kotlinx.android.synthetic.main.item_test.view.*
 
 /**
  *@version:
@@ -30,8 +30,8 @@ class RecyclerViewActivity : AppCompatActivity() {
         for (i in 0 until 20) {
             newData.add(i)
         }
-
-        recycler_view.linear()
+        
+//        recycler_view.linear()
 
         val acrobatAdapter = AcrobatAdapter<Int> {
             itemDSL {
@@ -45,7 +45,7 @@ class RecyclerViewActivity : AppCompatActivity() {
 
             }
         }.setData(data)
-        recycler_view.adapter = acrobatAdapter
+//        recycler_view.adapter = acrobatAdapter
 
         change_tv.setOnClickListener {
             acrobatAdapter.setData(newData)

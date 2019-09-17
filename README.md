@@ -5,32 +5,10 @@
 这是一个会长期，但不定期维护的辅助工具项目。因为UP主也就是本人，脑袋常常会短路。<br>`Kotlin-D`是一个帮助开发者，提高生产效率的项目，主要面向Android移动端的项目。
 
 ### 配置远程库
-项目的gradle配置如下：
+项目的build.gradle配置`JCenter`远程仓库。在需要的地方引用：
 
 ```
-buildscript {
-    ext.kotlin_version = '1.3.21'
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
-}
-```
-Module的gradle配置如下：
-
-```
-api 'com.jadynai.ai.kotlind:KotlinD:1.0.4'
+api 'com.jadynai.ai.kotlind:KotlinD:1.0.6'
 ```
 
 ### 如何使用
@@ -52,8 +30,9 @@ open class BaseApplication : Application() {
 ```
 这是一个非常简单的类，只对外提供了一个`Application`对象。在类似于`getDrawable`或者`getColor`这类方法会用到。
 
-#### Recyclerview
-`AcrobatAdapter`是为Recyclerview提供的适配器，使用DSL模式构建。可以灵活配置多Item样式，仅用两三行代码为为Item添加单击、长按、双击事件[使用文档](https://ailo.fun/2018/07/05/2018-07-05-kotlin-adapter/)
+<del>#### Recyclerview
+`AcrobatAdapter`是为Recyclerview提供的适配器，使用DSL模式构建。可以灵活配置多Item样式，仅用两三行代码为为Item添加单击、长按、双击事件[使用文档](https://ailo.fun/2018/07/05/2018-07-05-kotlin-adapter/)</del>
+> 1.0.6版本开始将适配器从库里移除，确保工具库为一个单纯的工具库存在
 
 #### 各色Drawable
 不需要为各种View添加Drawable，而去写一些烦扰的Drawable.xml或者Selector.xml文件，只需在代码中一键配置，轻松快捷。

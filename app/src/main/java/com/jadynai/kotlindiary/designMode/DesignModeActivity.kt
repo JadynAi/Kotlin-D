@@ -19,7 +19,6 @@ class DesignModeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_design_mode)
 
         proxy_tv.click {
-            createProxy<FFGo>().test("测试")
         }
     }
 }

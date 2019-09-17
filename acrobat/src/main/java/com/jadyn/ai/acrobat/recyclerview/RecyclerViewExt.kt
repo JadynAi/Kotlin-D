@@ -1,8 +1,8 @@
 package com.jadyn.ai.acrobat.recyclerview
 
-import androidx.appcompat.widget.GridLayoutManager
-import androidx.appcompat.widget.LinearLayoutManager
-import androidx.appcompat.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  *@version:
