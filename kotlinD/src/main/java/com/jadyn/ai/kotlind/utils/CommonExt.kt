@@ -2,13 +2,13 @@ package com.jadyn.ai.kotlind.utils
 
 import android.content.res.Resources
 import android.graphics.Rect
-import androidx.annotation.ColorRes
-import androidx.core.content.ContextCompat
 import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
-import com.jadyn.ai.kotlind.base.BaseApplication
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
+import com.jadyn.ai.kotlind.base.KD
 
 /**
  *@version:
@@ -18,7 +18,7 @@ import com.jadyn.ai.kotlind.base.BaseApplication
  *@ChangeList:
  */
 
-fun resources(): Resources = BaseApplication.instance.resources
+fun resources(): Resources = KD.application.resources
 
 val phonePixels: IntArray
     get() {
@@ -40,10 +40,10 @@ fun dip2px(dpValue: Float): Int {
 }
 
 fun toastS(string: String) {
-    Toast.makeText(BaseApplication.instance, string, Toast.LENGTH_SHORT).show()
+    Toast.makeText(KD.application, string, Toast.LENGTH_SHORT).show()
 }
 
-fun getResColor(@ColorRes id: Int) = ContextCompat.getColor(BaseApplication.instance, id)
+fun getResColor(@ColorRes id: Int) = ContextCompat.getColor(KD.application, id)
 
 fun computeDisWithScreenW(denominator: Int, member: Int): Int {
     val ratio = denominator.toFloat() / member.toFloat()

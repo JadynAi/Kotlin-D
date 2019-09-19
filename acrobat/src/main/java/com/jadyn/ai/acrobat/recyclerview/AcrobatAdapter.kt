@@ -160,23 +160,17 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         private var longPress: ((Int) -> Unit)? = null
 
         fun onClick(c: (Int) -> Unit) {
-            if (acrobatItem.hasEvent()) {
-                throw IllegalStateException("item has inner event!!!")
-            }
+            check(!acrobatItem.hasEvent()) { "item has inner event!!!" }
             click = c
         }
 
         fun onDoubleTap(d: (Int) -> Unit) {
-            if (acrobatItem.hasEvent()) {
-                throw IllegalStateException("item has inner event!!!")
-            }
+            check(!acrobatItem.hasEvent()) { "item has inner event!!!" }
             doubleTap = d
         }
 
         fun longPress(l: (Int) -> Unit) {
-            if (acrobatItem.hasEvent()) {
-                throw IllegalStateException("item has inner event!!!")
-            }
+            check(!acrobatItem.hasEvent()) { "item has inner event!!!" }
             longPress = l
         }
 

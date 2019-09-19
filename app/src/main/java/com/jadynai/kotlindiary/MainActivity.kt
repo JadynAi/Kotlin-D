@@ -3,9 +3,10 @@ package com.jadynai.kotlindiary
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.jadyn.ai.kotlind.base.KD
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.event
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        KD.init(this.application)
 
         recycler_tv.event(click = { startActivity(Intent(this, RecyclerViewActivity::class.java)) })
 

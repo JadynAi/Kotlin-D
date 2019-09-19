@@ -1,8 +1,8 @@
 package com.jadyn.ai.acrobat.recyclerview
 
-import androidx.annotation.LayoutRes
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 
 /**
  *@version:
@@ -15,7 +15,13 @@ abstract class AcrobatItem<D>(var click: ((d: D, pos: Int) -> Unit)? = null,
                               var doubleTap: ((d: D, pos: Int) -> Unit)? = null,
                               var longPress: ((d: D, pos: Int) -> Unit)? = null) {
 
-    constructor() : this(null, null, null)
+    companion object {
+        fun <D> create(dsl: AcrobatDSL<D>.() -> Unit): AcrobatItem<D> {
+            val acrobatDSL = AcrobatDSL<D>()
+            acrobatDSL.dsl()
+            return acrobatDSL.build()
+        }
+    }
 
     @LayoutRes
     abstract fun getResId(): Int
@@ -84,7 +90,7 @@ class AcrobatDSL<D> constructor(private inline var create: (parent: ViewGroup, v
     }
 
     internal fun build(): AcrobatItem<D> {
-        return object : AcrobatItem<D>(this.click, this.doubleTap, this.longP) {
+        return object : AcrobatItem<D>(click, doubleTap, longP) {
             override fun isMeetData(d: D, pos: Int): Boolean {
                 return dataMeet(d, pos)
             }

@@ -1,12 +1,13 @@
 package com.jadyn.ai.kotlind.function.ui
 
+import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
-import com.jadyn.ai.kotlind.base.BaseApplication
+import com.jadyn.ai.kotlind.base.KD
 import com.jadyn.ai.kotlind.utils.parseColor
 
 /**
@@ -81,9 +82,9 @@ fun ovalDrawable(solidColor: Int, w: Int, h: Int): GradientDrawable {
     return drawable
 }
 
-fun getResDrawable(resId: Int): Drawable? {
+fun getResDrawable(resId: Int, context: Context? = null): Drawable? {
     return try {
-        ContextCompat.getDrawable(BaseApplication.instance, resId)
+        ContextCompat.getDrawable(context ?: KD.application, resId)
     } catch (e: Exception) {
         null
     }

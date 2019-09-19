@@ -13,7 +13,7 @@ api 'com.jadynai.ai.kotlind:KotlinD:1.0.6'
 
 ### 如何使用
 #### 使用准备
-使用前，请将你的项目中的Application继承`com.jadyn.ai.kotlind.base.BaseApplication`。
+<del>使用前，请将你的项目中的Application继承`com.jadyn.ai.kotlind.base.BaseApplication`。</del>
 
 ```
 open class BaseApplication : Application() {
@@ -28,7 +28,12 @@ open class BaseApplication : Application() {
     }
 }
 ```
-这是一个非常简单的类，只对外提供了一个`Application`对象。在类似于`getDrawable`或者`getColor`这类方法会用到。
+`BaseApplication `已经废弃，使用Application的方式对项目侵入性太强。自<kbd>Version 1.0.7</kbd>之后使用如下方式初始化:
+
+```
+KD.init(application对象)
+```
+在启动时`init`,这是一个非常简单的类，只对外提供了一个`Application`对象。在类似于`getDrawable`或者`getColor`这类方法会用到。
 
 <del>#### Recyclerview
 `AcrobatAdapter`是为Recyclerview提供的适配器，使用DSL模式构建。可以灵活配置多Item样式，仅用两三行代码为为Item添加单击、长按、双击事件[使用文档](https://ailo.fun/2018/07/05/2018-07-05-kotlin-adapter/)</del>

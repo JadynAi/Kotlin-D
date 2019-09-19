@@ -6,7 +6,7 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
-import com.jadyn.ai.kotlind.base.BaseApplication
+import com.jadyn.ai.kotlind.base.KD
 
 /**
  *@version:
@@ -15,11 +15,11 @@ import com.jadyn.ai.kotlind.base.BaseApplication
  *@Since:2018/7/4
  *@ChangeList:
  */
- fun parseColor(color: String): Int {
+fun parseColor(color: String): Int {
     return parseColor(color, Color.BLACK)
 }
 
- fun parseColor(colorS: String, @ColorInt defColor: Int): Int {
+fun parseColor(colorS: String, @ColorInt defColor: Int): Int {
     var newColor = colorS
     if (colorS.toLowerCase().startsWith("0x")) {
         newColor = newColor.replace("0x", "#")
@@ -31,7 +31,7 @@ import com.jadyn.ai.kotlind.base.BaseApplication
     }
 }
 
-fun String?.getReal(def: String=""): String {
+fun String?.getReal(def: String = ""): String {
     if (isNullOrBlank()) {
         return def
     }
@@ -62,7 +62,7 @@ fun measureText(text: String?, textPaint: TextPaint): IntArray {
 
 fun getS(@StringRes id: Int, defS: String = ""): String {
     return try {
-        BaseApplication.instance.getString(id)
+        KD.application.getString(id)
     } catch (e: Exception) {
         defS
     }
@@ -70,7 +70,7 @@ fun getS(@StringRes id: Int, defS: String = ""): String {
 
 fun getS(@StringRes id: Int, vararg formatArgs: Any): String {
     return try {
-        BaseApplication.instance.getString(id, *formatArgs)
+        KD.application.getString(id, *formatArgs)
     } catch (e: Exception) {
         ""
     }
