@@ -8,7 +8,7 @@
 项目的build.gradle配置`JCenter`远程仓库。在需要的地方引用：
 
 ```
-api 'com.jadynai.ai.kotlind:KotlinD:1.0.6'
+api 'com.jadynai.ai.kotlind:KotlinD:1.0.7'
 ```
 
 ### 如何使用

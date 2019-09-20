@@ -18,7 +18,7 @@ import com.jadyn.ai.kotlind.base.KD
  *@ChangeList:
  */
 
-fun resources(): Resources = KD.application.resources
+fun resources(): Resources = KD.applicationWrapper().resources
 
 val phonePixels: IntArray
     get() {
@@ -40,10 +40,10 @@ fun dip2px(dpValue: Float): Int {
 }
 
 fun toastS(string: String) {
-    Toast.makeText(KD.application, string, Toast.LENGTH_SHORT).show()
+    Toast.makeText(KD.applicationWrapper(), string, Toast.LENGTH_SHORT).show()
 }
 
-fun getResColor(@ColorRes id: Int) = ContextCompat.getColor(KD.application, id)
+fun getResColor(@ColorRes id: Int) = ContextCompat.getColor(KD.applicationWrapper(), id)
 
 fun computeDisWithScreenW(denominator: Int, member: Int): Int {
     val ratio = denominator.toFloat() / member.toFloat()

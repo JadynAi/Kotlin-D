@@ -1,10 +1,7 @@
 package com.jadyn.ai.kotlind.function.ui
 
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.StateListDrawable
+import android.graphics.drawable.*
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import com.jadyn.ai.kotlind.base.KD
@@ -74,6 +71,21 @@ fun getSelectedDrawable(nor: Drawable?, checked: Drawable?): StateListDrawable {
     return sd
 }
 
+fun getLevelDrawable(@DrawableRes vararg ids: Int): Drawable {
+    val list = ids.map {
+        getResDrawable(it)!!
+    }.toTypedArray()
+    return getLevelDrawable(*list)
+}
+
+fun getLevelDrawable(vararg ds: Drawable): Drawable {
+    val drawable = LevelListDrawable()
+    ds.forEachIndexed { index, d ->
+        drawable.addLevel(index, index, d)
+    }
+    return drawable
+}
+
 fun ovalDrawable(solidColor: Int, w: Int, h: Int): GradientDrawable {
     val drawable = GradientDrawable()
     drawable.shape = GradientDrawable.OVAL
@@ -84,7 +96,7 @@ fun ovalDrawable(solidColor: Int, w: Int, h: Int): GradientDrawable {
 
 fun getResDrawable(resId: Int, context: Context? = null): Drawable? {
     return try {
-        ContextCompat.getDrawable(context ?: KD.application, resId)
+        ContextCompat.getDrawable(context ?: KD.applicationWrapper(), resId)
     } catch (e: Exception) {
         null
     }

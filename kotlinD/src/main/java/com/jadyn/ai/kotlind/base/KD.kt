@@ -10,13 +10,16 @@ import android.app.Application
  *@ChangeList:
  */
 class KD {
+
     companion object {
-        lateinit var application: Application
+        private lateinit var application: Application
 
         fun init(a: Application) {
             if (!::application.isInitialized) {
                 application = a
             }
         }
+
+        fun applicationWrapper() = application
     }
 } 

@@ -62,7 +62,7 @@ fun measureText(text: String?, textPaint: TextPaint): IntArray {
 
 fun getS(@StringRes id: Int, defS: String = ""): String {
     return try {
-        KD.application.getString(id)
+        KD.applicationWrapper().getString(id)
     } catch (e: Exception) {
         defS
     }
@@ -70,7 +70,7 @@ fun getS(@StringRes id: Int, defS: String = ""): String {
 
 fun getS(@StringRes id: Int, vararg formatArgs: Any): String {
     return try {
-        KD.application.getString(id, *formatArgs)
+        KD.applicationWrapper().getString(id, *formatArgs)
     } catch (e: Exception) {
         ""
     }
