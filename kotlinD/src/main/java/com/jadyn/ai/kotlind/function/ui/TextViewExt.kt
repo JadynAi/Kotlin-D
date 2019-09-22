@@ -28,20 +28,24 @@ fun TextView.drawable(textDrawable: TextDrawable.() -> Unit) {
 
 class TextDrawable(var dl: Drawable? = null, var dt: Drawable? = null, var dr: Drawable? = null, var db: Drawable? = null) {
 
-    fun drawLeft(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1) {
-        dl = getPressDrawable(normalRes, selectRes)
+    fun drawLeft(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
+                 drwable: (Int, Int) -> Drawable = ::getPressDrawable) {
+        dl = drwable(normalRes, selectRes)
     }
 
-    fun drawTop(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1) {
-        dt = getPressDrawable(normalRes, selectRes)
+    fun drawTop(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
+                drwable: (Int, Int) -> Drawable = ::getPressDrawable) {
+        dt = drwable(normalRes, selectRes)
     }
 
-    fun drawRight(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1) {
-        dr = getPressDrawable(normalRes, selectRes)
+    fun drawRight(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
+                  drwable: (Int, Int) -> Drawable = ::getPressDrawable) {
+        dr = drwable(normalRes, selectRes)
     }
 
-    fun drawBottom(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1) {
-        db = getPressDrawable(normalRes, selectRes)
+    fun drawBottom(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
+                   drwable: (Int, Int) -> Drawable = ::getPressDrawable) {
+        db = drwable(normalRes, selectRes)
     }
 }
 
@@ -64,11 +68,49 @@ fun TextView.checkedTextColor(normalColor: Int, pressColor: Int) {
 }
 
 fun TextView.generateHexColor(): String {
-    val a = Integer.toHexString(Color.alpha(currentTextColor))
-    val r = Integer.toHexString(Color.red(currentTextColor))
-    val g = Integer.toHexString(Color.green(currentTextColor))
-    val b = Integer.toHexString(Color.blue(currentTextColor))
-    return TextUtils.concat("#", a, r, g, b).toString()
+//    var a = Integer.toHexString(Color.alpha(currentTextColor))
+    var r = Integer.toHexString(Color.red(currentTextColor))
+    var g = Integer.toHexString(Color.green(currentTextColor))
+    var b = Integer.toHexString(Color.blue(currentTextColor))
+//    a = if (a.length == 1) "0" + a else a
+    r = if (r.length == 1) "0" + r else r
+    g = if (g.length == 1) "0" + g else g
+    b = if (b.length == 1) "0" + b else b
+    return TextUtils.concat("#", r, g, b).toString()
+}
+
+fun EditText.generateAutoNewLineText(success: (String) -> Unit) {
+    post {
+        val s = text.toString().trim()
+        if (s.isBlank()) {
+            success("")
+            return@post
+        }
+        val width = width - paddingLeft - paddingRight
+        val list = s.split("\n".toRegex())
+        val sb = StringBuilder()
+        list.forEach {
+            if (paint.measureText(it) >= width) {
+                val sb1 = StringBuilder()
+                //每个字符的宽度
+                val sl = paint.measureText(it).toInt() / it.length
+                //达到EditText的宽度需要多少字符
+                val sc = width / sl
+                it.forEachIndexed { index, c ->
+                    if (index != 0 && index % sc == 0) {
+                        sb1.append(c)
+                        sb1.append("\n")
+                    } else {
+                        sb1.append(c)
+                    }
+                }
+                sb.append(sb1)
+            } else {
+                sb.append(it)
+            }
+        }
+        success(sb.toString())
+    }
 }
 
 /*

@@ -8,6 +8,7 @@ import android.text.TextPaint
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.jadyn.ai.acrobat.recyclerview.AcrobatAdapter
+import com.jadyn.ai.acrobat.recyclerview.itemdecoration.GroupInfo
 import com.jadyn.ai.acrobat.recyclerview.itemdecoration.StickyHeaderDecor
 import com.jadyn.ai.kotlind.utils.toastS
 import kotlinx.android.synthetic.main.activity_recycler_view.*
@@ -21,7 +22,7 @@ import kotlinx.android.synthetic.main.item_test.view.*
  *@Since:2018/7/4
  *@ChangeList:
  */
-class RecyclerViewActivity : AppCompatActivity() {
+class StickyHeaderActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,11 +59,30 @@ class RecyclerViewActivity : AppCompatActivity() {
                         titleY, textPaint)
             }))
             adapter = acrobatAdapter
-            layoutManager = GridLayoutManager(this@RecyclerViewActivity, 3)
+            layoutManager = GridLayoutManager(this@StickyHeaderActivity, 3)
         }
 
         change_tv.setOnClickListener {
             //            acrobatAdapter.setData(newData)
         }
     }
+}
+
+class Women(var name: String, var info: GroupInfo)
+
+fun getWomen(): ArrayList<Women> {
+    val list = arrayListOf<Women>()
+    for (i in 0 until 4) {
+        list.add(Women("刘诗诗", GroupInfo(i, 4, "刘诗诗")))
+    }
+    for (i in 0 until 11) {
+        list.add(Women("李冰冰", GroupInfo(i, 11, "李冰冰")))
+    }
+    for (i in 0 until 9) {
+        list.add(Women("新垣结衣", GroupInfo(i, 9, "新垣结衣")))
+    }
+    for (i in 0 until 5) {
+        list.add(Women("石原里美", GroupInfo(i, 5, "石原里美")))
+    }
+    return list
 }

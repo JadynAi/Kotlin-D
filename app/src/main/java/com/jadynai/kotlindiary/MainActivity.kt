@@ -10,7 +10,6 @@ import com.jadyn.ai.kotlind.base.KD
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.event
-import com.jadynai.cm.kotlintest.R
 import com.jadynai.kotlindiary.designMode.DesignModeActivity
 import com.jadynai.kotlindiary.show.ShowActivity
 import com.jadynai.kotlindiary.thread.ThreadActivity

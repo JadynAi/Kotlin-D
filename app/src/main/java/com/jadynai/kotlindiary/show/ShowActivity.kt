@@ -3,7 +3,7 @@ package com.jadynai.kotlindiary.show
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.pressSrc
-import com.jadynai.cm.kotlintest.R
+import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_show.*
 
 /**

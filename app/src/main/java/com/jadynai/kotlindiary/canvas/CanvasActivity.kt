@@ -2,7 +2,7 @@ package com.jadynai.kotlindiary.canvas
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.jadynai.cm.kotlintest.R
+import com.jadynai.kotlindiary.R
 
 /**
  *@version:

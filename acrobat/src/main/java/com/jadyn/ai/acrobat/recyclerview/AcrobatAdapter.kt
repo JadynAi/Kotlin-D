@@ -1,8 +1,10 @@
 package com.jadyn.ai.acrobat.recyclerview
 
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IntRange
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jadyn.ai.kotlind.function.ui.event
@@ -15,10 +17,14 @@ import com.jadyn.ai.kotlind.utils.TooFastChecker
  *@Since:2018/6/12
  *@ChangeList:
  */
-class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder<D>>() {
+class AcrobatAdapter<D>(
+        create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder<D>>() {
 
     private val acrobatMgr by lazy {
-        AcrobatMgr<D>()
+        AcrobatMgr(this)
+    }
+    internal val tagMap by lazy {
+        SparseArray<Any>(1)
     }
 
     init {
@@ -72,7 +78,8 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         holder.acrobatItem.showItem(acrobatMgr.data[position], position, holder.itemView)
     }
 
-    override fun onBindViewHolder(holder: AcroViewHolder<D>, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: AcroViewHolder<D>, position: Int,
+                                  payloads: MutableList<Any>) {
         if (payloads.isNotEmpty()) {
             holder.acrobatItem.showItem(acrobatMgr.data[position], position, holder.itemView, payloads)
         } else {
@@ -127,6 +134,11 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         }
     }
 
+    fun putTag(@IntRange(from = 1, to = 3) id: Int, tag: Any): AcrobatAdapter<D> {
+        tagMap.put(id, tag)
+        return this
+    }
+
     private inner class DiffCallback(private var mOldData: List<D>,
                                      private var mNewData: List<D>) : DiffUtil.Callback() {
 
@@ -154,7 +166,9 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter
         }
     }
 
-    class AcroViewHolder<D>(view: View, val acrobatItem: AcrobatItem<D>) : RecyclerView.ViewHolder(view) {
+    class AcroViewHolder<D>(view: View,
+                            val acrobatItem: AcrobatItem<D>) : RecyclerView.ViewHolder(view) {
+
         private var click: ((Int) -> Unit)? = null
         private var doubleTap: ((Int) -> Unit)? = null
         private var longPress: ((Int) -> Unit)? = null

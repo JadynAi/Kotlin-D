@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.jadynai.cm.kotlintest">
+    package="com.jadynai.kotlindiary">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -34,6 +34,7 @@
         <activity android:name="com.jadynai.kotlindiary.view.ViewActivity"/>
         <activity android:name="com.jadynai.kotlindiary.canvas.CanvasActivity"/>
         <activity android:name="com.jadynai.kotlindiary.designMode.DesignModeActivity"/>
+        <activity android:name=".StickyHeaderActivity" />
 
         <service
             android:name="com.jadynai.kotlindiary.binder.MessengerService"

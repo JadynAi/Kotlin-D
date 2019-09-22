@@ -81,7 +81,8 @@ fun getLevelDrawable(@DrawableRes vararg ids: Int): Drawable {
 fun getLevelDrawable(vararg ds: Drawable): Drawable {
     val drawable = LevelListDrawable()
     ds.forEachIndexed { index, d ->
-        drawable.addLevel(index, index, d)
+        val i = index + 1
+        drawable.addLevel(i, i, d)
     }
     return drawable
 }
