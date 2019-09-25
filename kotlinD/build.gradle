@@ -42,7 +42,7 @@ publish {
     repoName = 'maven'
     groupId = 'com.jadynai.ai.kotlind'   
     artifactId = 'KotlinD'       
-    publishVersion = '1.0.7'    
-    desc = 'remove BaseApplication use KD.init' 
+    publishVersion = '1.0.8'    
+    desc = 'code optimize' 
     website = 'https://github.com/JadynAi/Kotlin-D'    
 }
