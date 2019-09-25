@@ -18,7 +18,8 @@ import com.jadyn.ai.kotlind.utils.TooFastChecker
  *@ChangeList:
  */
 class AcrobatAdapter<D>(
-        create: AcrobatMgr<D>.() -> Unit) : RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder<D>>() {
+        create: AcrobatMgr<D>.() -> Unit) :
+        RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder<D>>() {
 
     private val acrobatMgr by lazy {
         AcrobatMgr(this)
@@ -33,7 +34,10 @@ class AcrobatAdapter<D>(
 
     var emptyEvent: (() -> Unit)? = null
 
-    var itemCompare: ((D, D) -> Boolean)? = null
+    /**
+     *  diff utils item compare
+     * */
+    private var itemCompare: ((D, D) -> Boolean)? = null
 
     private var bind: AcroViewHolder<D>.() -> Unit = {}
 
@@ -49,19 +53,19 @@ class AcrobatAdapter<D>(
             view.event({
                 acrobatItem.click?.apply {
                     if (viewHolder.adapterPosition >= 0 && !tooFastChecker.isTooFast) {
-                        invoke(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition)
+                        invoke(acrobatMgr.data[viewHolder.adapterPosition], viewHolder)
                     }
                 }
             }, {
                 acrobatItem.doubleTap?.apply {
                     if (viewHolder.adapterPosition >= 0 && !tooFastChecker.isTooFast) {
-                        invoke(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition)
+                        invoke(acrobatMgr.data[viewHolder.adapterPosition], viewHolder)
                     }
                 }
             }, {
                 acrobatItem.longPress?.apply {
                     if (viewHolder.adapterPosition >= 0 && !tooFastChecker.isTooFast) {
-                        invoke(acrobatMgr.data[viewHolder.adapterPosition], viewHolder.adapterPosition)
+                        invoke(acrobatMgr.data[viewHolder.adapterPosition], viewHolder)
                     }
                 }
             })
@@ -139,30 +143,25 @@ class AcrobatAdapter<D>(
         return this
     }
 
-    private inner class DiffCallback(private var mOldData: List<D>,
-                                     private var mNewData: List<D>) : DiffUtil.Callback() {
+    private inner class DiffCallback(private var oldData: List<D>,
+                                     private var newData: List<D>) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int {
-            return mOldData.size
+            return oldData.size
         }
 
         override fun getNewListSize(): Int {
-            return mNewData.size
+            return newData.size
         }
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val old = mOldData.get(oldItemPosition)
-            val new = mNewData.get(newItemPosition)
-            itemCompare?.apply {
-                return invoke(old, new)
-            }
-            return old.toString().equals(new.toString())
+            return acrobatMgr.getItemConfig(oldItemPosition) == acrobatMgr.getItemConfig(newItemPosition)
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val old = mOldData.get(oldItemPosition)
-            val new = mNewData.get(newItemPosition)
-            return old.toString().equals(new.toString())
+            val old = oldData[oldItemPosition]
+            val new = newData[newItemPosition]
+            return itemCompare?.invoke(old, new) ?: (old?.equals(new) ?: false)
         }
     }
 

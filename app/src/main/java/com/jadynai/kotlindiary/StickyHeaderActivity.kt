@@ -28,8 +28,8 @@ class StickyHeaderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler_view)
 
-        val womens = getWomen()
-        val acrobatAdapter = AcrobatAdapter<Women> {
+        val womens = getData()
+        val acrobatAdapter = AcrobatAdapter<Girl> {
             itemDSL {
                 resId(R.layout.item_test)
                 showItem { d, pos, view ->
@@ -43,8 +43,9 @@ class StickyHeaderActivity : AppCompatActivity() {
         }.setData(womens)
 
         recycler_view.apply {
+            layoutManager = GridLayoutManager(this@StickyHeaderActivity, 3)
             addItemDecoration(StickyHeaderDecor({
-                getWomen()[it].info
+                getData()[it].info
             }, 20, false, 50, { canvas, info, l, t, r, b ->
                 canvas.drawRect(Rect(l, t, r, b), Paint().apply {
                     color = Color.BLUE
@@ -57,7 +58,7 @@ class StickyHeaderActivity : AppCompatActivity() {
                 //绘制Title
                 canvas.drawText("test${info.data}", titleX.toFloat(),
                         titleY, textPaint)
-            }))
+            }, this))
             adapter = acrobatAdapter
             layoutManager = GridLayoutManager(this@StickyHeaderActivity, 3)
         }
@@ -68,21 +69,21 @@ class StickyHeaderActivity : AppCompatActivity() {
     }
 }
 
-class Women(var name: String, var info: GroupInfo)
+class Girl(var name: String, var info: GroupInfo)
 
-fun getWomen(): ArrayList<Women> {
-    val list = arrayListOf<Women>()
+fun getData(): ArrayList<Girl> {
+    val list = arrayListOf<Girl>()
     for (i in 0 until 4) {
-        list.add(Women("刘诗诗", GroupInfo(i, 4, "刘诗诗")))
+        list.add(Girl("刘诗诗", GroupInfo(i, 4, "刘诗诗")))
     }
     for (i in 0 until 11) {
-        list.add(Women("李冰冰", GroupInfo(i, 11, "李冰冰")))
+        list.add(Girl("李冰冰", GroupInfo(i, 11, "李冰冰")))
     }
     for (i in 0 until 9) {
-        list.add(Women("新垣结衣", GroupInfo(i, 9, "新垣结衣")))
+        list.add(Girl("新垣结衣", GroupInfo(i, 9, "新垣结衣")))
     }
     for (i in 0 until 5) {
-        list.add(Women("石原里美", GroupInfo(i, 5, "石原里美")))
+        list.add(Girl("石原里美", GroupInfo(i, 5, "石原里美")))
     }
     return list
 }

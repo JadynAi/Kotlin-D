@@ -2,6 +2,7 @@ package com.jadyn.ai.acrobat.recyclerview.itemdecoration
 
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,39 +16,52 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  *@Since:2019-09-21
  *@ChangeList:
  */
-class StickyHeaderDecor(private val callback: (pot: Int) -> GroupInfo,
+class StickyHeaderDecor(private val callback: (pos: Int) -> GroupInfo,
                         private val dividerH: Int = 0,
                         private val dividerIncludeEdge: Boolean = false,
                         private var headerHeight: Int = 0,
                         private val drawHeaderRect: (canvas: Canvas, info: GroupInfo,
-                                                          l: Int, t: Int, r: Int, b: Int) -> Unit
-) : RecyclerView.ItemDecoration() {
-
+                                                     l: Int, t: Int, r: Int, b: Int) -> Unit,
+                        recyclerView: RecyclerView) : RecyclerView.ItemDecoration() {
 
     private var spanCount1: Int = 0
-    private var isSetSpanSizeLookup = false
+
+    init {
+        recyclerView.layoutManager?.apply {
+            if (this is GridLayoutManager) {
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return callback.invoke(position).getSpanSize(this@apply)
+                    }
+                }
+            }
+        }
+    }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
                                 state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
         val position = parent.getChildAdapterPosition(view)
         val groupInfo = callback.invoke(position)
-        //如果是组内的第一个则将间距撑开为一个Header的高度，或者就是普通的分割线高度
         if (groupInfo.isFirstViewInGroup(parent.layoutManager)) {
             outRect.top = headerHeight
         }
         val spanCount = getSpanCount(parent)
         val column = groupInfo.position % spanCount
+        Log.d("StickyHeaderDecor", "getItemOffsets: ")
         if (dividerIncludeEdge) {
-            outRect.left = dividerH - column * dividerH / spanCount
-            outRect.right = (column + 1) * dividerH / spanCount
-            if (position < spanCount) {
-                outRect.top = dividerH
+            if (spanCount != 0) {
+                // 如果是LinearLayout就不用Left和Right
+                outRect.left = dividerH - column * dividerH / spanCount
+                outRect.right = (column + 1) * dividerH / spanCount
             }
             outRect.bottom = dividerH
         } else {
-            outRect.left = column * dividerH / spanCount
-            outRect.right = dividerH - (column + 1) * dividerH / spanCount
+            if (spanCount != 0) {
+                // 如果是LinearLayout就不用Left和Right
+                outRect.left = column * dividerH / spanCount
+                outRect.right = dividerH - (column + 1) * dividerH / spanCount
+            }
             outRect.bottom = dividerH
         }
         parent.layoutManager?.apply {
@@ -55,21 +69,13 @@ class StickyHeaderDecor(private val callback: (pot: Int) -> GroupInfo,
                 val width = parent.width - (dividerH * (spanCount - if (dividerIncludeEdge) -1 else 1))
                 view.layoutParams.width = width / spanCount
                 view.layoutParams.height = width / spanCount
-
-                if (!isSetSpanSizeLookup) {
-                    spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int): Int {
-                            return callback.invoke(position).getSpanSize(this@apply)
-                        }
-                    }
-                    isSetSpanSizeLookup = true
-                }
             }
         }
     }
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDrawOver(c, parent, state)
+        Log.d("StickyHeaderDecor", "onDrawOver: ")
         if (parent.childCount > 0) {
             val childCount = parent.childCount
             val paddingTop = parent.paddingTop
@@ -146,3 +152,5 @@ class GroupInfo(val position: Int = 0,
         return 1
     }
 }
+
+class GroupItemData<D>(groupInfo: GroupInfo, data: D)

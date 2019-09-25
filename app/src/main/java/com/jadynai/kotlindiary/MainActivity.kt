@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         KD.init(this.application)
 
-        recycler_tv.event(click = { startActivity(Intent(this, RecyclerViewActivity::class.java)) })
+        recycler_tv.event(click = { startActivity(Intent(this, StickyHeaderActivity::class.java)) })
 
         show_tv.click {
             start<ShowActivity>()

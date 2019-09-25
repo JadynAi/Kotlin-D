@@ -3,6 +3,7 @@ package com.jadyn.ai.acrobat.recyclerview
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  *@version:
@@ -11,9 +12,9 @@ import androidx.annotation.LayoutRes
  *@Since:2018/6/13
  *@ChangeList:
  */
-abstract class AcrobatItem<D>(var click: ((d: D, pos: Int) -> Unit)? = null,
-                              var doubleTap: ((d: D, pos: Int) -> Unit)? = null,
-                              var longPress: ((d: D, pos: Int) -> Unit)? = null) {
+abstract class AcrobatItem<D>(var click: ((d: D, vh: RecyclerView.ViewHolder) -> Unit)? = null,
+                              var doubleTap: ((d: D, vh: RecyclerView.ViewHolder) -> Unit)? = null,
+                              var longPress: ((d: D, vh: RecyclerView.ViewHolder) -> Unit)? = null) {
 
     companion object {
         fun <D> create(dsl: AcrobatDSL<D>.() -> Unit): AcrobatItem<D> {
@@ -56,11 +57,11 @@ class AcrobatDSL<D> constructor(
 
         private inline var dataMeet: (d: D, pos: Int) -> Boolean = { _: D, _: Int -> false },
 
-        private inline var click: ((d: D, pos: Int) -> Unit)? = null,
+        private inline var click: ((d: D, vh: RecyclerView.ViewHolder) -> Unit)? = null,
 
-        private inline var doubleTap: ((d: D, pos: Int) -> Unit)? = null,
+        private inline var doubleTap: ((d: D, vh: RecyclerView.ViewHolder) -> Unit)? = null,
 
-        private inline var longP: ((d: D, pos: Int) -> Unit)? = null) {
+        private inline var longP: ((d: D, vh: RecyclerView.ViewHolder) -> Unit)? = null) {
 
     internal lateinit var adapter: AcrobatAdapter<D>
 
@@ -93,15 +94,15 @@ class AcrobatDSL<D> constructor(
         this.dataPayload = dataPayload
     }
 
-    fun onClick(event: (d: D, pos: Int) -> Unit) {
+    fun onClick(event: (d: D, vh: RecyclerView.ViewHolder) -> Unit) {
         this.click = event
     }
 
-    fun onDoubleTap(dT: (d: D, pos: Int) -> Unit) {
+    fun onDoubleTap(dT: (d: D, vh: RecyclerView.ViewHolder) -> Unit) {
         this.doubleTap = dT
     }
 
-    fun longPress(lp: (d: D, pos: Int) -> Unit) {
+    fun longPress(lp: (d: D, vh: RecyclerView.ViewHolder) -> Unit) {
         this.longP = lp
     }
 
