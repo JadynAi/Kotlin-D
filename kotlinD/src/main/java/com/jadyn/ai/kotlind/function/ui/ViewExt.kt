@@ -4,7 +4,6 @@ import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.text.Layout
 import android.text.StaticLayout
@@ -17,7 +16,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
 import androidx.annotation.DrawableRes
-import com.jadyn.ai.kotlind.utils.dip2px
+import com.jadyn.ai.kotlind.utils.dp2px
 import com.jadyn.ai.kotlind.utils.screenWidth
 
 /**
@@ -116,63 +115,26 @@ fun View.roundHeight(solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeC
  * */
 fun View.roundArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
     roundInternalArray(r.map {
-        dip2px(it).toFloat()
+        dp2px(it).toFloat()
     }.toFloatArray(), solidColor, strokeW, strokeColor)
 }
 
 fun View.round(r: Float = 2f, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
-    roundInternal(dip2px(r).toFloat(), solidColor, strokeW, strokeColor)
+    roundInternal(dp2px(r).toFloat(), solidColor, strokeW, strokeColor)
 }
 
-fun View.roundInternal(r: Float = dip2px(2f).toFloat(), solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
-    val roundDrawable = RoundDrawable(r, solidColor, strokeW, strokeColor)
-    this.background = roundDrawable.build()
+fun View.roundInternal(r: Float = dp2px(2f).toFloat(), solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+    this.background =  roundDrawable(r, solidColor, strokeW, strokeColor)
     //避免子View影响到背景
     this.clipToOutline = true
 }
 
 fun View.roundInternalArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
-    val roundDrawable = RoundDrawable(r, solidColor, strokeW, strokeColor)
-    this.background = roundDrawable.build()
+    this.background = roundDrawable(r, solidColor, strokeW, strokeColor)
     //避免子View影响到背景
     this.clipToOutline = true
 }
 
-class RoundDrawable(private val rArray: FloatArray,
-                    private var solidColor: Int = Color.WHITE,
-                    private val strokeW: Float = 0f,
-                    private val strokeColor: Int = Color.TRANSPARENT) {
-
-    constructor(r: Float = dip2px(2f).toFloat(),
-                solidColor: Int = Color.WHITE, strokeW: Float = 0f,
-                strokeColor: Int = Color.TRANSPARENT) : this(floatArrayOf(r, r, r, r), solidColor,
-            strokeW, strokeColor)
-
-    init {
-        if (rArray.size != 4) {
-            throw IllegalArgumentException("round corner size must is 4!!!")
-        }
-    }
-
-    fun build(): GradientDrawable {
-        val gradientDrawable = GradientDrawable()
-        gradientDrawable.mutate()
-        gradientDrawable.shape = GradientDrawable.RECTANGLE
-        gradientDrawable.setColor(this.solidColor)
-        gradientDrawable.setStroke(dip2px(strokeW), strokeColor)
-        if (rArray[0] == rArray[1] && rArray[2] == rArray[3] && rArray[1] == rArray[2]) {
-            gradientDrawable.cornerRadius = rArray[0]
-        } else {
-            gradientDrawable.cornerRadii = floatArrayOf(
-                    rArray[0], rArray[0],
-                    rArray[1], rArray[1],
-                    rArray[2], rArray[2],
-                    rArray[3], rArray[3]
-            )
-        }
-        return gradientDrawable
-    }
-}
 
 fun pressColorAll(normalColor: Int, pressColor: Int, vararg views: View) {
     if (views.isEmpty()) {

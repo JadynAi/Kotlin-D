@@ -4,7 +4,7 @@ import android.graphics.*
 import com.bumptech.glide.load.Key
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
-import com.jadyn.ai.kotlind.utils.dip2px
+import com.jadyn.ai.kotlind.utils.dp2px
 import java.security.MessageDigest
 
 
@@ -24,10 +24,10 @@ class RoundCorner constructor(leftTop: Float = 0f,
 
     private val ID: String = "com.jadynai.kotlindiary.RoundCorner$leftTop$rightTop$leftBottom$rightBottom"
 
-    private val leftTop: Float = dip2px(leftTop).toFloat()
-    private val rightTop = dip2px(rightTop).toFloat()
-    private val leftBottom = dip2px(leftBottom).toFloat()
-    private val rightBottom = dip2px(rightBottom).toFloat()
+    private val leftTop: Float = dp2px(leftTop).toFloat()
+    private val rightTop = dp2px(rightTop).toFloat()
+    private val leftBottom = dp2px(leftBottom).toFloat()
+    private val rightBottom = dp2px(rightBottom).toFloat()
 
     private val ID_BYTES: ByteArray
 

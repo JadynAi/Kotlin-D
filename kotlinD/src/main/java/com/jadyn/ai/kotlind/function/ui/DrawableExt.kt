@@ -1,10 +1,12 @@
 package com.jadyn.ai.kotlind.function.ui
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.*
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import com.jadyn.ai.kotlind.base.KD
+import com.jadyn.ai.kotlind.utils.dp2px
 import com.jadyn.ai.kotlind.utils.parseColor
 
 /**
@@ -85,6 +87,33 @@ fun getLevelDrawable(vararg ds: Drawable): Drawable {
         drawable.addLevel(i, i, d)
     }
     return drawable
+}
+
+fun roundDrawable(r: Float = dp2px(2f).toFloat(), solidColor: Int = Color.WHITE,
+                  strokeW: Float = 0f,
+                  strokeColor: Int = Color.TRANSPARENT): GradientDrawable {
+    return roundDrawable(floatArrayOf(r, r, r, r), solidColor, strokeW, strokeColor)
+}
+
+fun roundDrawable(rArray: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
+                  strokeColor: Int = Color.TRANSPARENT): GradientDrawable {
+    require(rArray.size == 4) { "round corner size must is 4!!!" }
+    val gradientDrawable = GradientDrawable()
+    gradientDrawable.mutate()
+    gradientDrawable.shape = GradientDrawable.RECTANGLE
+    gradientDrawable.setColor(solidColor)
+    gradientDrawable.setStroke(dp2px(strokeW), strokeColor)
+    if (rArray[0] == rArray[1] && rArray[2] == rArray[3] && rArray[1] == rArray[2]) {
+        gradientDrawable.cornerRadius = rArray[0]
+    } else {
+        gradientDrawable.cornerRadii = floatArrayOf(
+                rArray[0], rArray[0],
+                rArray[1], rArray[1],
+                rArray[2], rArray[2],
+                rArray[3], rArray[3]
+        )
+    }
+    return gradientDrawable
 }
 
 fun ovalDrawable(solidColor: Int, w: Int, h: Int): GradientDrawable {

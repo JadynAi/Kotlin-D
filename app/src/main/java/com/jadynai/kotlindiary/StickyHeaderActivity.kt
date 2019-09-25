@@ -44,7 +44,15 @@ class StickyHeaderActivity : AppCompatActivity() {
 
         recycler_view.apply {
             layoutManager = GridLayoutManager(this@StickyHeaderActivity, 3)
-            addItemDecoration(StickyHeaderDecor({
+//                    .let {
+//                it.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+//                    override fun getSpanSize(position: Int): Int {
+//                        return womens[position].info.getSpanSize(it)
+//                    }
+//                }
+//                it
+//            }
+            addItemDecoration(StickyHeaderDecor(this, {
                 getData()[it].info
             }, 20, false, 50, { canvas, info, l, t, r, b ->
                 canvas.drawRect(Rect(l, t, r, b), Paint().apply {
@@ -58,9 +66,8 @@ class StickyHeaderActivity : AppCompatActivity() {
                 //绘制Title
                 canvas.drawText("test${info.data}", titleX.toFloat(),
                         titleY, textPaint)
-            }, this))
+            }))
             adapter = acrobatAdapter
-            layoutManager = GridLayoutManager(this@StickyHeaderActivity, 3)
         }
 
         change_tv.setOnClickListener {

@@ -16,13 +16,14 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  *@Since:2019-09-21
  *@ChangeList:
  */
-class StickyHeaderDecor(private val callback: (pos: Int) -> GroupInfo,
+class StickyHeaderDecor(recyclerView: RecyclerView,
+                        private val callback: (pos: Int) -> GroupInfo,
                         private val dividerH: Int = 0,
                         private val dividerIncludeEdge: Boolean = false,
                         private var headerHeight: Int = 0,
                         private val drawHeaderRect: (canvas: Canvas, info: GroupInfo,
-                                                     l: Int, t: Int, r: Int, b: Int) -> Unit,
-                        recyclerView: RecyclerView) : RecyclerView.ItemDecoration() {
+                                                     l: Int, t: Int, r: Int, b: Int) -> Unit) :
+        RecyclerView.ItemDecoration() {
 
     private var spanCount1: Int = 0
 
