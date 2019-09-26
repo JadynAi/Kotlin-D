@@ -52,6 +52,7 @@ class StickyHeaderActivity : AppCompatActivity() {
 //                }
 //                it
 //            }
+            setHasFixedSize(true)
             addItemDecoration(StickyHeaderDecor(this, {
                 getData()[it].info
             }, 20, false, 50, { canvas, info, l, t, r, b ->

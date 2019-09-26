@@ -17,8 +17,7 @@ import com.jadyn.ai.kotlind.utils.TooFastChecker
  *@Since:2018/6/12
  *@ChangeList:
  */
-class AcrobatAdapter<D>(
-        create: AcrobatMgr<D>.() -> Unit) :
+class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
         RecyclerView.Adapter<AcrobatAdapter.AcroViewHolder<D>>() {
 
     private val acrobatMgr by lazy {
@@ -143,6 +142,12 @@ class AcrobatAdapter<D>(
         return this
     }
 
+    fun notifyItemChangedSafe(pos: Int) {
+        if (pos > -1 && pos < acrobatMgr.data.size) {
+            notifyItemChanged(pos)
+        }
+    }
+
     private inner class DiffCallback(private var oldData: List<D>,
                                      private var newData: List<D>) : DiffUtil.Callback() {
 
@@ -165,33 +170,33 @@ class AcrobatAdapter<D>(
         }
     }
 
-    class AcroViewHolder<D>(view: View,
-                            val acrobatItem: AcrobatItem<D>) : RecyclerView.ViewHolder(view) {
+    class AcroViewHolder<D>(view: View, val acrobatItem: AcrobatItem<D>) :
+            RecyclerView.ViewHolder(view) {
 
-        private var click: ((Int) -> Unit)? = null
-        private var doubleTap: ((Int) -> Unit)? = null
-        private var longPress: ((Int) -> Unit)? = null
+        private var click: ((View, pos: Int) -> Unit)? = null
+        private var doubleTap: ((View, pos: Int) -> Unit)? = null
+        private var longPress: ((View, pos: Int) -> Unit)? = null
 
-        fun onClick(c: (Int) -> Unit) {
+        fun onClick(c: (View, pos: Int) -> Unit) {
             check(!acrobatItem.hasEvent()) { "item has inner event!!!" }
             click = c
         }
 
-        fun onDoubleTap(d: (Int) -> Unit) {
+        fun onDoubleTap(d: (View, pos: Int) -> Unit) {
             check(!acrobatItem.hasEvent()) { "item has inner event!!!" }
             doubleTap = d
         }
 
-        fun longPress(l: (Int) -> Unit) {
+        fun longPress(l: (View, pos: Int) -> Unit) {
             check(!acrobatItem.hasEvent()) { "item has inner event!!!" }
             longPress = l
         }
 
         internal fun doBindEvent() {
             if (click != null || doubleTap != null || longPress != null) {
-                itemView.event({ click?.apply { this((adapterPosition)) } },
-                        { doubleTap?.apply { this(adapterPosition) } },
-                        { longPress?.apply { this(adapterPosition) } })
+                itemView.event({ if (adapterPosition >= 0) click?.invoke(itemView, adapterPosition) },
+                        { if (adapterPosition >= 0) doubleTap?.invoke(itemView, adapterPosition) },
+                        { if (adapterPosition >= 0) longPress?.invoke(itemView, adapterPosition) })
             }
         }
     }

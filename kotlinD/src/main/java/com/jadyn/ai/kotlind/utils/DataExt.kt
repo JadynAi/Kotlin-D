@@ -23,20 +23,26 @@ fun <T> List<T>.getSafeNull(index: Int): T? {
 }
 
 fun <T> List<T>.indexOfSafe(t: T): Int {
-    return if (indexOf(t) < 0) 0 else indexOf(t)
+    val i = indexOf(t)
+    return if (i < 0) 0 else i
+}
+
+fun <T> List<T>.indexOfNull(t: T): Int? {
+    val i = indexOf(t)
+    return if (i < 0) null else i
 }
 
 fun <T> List<T>?.isValid(): Boolean {
     return this != null && isNotEmpty()
 }
 
-fun <T> List<T>?.findIndex(predicate: (T) -> Boolean): Int {
+fun <T> List<T>?.findIndex(predicate: (T) -> Boolean): Int? {
     this?.apply {
         find(predicate)?.let {
-            return this.indexOfSafe(it)
+            return this.indexOfNull(it)
         }
     }
-    return 0
+    return null
 }
 
 fun String?.isValid(): Boolean {
