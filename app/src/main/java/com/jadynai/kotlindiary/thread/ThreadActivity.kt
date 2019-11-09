@@ -2,13 +2,16 @@ package com.jadynai.kotlindiary.thread
 
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.os.SystemClock
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_thread.*
 import java.util.*
 import java.util.concurrent.Executors
+import java.util.concurrent.RunnableFuture
+import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.locks.ReentrantLock
 
 /**
@@ -34,7 +37,7 @@ class ThreadActivity : AppCompatActivity() {
     }
 
     private val fixThread by lazy {
-        Executors.newFixedThreadPool(3)
+        Executors.newFixedThreadPool(1) as ThreadPoolExecutor
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,34 +55,26 @@ class ThreadActivity : AppCompatActivity() {
         }
 
         textView3.click {
-            //            Consumer1().start()
-//            Producer1().start()
-            Thread({
-                Log.d("cece", " runing: ${Thread.currentThread().name}")
-                A.test(3000)
-            }, "1").start()
-            it.postDelayed({
-                Thread({
-                    Log.d("cece", " runing: ${Thread.currentThread().name}")
-                    A.test(500)
-                }, "2").start()
-            }, 1000)
+            fixThread.shutdown()
         }
-
-
-        val group = "test"
 
         textView2.click {
-
-            for (i in 0..1) {
-//                fixThread.execute {
-//                    Log.d("cece", "thread : ${Thread.currentThread().name} + $i")
-//                }
-                Thread(ThreadGroup(group)) {
-                    Log.d("cece", "thread : ${Thread.currentThread().name} + $i")
-                }.start()
+            fixThread.submit {
+                for (i in 0..15) {
+                    SystemClock.sleep(1000)
+                    Log.d("ThreadActivity", "onCreate: $i")
+                }
             }
         }
+
+        textView5.click {
+            fixThread.queue.forEach {
+                if (it is RunnableFuture<*>) {
+                    it.cancel(true)
+                }
+            }
+        }
+
     }
 
     inner class Consumer1 : Thread() {

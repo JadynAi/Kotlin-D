@@ -22,7 +22,7 @@ val phonePixels: IntArray
         return intArrayOf(metrics.widthPixels, metrics.heightPixels)
     }
 
-val screenWidth by lazy { 
+val screenWidth by lazy {
     phonePixels[0]
 }
 
@@ -49,4 +49,12 @@ fun computeDisWithScreenW(denominator: Int, member: Int): Int {
 fun computeDisWithPhoneHeight(denominator: Int, member: Int): Int {
     val ratio = denominator.toFloat() / member.toFloat()
     return (phonePixels[1] / ratio + 0.5f).toInt()
+}
+
+fun repeatTimeOut(time: Long, action: () -> Boolean, callback: () -> Unit) {
+    val start = System.currentTimeMillis()
+    while (action.invoke() && System.currentTimeMillis() - start <= time) {
+        
+    }
+    callback.invoke()
 }
