@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_thread.*
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.RunnableFuture
+import java.util.concurrent.Semaphore
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.locks.ReentrantLock
 
@@ -37,14 +38,13 @@ class ThreadActivity : AppCompatActivity() {
     }
 
     private val fixThread by lazy {
-        Executors.newFixedThreadPool(1) as ThreadPoolExecutor
+        Executors.newFixedThreadPool(3) as ThreadPoolExecutor
     }
+    private val semaphore = Semaphore(1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_thread)
-
-        "".replace("", "")
 
         textView.click {
             val consumer = Consumer()
@@ -60,10 +60,10 @@ class ThreadActivity : AppCompatActivity() {
 
         textView2.click {
             fixThread.submit {
-                for (i in 0..15) {
-                    SystemClock.sleep(1000)
-                    Log.d("ThreadActivity", "onCreate: $i")
-                }
+                semaphore.acquire()
+                SystemClock.sleep(2000)
+                Log.d("ThreadActivity", "onCreate: ")
+                semaphore.release()
             }
         }
 

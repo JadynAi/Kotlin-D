@@ -3,6 +3,7 @@ package com.jadyn.ai.kotlind.function.ui
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.*
+import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import com.jadyn.ai.kotlind.base.KD
@@ -16,6 +17,20 @@ import com.jadyn.ai.kotlind.utils.parseColor
  *@Since:2018/7/4
  *@ChangeList:
  */
+//------enable------
+fun getEnableDrawable(normalRes: String, changedRes: String): StateListDrawable {
+    return getEnableDrawable(ColorDrawable(parseColor(normalRes)), ColorDrawable(parseColor(changedRes)))
+}
+
+fun getEnableDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int): StateListDrawable {
+    return getEnableDrawable(getResDrawable(normalRes), getResDrawable(pressRes))
+}
+
+fun getEnableDrawable(nor: Drawable?, press: Drawable?): StateListDrawable {
+    return getStateDrawable(nor, press, android.R.attr.state_enabled)
+}
+
+//------press------
 fun getPressDrawable(normalRes: String, pressColor: String): StateListDrawable {
     return getPressDrawable(ColorDrawable(parseColor(normalRes)), ColorDrawable(parseColor(pressColor)))
 }
@@ -25,16 +40,10 @@ fun getPressDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int): S
 }
 
 fun getPressDrawable(nor: Drawable?, press: Drawable?): StateListDrawable {
-    val sd = StateListDrawable()
-    press?.apply {
-        sd.addState(intArrayOf(android.R.attr.state_pressed), this)
-    }
-    nor?.apply {
-        sd.addState(intArrayOf(), this)
-    }
-    return sd
+    return getStateDrawable(nor, press, android.R.attr.state_pressed)
 }
 
+//------check------
 fun getCheckedDrawable(normalRes: String, checkedColor: String): StateListDrawable {
     return getCheckedDrawable(ColorDrawable(parseColor(normalRes)), ColorDrawable(parseColor(checkedColor)))
 }
@@ -44,16 +53,10 @@ fun getCheckedDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int):
 }
 
 fun getCheckedDrawable(nor: Drawable?, checked: Drawable?): StateListDrawable {
-    val sd = StateListDrawable()
-    checked?.apply {
-        sd.addState(intArrayOf(android.R.attr.state_checked), this)
-    }
-    nor?.apply {
-        sd.addState(intArrayOf(), this)
-    }
-    return sd
+    return getStateDrawable(nor, checked, android.R.attr.state_checked)
 }
 
+//------select------
 fun getSelectedDrawable(normalRes: String, checkedColor: String): StateListDrawable {
     return getSelectedDrawable(ColorDrawable(parseColor(normalRes)), ColorDrawable(parseColor(checkedColor)))
 }
@@ -63,9 +66,13 @@ fun getSelectedDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int)
 }
 
 fun getSelectedDrawable(nor: Drawable?, checked: Drawable?): StateListDrawable {
+    return getStateDrawable(nor, checked, android.R.attr.state_selected)
+}
+
+fun getStateDrawable(nor: Drawable?, checked: Drawable?, @AttrRes state: Int): StateListDrawable {
     val sd = StateListDrawable()
     checked?.apply {
-        sd.addState(intArrayOf(android.R.attr.state_selected), this)
+        sd.addState(intArrayOf(state), this)
     }
     nor?.apply {
         sd.addState(intArrayOf(), this)
@@ -116,10 +123,12 @@ fun roundDrawable(rArray: FloatArray, solidColor: Int = Color.WHITE, strokeW: Fl
     return gradientDrawable
 }
 
-fun ovalDrawable(solidColor: Int, w: Int, h: Int): GradientDrawable {
+fun ovalDrawable(solidColor: Int, w: Int = 0, h: Int = 0): GradientDrawable {
     val drawable = GradientDrawable()
     drawable.shape = GradientDrawable.OVAL
-    drawable.setSize(w, h)
+    if (w != 0 && h != 0) {
+        drawable.setSize(w, h)
+    }
     drawable.setColor(solidColor)
     return drawable
 }

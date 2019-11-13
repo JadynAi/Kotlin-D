@@ -60,15 +60,6 @@ fun View.computeWidthWithH(ratio: Float) {
     }
 }
 
-//根据屏幕宽来计算宽
-fun View.computeWidthWithScreenW(ratio: Float) {
-    post {
-        val params = this.layoutParams
-        params.width = (screenWidth * ratio).toInt()
-        layoutParams = params
-    }
-}
-
 //View根据宽计算高
 fun View.computeHeightWithW(ratio: Float) {
     this.post {
@@ -77,22 +68,6 @@ fun View.computeHeightWithW(ratio: Float) {
         this.layoutParams = params
     }
 }
-
-//fun View.setHeightWithW(wRatio: Float, hRatio: Float) {
-//    val params = layoutParams
-//    if (params is ConstraintLayout.LayoutParams) {
-//        params.dimensionRatio = "W : $wRatio:$hRatio"
-//        layoutParams = params
-//    }
-//}
-//
-//fun View.setWidthWithH(wRatio: Float, hRatio: Float) {
-//    val params = layoutParams
-//    if (params is ConstraintLayout.LayoutParams) {
-//        params.dimensionRatio = "H : $wRatio:$hRatio"
-//        layoutParams = params
-//    }
-//}
 
 fun View.updateWH(width: Int = layoutParams.width, height: Int = layoutParams.height) {
     val params = layoutParams
@@ -135,7 +110,6 @@ fun View.roundInternalArray(r: FloatArray, solidColor: Int = Color.WHITE, stroke
     this.clipToOutline = true
 }
 
-
 fun pressColorAll(normalColor: Int, pressColor: Int, vararg views: View) {
     if (views.isEmpty()) {
         return
@@ -173,9 +147,23 @@ fun CompoundButton.checkedButton(@DrawableRes normalRes: Int, @DrawableRes press
 
 fun CompoundButton.checkedColorButton(normalColor: Int, checkedColor: Int,
                                       drawableHandle: (StateListDrawable) -> Unit = {}) {
-    val checkedDrawable = getCheckedDrawable(ColorDrawable(normalColor), ColorDrawable(checkedColor))
-    drawableHandle.invoke(checkedDrawable)
-    this.buttonDrawable = checkedDrawable
+    val drawable = getCheckedDrawable(ColorDrawable(normalColor), ColorDrawable(checkedColor))
+    drawableHandle.invoke(drawable)
+    this.buttonDrawable = drawable
+}
+
+fun View.enabled(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
+    this.background = getEnableDrawable(normalRes, pressRes)
+}
+
+fun View.enabled(normal: Drawable, press: Drawable, drawableHandle: (StateListDrawable) -> Unit = {}) {
+    val drawable = getEnableDrawable(normal, press)
+    drawableHandle.invoke(drawable)
+    this.background = drawable
+}
+
+fun View.enabledColor(normalColor: Int, checkedColor: Int) {
+    this.background = getEnableDrawable(ColorDrawable(normalColor), ColorDrawable(checkedColor))
 }
 
 fun View.checked(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
