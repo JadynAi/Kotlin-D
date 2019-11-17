@@ -153,5 +153,3 @@ class GroupInfo(val position: Int = 0,
         return 1
     }
 }
-
-class GroupItemData<D>(groupInfo: GroupInfo, data: D)
