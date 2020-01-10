@@ -73,9 +73,9 @@ fun TextView.generateHexColor(): String {
     var g = Integer.toHexString(Color.green(currentTextColor))
     var b = Integer.toHexString(Color.blue(currentTextColor))
 //    a = if (a.length == 1) "0" + a else a
-    r = if (r.length == 1) "0" + r else r
-    g = if (g.length == 1) "0" + g else g
-    b = if (b.length == 1) "0" + b else b
+    r = if (r.length == 1) "0$r" else r
+    g = if (g.length == 1) "0$g" else g
+    b = if (b.length == 1) "0$b" else b
     return TextUtils.concat("#", r, g, b).toString()
 }
 

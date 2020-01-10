@@ -2,7 +2,6 @@ package com.jadynai.kotlindiary.thread
 
 import android.content.Context
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.click
@@ -10,7 +9,6 @@ import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_thread.*
 import java.util.*
 import java.util.concurrent.Executors
-import java.util.concurrent.RunnableFuture
 import java.util.concurrent.Semaphore
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.locks.ReentrantLock
@@ -38,7 +36,7 @@ class ThreadActivity : AppCompatActivity() {
     }
 
     private val fixThread by lazy {
-        Executors.newFixedThreadPool(3) as ThreadPoolExecutor
+        Executors.newFixedThreadPool(1) as ThreadPoolExecutor
     }
     private val semaphore = Semaphore(1)
 
@@ -58,21 +56,17 @@ class ThreadActivity : AppCompatActivity() {
             fixThread.shutdown()
         }
 
-        textView2.click {
+        thread_pool_test.click {
             fixThread.submit {
-                semaphore.acquire()
-                SystemClock.sleep(2000)
-                Log.d("ThreadActivity", "onCreate: ")
-                semaphore.release()
+                for (i in 0..100) {
+                    Thread.sleep(500)
+                    Log.d("ThreadActivity", "onCreate: i$i")
+                }
             }
         }
 
-        textView5.click {
-            fixThread.queue.forEach {
-                if (it is RunnableFuture<*>) {
-                    it.cancel(true)
-                }
-            }
+        thread_pool_stop.click {
+            fixThread.shutdown()
         }
 
     }

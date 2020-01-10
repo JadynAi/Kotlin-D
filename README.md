@@ -54,6 +54,14 @@ View.press(normal: Drawable, press: Drawable)
 // 颜色
 View.pressColor(normalColor: Int, pressColor: Int)
 ```
+- checkBox之类的设置button drawable
+```
+// 设置资源ID
+checkedButton(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int)
+
+// 设置颜色
+CompoundButton.checkedColorButton(normalColor: Int, checkedColor: Int)
+```
 
 ## LICENSE
 

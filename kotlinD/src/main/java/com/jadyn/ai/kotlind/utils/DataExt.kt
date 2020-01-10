@@ -1,5 +1,7 @@
 package com.jadyn.ai.kotlind.utils
 
+import android.util.Range
+import androidx.collection.ArrayMap
 import java.nio.charset.Charset
 import java.util.*
 
@@ -104,3 +106,60 @@ val <D> Queue<D>.pollSafe: D?
             null
         }
     }
+
+/**
+ * 区间[)
+ * */
+fun <D> List<D>.subListSafe(range: Range<Int>): List<D> {
+    val start = if (range.lower < 0) 0 else range.lower
+    val end = if (range.upper > size) size else range.upper
+    return subList(start, end)
+}
+
+/**
+ * Androidx arrayMap
+ * */
+fun <K, V> weakMapOf(vararg pairs: Pair<K, V>): WeakHashMap<K, V> =
+        WeakHashMap<K, V>(pairs.size).apply { putAll(pairs) }
+
+/**
+ * Androidx arrayMap
+ * */
+fun <K, V> arrayXMapOf(vararg pairs: Pair<K, V>): ArrayMap<K, V> =
+        ArrayMap<K, V>(pairs.size).apply { putAll(pairs) }
+
+inline fun <T, R> Iterable<T>.mapUntil(transform: (T) -> R, judge: (T) -> Boolean): List<R> {
+    return mapToUntil(ArrayList(), transform, judge)
+}
+
+inline fun <T, R, C : MutableCollection<in R>> Iterable<T>.mapToUntil(destination: C, transform: (T) -> R, judge: (T) -> Boolean): C {
+    for (item in this) {
+        if (judge.invoke(item)) {
+            break
+        }
+        destination.add(transform(item))
+    }
+    return destination
+}
+
+/**
+ * 将一个list分为 sub 份
+ * */
+//fun <T> partition(list: List<T>, sub: Int): List<List<T>> {
+//    if (list.isEmpty() || list.size <= sub) {
+//        return arrayListOf(list)
+//    }
+//    val s = list.size
+//    return Lists.partition(list, s / sub + s % sub)
+//}
+
+fun parseInt(num: String?, def: Int = 0): Int {
+    if (num.isNullOrBlank()) {
+        return def
+    }
+    return try {
+        num.toInt()
+    } catch (e: Exception) {
+        def
+    }
+}

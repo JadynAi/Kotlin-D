@@ -1,9 +1,11 @@
 package com.jadyn.ai.kotlind.function.ui
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.*
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import com.jadyn.ai.kotlind.base.KD
@@ -18,8 +20,8 @@ import com.jadyn.ai.kotlind.utils.parseColor
  *@ChangeList:
  */
 //------enable------
-fun getEnableDrawable(normalRes: String, changedRes: String): StateListDrawable {
-    return getEnableDrawable(ColorDrawable(parseColor(normalRes)), ColorDrawable(parseColor(changedRes)))
+fun getEnableDrawable(normal: String, changed: String): StateListDrawable {
+    return getEnableDrawable(ColorDrawable(parseColor(normal)), ColorDrawable(parseColor(changed)))
 }
 
 fun getEnableDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int): StateListDrawable {
@@ -31,8 +33,8 @@ fun getEnableDrawable(nor: Drawable?, press: Drawable?): StateListDrawable {
 }
 
 //------press------
-fun getPressDrawable(normalRes: String, pressColor: String): StateListDrawable {
-    return getPressDrawable(ColorDrawable(parseColor(normalRes)), ColorDrawable(parseColor(pressColor)))
+fun getPressDrawable(nor: String, pressColor: String): StateListDrawable {
+    return getPressDrawable(ColorDrawable(parseColor(nor)), ColorDrawable(parseColor(pressColor)))
 }
 
 fun getPressDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int): StateListDrawable {
@@ -57,8 +59,8 @@ fun getCheckedDrawable(nor: Drawable?, checked: Drawable?): StateListDrawable {
 }
 
 //------select------
-fun getSelectedDrawable(normalRes: String, checkedColor: String): StateListDrawable {
-    return getSelectedDrawable(ColorDrawable(parseColor(normalRes)), ColorDrawable(parseColor(checkedColor)))
+fun getSelectedDrawable(nor: String, checkedColor: String): StateListDrawable {
+    return getSelectedDrawable(ColorDrawable(parseColor(nor)), ColorDrawable(parseColor(checkedColor)))
 }
 
 fun getSelectedDrawable(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int): StateListDrawable {
@@ -106,7 +108,7 @@ fun roundDrawable(rArray: FloatArray, solidColor: Int = Color.WHITE, strokeW: Fl
                   strokeColor: Int = Color.TRANSPARENT): GradientDrawable {
     require(rArray.size == 4) { "round corner size must is 4!!!" }
     val gradientDrawable = GradientDrawable()
-    gradientDrawable.mutate()
+//    gradientDrawable.mutate()
     gradientDrawable.shape = GradientDrawable.RECTANGLE
     gradientDrawable.setColor(solidColor)
     gradientDrawable.setStroke(dp2px(strokeW), strokeColor)
@@ -123,13 +125,15 @@ fun roundDrawable(rArray: FloatArray, solidColor: Int = Color.WHITE, strokeW: Fl
     return gradientDrawable
 }
 
-fun ovalDrawable(solidColor: Int, w: Int = 0, h: Int = 0): GradientDrawable {
+fun ovalDrawable(solidColor: Int, strokeW: Float = 0f,
+                 strokeColor: Int = Color.TRANSPARENT, w: Int = 0, h: Int = 0): GradientDrawable {
     val drawable = GradientDrawable()
     drawable.shape = GradientDrawable.OVAL
     if (w != 0 && h != 0) {
         drawable.setSize(w, h)
     }
     drawable.setColor(solidColor)
+    drawable.setStroke(dp2px(strokeW), strokeColor)
     return drawable
 }
 
@@ -139,4 +143,30 @@ fun getResDrawable(resId: Int, context: Context? = null): Drawable? {
     } catch (e: Exception) {
         null
     }
+}
+
+fun Drawable.tintSelected(@ColorInt nor: Int, @ColorInt state: Int): Drawable {
+    return tintState(nor, state, android.R.attr.state_selected)
+}
+
+fun Drawable.tintEnable(@ColorInt nor: Int, @ColorInt state: Int): Drawable {
+    return tintState(nor, state, android.R.attr.state_enabled)
+}
+
+fun Drawable.tintChecked(@ColorInt nor: Int, @ColorInt state: Int): Drawable {
+    return tintState(nor, state, android.R.attr.state_checked)
+}
+
+/**
+ * ColorStateList 两个参数，第一参数就是状态数组。第二个参数为状态对应的颜色
+ *
+ * @param nor state false状态下的颜色
+ * @param state State触发时，为true的颜色
+ * @param stateId
+ * */
+fun Drawable.tintState(@ColorInt nor: Int, @ColorInt state: Int, @AttrRes stateId: Int): Drawable {
+    setTintList(ColorStateList(arrayOf(intArrayOf(stateId), intArrayOf()),
+            intArrayOf(state, nor)))
+    mutate()
+    return this
 }

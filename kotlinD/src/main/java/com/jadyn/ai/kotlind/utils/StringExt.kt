@@ -75,11 +75,3 @@ fun getS(@StringRes id: Int, vararg formatArgs: Any): String {
         ""
     }
 }
-
-fun parseInt(s: String?, def: Int = 0): Int {
-    return try {
-        Integer.parseInt(s)
-    } catch (e: Exception) {
-        def
-    }
-}

@@ -2,6 +2,7 @@ package com.jadyn.ai.kotlind.function.ui
 
 import android.app.Activity
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.StateListDrawable
@@ -9,15 +10,12 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.Log
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
 import androidx.annotation.DrawableRes
+import androidx.viewpager.widget.ViewPager
 import com.jadyn.ai.kotlind.utils.dp2px
-import com.jadyn.ai.kotlind.utils.screenWidth
 
 /**
  *@version:
@@ -288,3 +286,59 @@ fun measureText(text: String, textPaint: TextPaint): IntArray {
 //        Logger.t("choose").d("error $e")
 //    }
 //}
+
+fun View.interceptBackPress(onBackPress: (View) -> Unit) {
+    isFocusableInTouchMode = true
+    requestFocus()
+    setOnKeyListener { v, keyCode, event ->
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+            onBackPress.invoke(this)
+            clearAllInterceptBackPress()
+            return@setOnKeyListener true
+        }
+        return@setOnKeyListener false
+    }
+}
+
+fun View.clearAllInterceptBackPress() {
+    setOnKeyListener(null)
+    isFocusableInTouchMode = false
+    clearFocus()
+}
+
+fun View.getLocationOnScreen(): IntArray {
+    val array = IntArray(2)
+    getLocationOnScreen(array)
+    return array
+}
+
+fun View.getLocationOnWindow(): IntArray {
+    val array = IntArray(2)
+    getLocationInWindow(array)
+    return array
+}
+
+fun View.getCurRectLocation(): Rect {
+    val rect = Rect()
+    getGlobalVisibleRect(rect)
+    return rect
+}
+
+fun ViewGroup.childView(): ArrayList<View> {
+    val list = arrayListOf<View>()
+    val count = childCount
+    for (i in 0 until count) {
+        list.add(getChildAt(i))
+    }
+    return list
+}
+
+fun ViewPager.setCurItemSafe(pos: Int) {
+    if (pos < 0 || pos >= adapter?.count ?: 0) {
+        return
+    }
+    if (pos == currentItem) {
+        return
+    }
+    currentItem = pos
+}
