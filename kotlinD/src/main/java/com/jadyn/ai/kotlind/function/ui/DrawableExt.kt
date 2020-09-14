@@ -1,5 +1,6 @@
 package com.jadyn.ai.kotlind.function.ui
 
+import android.R
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -101,16 +102,35 @@ fun getLevelDrawable(vararg ds: Drawable): Drawable {
 fun roundDrawable(r: Float = dp2px(2f).toFloat(), solidColor: Int = Color.WHITE,
                   strokeW: Float = 0f,
                   strokeColor: Int = Color.TRANSPARENT): GradientDrawable {
-    return roundDrawable(floatArrayOf(r, r, r, r), solidColor, strokeW, strokeColor)
+    return roundDrawable(floatArrayOf(r, r, r, r), intArrayOf(solidColor), strokeW, strokeColor)
+}
+
+fun roundDrawable(r: Float = dp2px(2f).toFloat(),
+                  solidColors: IntArray = intArrayOf(Color.WHITE),
+                  orientation: GradientDrawable.Orientation = GradientDrawable.Orientation.TOP_BOTTOM,
+                  strokeW: Float = 0f,
+                  strokeColor: Int = Color.TRANSPARENT): GradientDrawable {
+    return roundDrawable(floatArrayOf(r, r, r, r), solidColors, strokeW, strokeColor, orientation)
 }
 
 fun roundDrawable(rArray: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
                   strokeColor: Int = Color.TRANSPARENT): GradientDrawable {
+    return roundDrawable(rArray, intArrayOf(solidColor), strokeW, strokeColor)
+}
+
+fun roundDrawable(rArray: FloatArray, solidColors: IntArray = intArrayOf(Color.WHITE), strokeW: Float = 0f,
+                  strokeColor: Int = Color.TRANSPARENT,
+                  orientation: GradientDrawable.Orientation = GradientDrawable.Orientation.TOP_BOTTOM): GradientDrawable {
     require(rArray.size == 4) { "round corner size must is 4!!!" }
     val gradientDrawable = GradientDrawable()
 //    gradientDrawable.mutate()
     gradientDrawable.shape = GradientDrawable.RECTANGLE
-    gradientDrawable.setColor(solidColor)
+    if (solidColors.size > 1) {
+        gradientDrawable.orientation = orientation
+        gradientDrawable.colors = solidColors
+    } else {
+        gradientDrawable.setColor(solidColors.first())
+    }
     gradientDrawable.setStroke(dp2px(strokeW), strokeColor)
     if (rArray[0] == rArray[1] && rArray[2] == rArray[3] && rArray[1] == rArray[2]) {
         gradientDrawable.cornerRadius = rArray[0]
@@ -145,12 +165,16 @@ fun getResDrawable(resId: Int, context: Context? = null): Drawable? {
     }
 }
 
+fun Context.getResDrawable(resId: Int): Drawable? {
+    return getResDrawable(resId, this)
+}
+
 fun Drawable.tintSelected(@ColorInt nor: Int, @ColorInt state: Int): Drawable {
-    return tintState(nor, state, android.R.attr.state_selected)
+    return tintState(nor, state, R.attr.state_selected)
 }
 
 fun Drawable.tintEnable(@ColorInt nor: Int, @ColorInt state: Int): Drawable {
-    return tintState(nor, state, android.R.attr.state_enabled)
+    return tintState(nor, state, R.attr.state_enabled)
 }
 
 fun Drawable.tintChecked(@ColorInt nor: Int, @ColorInt state: Int): Drawable {

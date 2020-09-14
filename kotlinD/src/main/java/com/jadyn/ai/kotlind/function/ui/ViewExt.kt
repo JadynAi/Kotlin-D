@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.text.Layout
 import android.text.StaticLayout
@@ -16,6 +17,7 @@ import android.widget.CompoundButton
 import androidx.annotation.DrawableRes
 import androidx.viewpager.widget.ViewPager
 import com.jadyn.ai.kotlind.utils.dp2px
+import com.jadyn.ai.kotlind.utils.parseColor
 
 /**
  *@version:
@@ -28,6 +30,12 @@ import com.jadyn.ai.kotlind.utils.dp2px
 fun View?.setVisible(show: Boolean) {
     this?.apply {
         visibility = if (show) View.VISIBLE else View.GONE
+    }
+}
+
+fun View?.setVisibleOrInVisible(show: Boolean) {
+    this?.apply {
+        visibility = if (show) View.VISIBLE else View.INVISIBLE
     }
 }
 
@@ -54,6 +62,7 @@ fun View.computeWidthWithH(ratio: Float) {
     this.post {
         val params = this.layoutParams
         params.width = (this.height * ratio).toInt()
+        params.height = height
         this.layoutParams = params
     }
 }
@@ -63,7 +72,15 @@ fun View.computeHeightWithW(ratio: Float) {
     this.post {
         val params = this.layoutParams
         params.height = (this.width * ratio).toInt()
+        params.width = width
         this.layoutParams = params
+    }
+}
+
+inline fun <reified D : ViewGroup.LayoutParams> View.updateParams(c: (D) -> Unit) {
+    layoutParams?.let {
+        c.invoke(it as D)
+        layoutParams = it
     }
 }
 
@@ -74,36 +91,117 @@ fun View.updateWH(width: Int = layoutParams.width, height: Int = layoutParams.he
     layoutParams = params
 }
 
+/**
+ * crossinline 间不能有return
+ * */
+inline fun View.forSureGetSize(crossinline callback: () -> Unit) {
+    if (height <= 0) {
+        if (visibility == View.GONE) {
+            addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
+                override fun onLayoutChange(v: View?, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
+                    if (height > 0) {
+                        callback.invoke()
+                        post { removeOnLayoutChangeListener(this) }
+                    }
+                }
+            })
+        } else {
+            post {
+                if (height > 0) {
+                    callback.invoke()
+                } else {
+                    addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
+                        override fun onLayoutChange(v: View?, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
+                            if (height > 0) {
+                                callback.invoke()
+                                post { removeOnLayoutChangeListener(this) }
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        return
+    }
+    callback.invoke()
+}
+
 /*
 * View设置以高度为准的圆角矩形
 * */
-fun View.roundHeight(solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+fun View.roundHeight(solidColor: Int = Color.WHITE, strokeW: Float = 0f,
+                     strokeColor: Int = Color.TRANSPARENT) {
     post {
         roundInternal(height * 0.5f, solidColor, strokeW, strokeColor)
     }
 }
 
+fun View.roundHeightLR(vararg solidColors: String,
+                       strokeW: Float = 0f,
+                       strokeColor: Int = Color.TRANSPARENT) {
+    roundHeightLR(solidColors.map { parseColor(it) }.toIntArray(), strokeW, strokeColor)
+}
+
+fun View.roundHeightLR(solidColors: IntArray,
+                       strokeW: Float = 0f,
+                       strokeColor: Int = Color.TRANSPARENT) {
+    forSureGetSize {
+        roundInternal(height * 0.5f, solidColors, GradientDrawable.Orientation.LEFT_RIGHT, strokeW, strokeColor)
+    }
+}
+
 /**
- * 四个角，r的size必须为4
+ * 四个角，r的size必须为4。分别为左上，右上、右下、左下
  * */
-fun View.roundArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+fun View.roundArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
+                    strokeColor: Int = Color.TRANSPARENT) {
     roundInternalArray(r.map {
         dp2px(it).toFloat()
     }.toFloatArray(), solidColor, strokeW, strokeColor)
 }
 
-fun View.round(r: Float = 2f, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+fun View.roundArrayLR(r: FloatArray, solidColors: IntArray, strokeW: Float = 0f,
+                      strokeColor: Int = Color.TRANSPARENT) {
+    roundInternalArray(r, solidColors, GradientDrawable.Orientation.LEFT_RIGHT, strokeW, strokeColor)
+}
+
+fun View.round(r: Float = 2f, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
+               strokeColor: Int = Color.TRANSPARENT) {
     roundInternal(dp2px(r).toFloat(), solidColor, strokeW, strokeColor)
 }
 
-fun View.roundInternal(r: Float = dp2px(2f).toFloat(), solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
-    this.background =  roundDrawable(r, solidColor, strokeW, strokeColor)
+fun View.roundLR(r: Float = 2f, solidColors: IntArray, strokeW: Float = 0f,
+                 strokeColor: Int = Color.TRANSPARENT) {
+    roundInternal(r, solidColors, GradientDrawable.Orientation.LEFT_RIGHT, strokeW, strokeColor)
+}
+
+fun View.roundInternal(r: Float = dp2px(2f).toFloat(), solidColor: Int = Color.WHITE,
+                       strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+    this.background = roundDrawable(r, solidColor, strokeW, strokeColor)
     //避免子View影响到背景
     this.clipToOutline = true
 }
 
-fun View.roundInternalArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+fun View.roundInternal(r: Float = dp2px(2f).toFloat(), solidColor: IntArray,
+                       orientation: GradientDrawable.Orientation,
+                       strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
+    this.background = roundDrawable(r, solidColor, orientation, strokeW, strokeColor)
+    //避免子View影响到背景
+    this.clipToOutline = true
+}
+
+fun View.roundInternalArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
+                            strokeColor: Int = Color.TRANSPARENT) {
     this.background = roundDrawable(r, solidColor, strokeW, strokeColor)
+    //避免子View影响到背景
+    this.clipToOutline = true
+}
+
+fun View.roundInternalArray(r: FloatArray, solidColors: IntArray,
+                            orientation: GradientDrawable.Orientation,
+                            strokeW: Float = 0f,
+                            strokeColor: Int = Color.TRANSPARENT) {
+    this.background = roundDrawable(r, solidColors, strokeW, strokeColor, orientation)
     //避免子View影响到背景
     this.clipToOutline = true
 }
@@ -130,7 +228,8 @@ fun View.pressColor(normalColor: Int, pressColor: Int) {
 }
 
 //-----checkBox之类的设置button的drawable
-fun CompoundButton.checkedButton(normal: Drawable, press: Drawable, drawableHandle: (StateListDrawable) -> Unit = {}) {
+fun CompoundButton.checkedButton(normal: Drawable, press: Drawable,
+                                 drawableHandle: (StateListDrawable) -> Unit = {}) {
     val checkedDrawable = getCheckedDrawable(normal, press)
     drawableHandle.invoke(checkedDrawable)
     this.buttonDrawable = checkedDrawable
@@ -154,7 +253,8 @@ fun View.enabled(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
     this.background = getEnableDrawable(normalRes, pressRes)
 }
 
-fun View.enabled(normal: Drawable, press: Drawable, drawableHandle: (StateListDrawable) -> Unit = {}) {
+fun View.enabled(normal: Drawable, press: Drawable,
+                 drawableHandle: (StateListDrawable) -> Unit = {}) {
     val drawable = getEnableDrawable(normal, press)
     drawableHandle.invoke(drawable)
     this.background = drawable
@@ -168,7 +268,8 @@ fun View.checked(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int) {
     this.background = getCheckedDrawable(normalRes, pressRes)
 }
 
-fun View.checked(normal: Drawable, press: Drawable, drawableHandle: (StateListDrawable) -> Unit = {}) {
+fun View.checked(normal: Drawable, press: Drawable,
+                 drawableHandle: (StateListDrawable) -> Unit = {}) {
     val checkedDrawable = getCheckedDrawable(normal, press)
     drawableHandle.invoke(checkedDrawable)
     this.background = checkedDrawable
@@ -191,9 +292,11 @@ fun View.selectedColor(normalColor: Int, checkedColor: Int) {
 }
 
 fun View.event(click: ((View) -> Unit)? = null, doubleTap: ((MotionEvent?) -> Unit)? = null,
-               longPress: ((MotionEvent?) -> Unit)? = null, onTouch: ((MotionEvent) -> Unit)? = null) {
+               longPress: ((MotionEvent?) -> Unit)? = null,
+               onTouch: ((MotionEvent) -> Unit)? = null) {
     this.isLongClickable = true
-    val gestureDetector = GestureDetector(this.context, object : GestureDetector.SimpleOnGestureListener() {
+    val gestureDetector = GestureDetector(this.context, object :
+            GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
             Log.d("event", "onSingleTapConfirmed ")
             click?.apply {
@@ -333,6 +436,43 @@ fun ViewGroup.childView(): ArrayList<View> {
     return list
 }
 
+inline fun <reified C : View> ViewGroup.filterViewIsInstance(): List<C> {
+    val list = arrayListOf<C>()
+    list.addAll(filterViewIsInstanceOnce())
+    val filterViewGroup = filterViewGroup()
+    filterViewGroup.forEach {
+        @Suppress("UNCHECKED_CAST")
+        if (it is C) {
+            list.add(it)
+        } else {
+            list.addAll(it.filterViewIsInstanceOnce())
+        }
+    }
+    return list
+}
+
+fun ViewGroup.filterViewGroup(): List<ViewGroup> {
+    val list = arrayListOf<ViewGroup>()
+    childView().forEach {
+        if (it is ViewGroup) {
+            list.add(it)
+            list.addAll(it.filterViewGroup())
+        }
+    }
+    return list
+}
+
+inline fun <reified C : View> ViewGroup.filterViewIsInstanceOnce(): List<C> {
+    val list = arrayListOf<C>()
+    childView().forEach {
+        @Suppress("UNCHECKED_CAST")
+        if (it is C) {
+            list.add(it)
+        }
+    }
+    return list
+}
+
 fun ViewPager.setCurItemSafe(pos: Int) {
     if (pos < 0 || pos >= adapter?.count ?: 0) {
         return
@@ -341,4 +481,14 @@ fun ViewPager.setCurItemSafe(pos: Int) {
         return
     }
     currentItem = pos
+}
+
+fun View.copyBackgroundColor(other: View): Boolean {
+    val b = other.background
+    b ?: return false
+    if (b is ColorDrawable) {
+        setBackgroundColor(b.color)
+        return true
+    }
+    return false
 }
