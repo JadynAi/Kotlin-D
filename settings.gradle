@@ -1,1 +1,2 @@
+include ':kotlinP'
 include ':app', ':kotlinD', ':acrobat'
