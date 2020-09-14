@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_view.*
-import org.jetbrains.anko.toast
 
 /**
  *@version:
@@ -39,7 +38,6 @@ class ViewActivity : AppCompatActivity() {
 
         text_one.click { 
             Choreographer.getInstance().postFrameCallback { 
-                toast("this is $it")
             }
             parent_3.invalidate()
         }
