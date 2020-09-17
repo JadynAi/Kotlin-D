@@ -1,12 +1,14 @@
 package com.jadyn.ai.kotlind.utils
 
 import android.graphics.Color
-import android.text.Layout
-import android.text.StaticLayout
-import android.text.TextPaint
+import android.text.*
+import android.text.style.ImageSpan
+import android.text.style.MetricAffectingSpan
 import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.jadyn.ai.kotlind.base.KD
+import com.jadyn.ai.kotlind.function.ui.getResDrawable
 
 /**
  *@version:
@@ -38,29 +40,21 @@ fun String?.getReal(def: String = ""): String {
     return this!!
 }
 
-/*
-* 测量文字宽高
-* */
-fun measureText(text: String?, textPaint: TextPaint): IntArray {
-    val ints = IntArray(2)
-    if (text.isNullOrBlank()) {
-        ints[0] = 0
-        ints[1] = 0
-        return ints
+fun String?.toIntOrDefault(def: Int = 0): Int {
+    if (isNullOrBlank()) {
+        return def
     }
-    val arr = text!!.trim { it <= ' ' }.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    var maxLength = 0f
-    for (s in arr) {
-        maxLength = Math.max(maxLength, textPaint.measureText(s))
+    return try {
+        Integer.parseInt(this!!)
+    } catch (e: Exception) {
+        def
     }
-    val width = (maxLength + 2.5f).toInt()
-    val staticLayout = StaticLayout(text, textPaint, width, Layout.Alignment.ALIGN_NORMAL, 1f, 0f, true)
-    ints[0] = width
-    ints[1] = staticLayout.height
-    return ints
 }
 
 fun getS(@StringRes id: Int, defS: String = ""): String {
+    if (id == -1) {
+        return ""
+    }
     return try {
         KD.applicationWrapper().getString(id)
     } catch (e: Exception) {
@@ -73,5 +67,36 @@ fun getS(@StringRes id: Int, vararg formatArgs: Any): String {
         KD.applicationWrapper().getString(id, *formatArgs)
     } catch (e: Exception) {
         ""
+    }
+}
+
+/**
+ * 给文本末端附带drawable
+ * */
+fun String.drawableEnd(@DrawableRes id: Int, padding: Float = 0f, size: android.util.Size? = null): CharSequence {
+    val drawable = getResDrawable(id)
+    drawable ?: return this
+    val ps = dp2px(padding)
+    drawable.setBounds(ps, 0, ps + (size?.width ?: drawable.intrinsicWidth), size?.height ?: drawable.intrinsicHeight)
+    val imgSpan = ImageSpan(drawable)
+    val sp = SpannableString("$this ")
+    sp.setSpan(imgSpan, sp.length - 1, sp.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+    sp.setSpan(CenterVerticalSpan(), 0, sp.length - 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+    return sp
+}
+
+class CenterVerticalSpan : MetricAffectingSpan() {
+    override fun updateMeasureState(textPaint: TextPaint) {
+        textPaint.baselineShift += getBaselineShift(textPaint)
+    }
+
+    override fun updateDrawState(textPaint: TextPaint) {
+        textPaint.baselineShift += getBaselineShift(textPaint)
+    }
+
+    private fun getBaselineShift(tp: TextPaint): Int {
+//        val total = tp.ascent() + tp.descent()
+//        return (total / 2f).toInt()
+        return -tp.descent().toInt()
     }
 }
