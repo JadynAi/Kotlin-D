@@ -8,7 +8,8 @@
 项目的build.gradle配置`JCenter`远程仓库。在需要的地方引用：
 
 ```
-api 'com.jadynai.ai.kotlind:KotlinD:1.0.8'
+api 'com.jadynai.ai.kotlind:KotlinD:1.1.2'
+
 ```
 
 ### 如何使用
@@ -39,7 +40,7 @@ KD.init(application对象)
 `AcrobatAdapter`是为Recyclerview提供的适配器，使用DSL模式构建。可以灵活配置多Item样式，仅用两三行代码为为Item添加单击、长按、双击事件[使用文档](https://ailo.fun/2018/07/05/2018-07-05-kotlin-adapter/)</del>
 > 1.0.6版本开始将适配器从库里移除，确保工具库为一个单纯的工具库存在
 
-#### 各色Drawable
+#### Drawable、View扩展
 不需要为各种View添加Drawable，而去写一些烦扰的Drawable.xml或者Selector.xml文件，只需在代码中一键配置，轻松快捷。
 
 - 为View添加Press效果：
@@ -61,6 +62,11 @@ checkedButton(@DrawableRes normalRes: Int, @DrawableRes pressRes: Int)
 
 // 设置颜色
 CompoundButton.checkedColorButton(normalColor: Int, checkedColor: Int)
+```
+#### 字符串扩展
+- 字符串末端添加Drawable。TextvView的drawableEnd只能居于末端，控制位置只能增加padding或者设置drawablePadding。
+```
+String.drawableEnd(@DrawableRes id: Int, padding: Float = 0f, size: android.util.Size? = null): CharSequence
 ```
 
 ## LICENSE
