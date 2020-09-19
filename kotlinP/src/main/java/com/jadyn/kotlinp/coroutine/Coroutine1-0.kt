@@ -23,15 +23,15 @@ val mainExecutors by lazy {
 }
 
 fun main() {
-    A0().run()
+    BaseMainTest().run()
 }
 
-class A0 : CoroutineScope {
+open class BaseMainTest : CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = mainExecutors.asCoroutineDispatcher()
 
-    fun run() {
+    open fun run() {
         launch { 
             delay(1000)
             printWithThreadName("launch finish")
