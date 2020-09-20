@@ -9,6 +9,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.sync.Mutex
 
 /**
  *JadynAi since 2020/9/19
@@ -21,7 +23,7 @@ class Channel0 : BaseMainTest() {
 
     override fun run() {
         val channel = Channel<Int>(4)
-        launch { 
+        launch {
             repeat(10){
                 channel.send(it)
                 println("sen $it")

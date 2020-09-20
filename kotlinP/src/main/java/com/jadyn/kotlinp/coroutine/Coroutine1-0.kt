@@ -10,6 +10,10 @@ import kotlin.coroutines.CoroutineContext
 fun printWithThreadName(content: String) {
     println("$content | thread :${Thread.currentThread().name}")
 }
+
+fun printWithThreadNameAndTime(content: String) {
+    println("$content | thread :${Thread.currentThread().name} | ${System.currentTimeMillis()}")
+}
 // 模拟android主线程
 val mainExecutors by lazy {
     Executors.newSingleThreadExecutor {
