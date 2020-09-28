@@ -15,6 +15,7 @@ fun printWithThreadName(content: String) {
 fun printWithThreadNameAndTime(content: String) {
     println("$content | thread :${Thread.currentThread().name} | ${System.currentTimeMillis()}")
 }
+
 // 模拟android主线程
 val mainExecutors by lazy {
     Executors.newSingleThreadExecutor {
@@ -34,14 +35,14 @@ fun main() {
 open class BaseMainTest : CoroutineScope {
 
     override val coroutineContext: CoroutineContext
-        get() = mainExecutors.asCoroutineDispatcher()
+        get() = SupervisorJob() + mainExecutors.asCoroutineDispatcher()
 
     open fun run() {
-        launch { 
+        launch {
             delay(1000)
             printWithThreadName("launch finish")
         }
-        launch { 
+        launch {
             delay(500)
             printWithThreadName("global launch finish")
         }
