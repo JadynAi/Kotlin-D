@@ -15,8 +15,8 @@ fun main() {
 
 abstract class BaseHandleErrorTest : BaseMainTest() {
     override fun run() {
-//        testSupervisor()
-        testCoroutineScope()
+        testSupervisor()
+//        testCoroutineScope()
     }
 
     private fun testSupervisor() {
@@ -31,7 +31,7 @@ abstract class BaseHandleErrorTest : BaseMainTest() {
                     // CoroutineExceptionHandler不能应用于async
                     launch(Dispatchers.IO + coroutineExceptionHandler) {
                         test1(it)
-                    }
+                    }.join()
                 }
             }
             println("end")
