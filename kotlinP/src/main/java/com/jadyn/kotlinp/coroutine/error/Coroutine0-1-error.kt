@@ -4,6 +4,7 @@ import com.jadyn.kotlinp.coroutine.BaseMainTest
 import com.jadyn.kotlinp.coroutine.printWithThreadName
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import java.lang.Exception
 import java.lang.IllegalStateException
 
 /**
@@ -15,7 +16,9 @@ fun main() {
 
 abstract class BaseHandleErrorTest : BaseMainTest() {
     override fun run() {
-        testSupervisor()
+        testSuspend()
+//        testAsync()
+//        testSupervisor()
 //        testCoroutineScope()
     }
 
@@ -60,13 +63,51 @@ abstract class BaseHandleErrorTest : BaseMainTest() {
         }
     }
 
-    abstract fun test1(it: Int)
+    private fun testAsync() {
+        launch {
+            // 不使用supervisorScope的话，async的异常还是会被抛出
+            supervisorScope {
+                repeat(5) {
+                    val async = async(Dispatchers.IO) {
+                        test1(it)
+                    }
+                    try {
+                        // join 不会catch异常
+//                        async.join()
+                        async.join()
+                    } catch (e: Exception) {
+                        printWithThreadName("async catch exception ${e.message}")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun testSuspend() {
+        launch {
+            repeat(5) {
+                try {
+                    // withContext不算启动一个协程，所以withContext加上coroutineExceptionHandler不起作用
+                    runSingle(it)
+                } catch (e: Exception) {
+                    printWithThreadName("catch exception ${e.message}")
+                }
+            }
+        }
+    }
+
+    suspend fun runSingle(num: Int) = withContext(Dispatchers.IO) {
+        test1(num)
+    }
+
+    abstract suspend fun test1(it: Int)
+
 }
 
 class HandleErrorTest : BaseHandleErrorTest() {
-    override fun test1(it: Int) {
+    override suspend fun test1(it: Int) {
         printWithThreadName("test $it start")
-        Thread.sleep(500)
+        delay(500)
         if (it == 1) {
             throw IllegalStateException("ha ha one")
         }
