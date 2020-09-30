@@ -1,11 +1,15 @@
 package com.jadyn.kotlinp.coroutine.error
 
 import com.jadyn.kotlinp.coroutine.BaseMainTest
+import com.jadyn.kotlinp.coroutine.mainExecutors
 import com.jadyn.kotlinp.coroutine.printWithThreadName
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
-import java.lang.Exception
 import java.lang.IllegalStateException
+import kotlin.Exception
+import kotlin.coroutines.AbstractCoroutineContextElement
+import kotlin.coroutines.CoroutineContext
 
 /**
  *JadynAi since 2020/9/28
@@ -16,27 +20,37 @@ fun main() {
 
 abstract class BaseHandleErrorTest : BaseMainTest() {
     override fun run() {
-        testSuspend()
+//        testSuspend()
 //        testAsync()
-//        testSupervisor()
+        testSupervisor()
 //        testCoroutineScope()
     }
 
     private fun testSupervisor() {
         launch {
             println("start")
-            val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-                printWithThreadName("throwable ${throwable.message}")
-            }
             supervisorScope {
+                val channel = Channel<Float>()
+                launch {
+                    channel.receiveAsFlow().collect {
+//                        printWithThreadName("collect $it")
+                    }
+                }
                 repeat(5) {
-                    flowOf(0f)
-                    // CoroutineExceptionHandler不能应用于async
-                    launch(Dispatchers.IO + coroutineExceptionHandler) {
-                        test1(it)
-                    }.join()
+                    // CoroutineExceptionHandler不能应用于async,cancel 的话在这里cancel会取消掉
+//                    if (it == 2) {
+//                        cancel()
+//                    }
+                    try {
+                        async(Dispatchers.IO) {
+                            testC(it, channel)
+                        }.await()
+                    } catch (e: Exception) {
+                        printWithThreadName("catch exception ${e.message}")
+                    }
                 }
             }
+            // 确保channel close掉，才会执行到这里
             println("end")
         }
     }
@@ -86,9 +100,17 @@ abstract class BaseHandleErrorTest : BaseMainTest() {
     private fun testSuspend() {
         launch {
             repeat(5) {
+                // withContext不算启动一个协程，所以withContext加上coroutineExceptionHandler不起作用
                 try {
-                    // withContext不算启动一个协程，所以withContext加上coroutineExceptionHandler不起作用
-                    runSingle(it)
+                    flow<Float> {
+                        val result = withContext(Dispatchers.IO) {
+                            if (it == 3) {
+                                cancel()
+                            }
+                            test2(it, this@flow)
+                        }
+                        printWithThreadName("test result finish $result")
+                    }.flowOn(Dispatchers.IO).collect { printWithThreadName("collect $it") }
                 } catch (e: Exception) {
                     printWithThreadName("catch exception ${e.message}")
                 }
@@ -96,12 +118,15 @@ abstract class BaseHandleErrorTest : BaseMainTest() {
         }
     }
 
-    suspend fun runSingle(num: Int) = withContext(Dispatchers.IO) {
-        test1(num)
-    }
-
     abstract suspend fun test1(it: Int)
 
+    open suspend fun test2(num: Int, emitter: FlowCollector<Float>? = null): Int {
+        return -1
+    }
+
+    open suspend fun testC(num: Int, emitter: Channel<Float>): Int {
+        return -1
+    }
 }
 
 class HandleErrorTest : BaseHandleErrorTest() {
@@ -114,5 +139,32 @@ class HandleErrorTest : BaseHandleErrorTest() {
         printWithThreadName("test $it finish")
     }
 
+    override suspend fun test2(num: Int, emitter: FlowCollector<Float>?): Int {
+        if (num == 1) {
+            throw IllegalStateException("exception!!!")
+        }
+        printWithThreadName("test2 go $num")
+        repeat(5) {
+            delay(100)
+            emitter?.emit(it.toFloat())
+        }
+        return num + 1
+    }
+
+    override suspend fun testC(num: Int, emitter: Channel<Float>): Int {
+        if (num == 2) {
+            throw IllegalStateException("exception!!!")
+        }
+        printWithThreadName("test ccc go $num")
+        repeat(5) {
+            delay(100)
+            emitter.send(it.toFloat())
+        }
+        if (num == 4) {
+            // 使用完要及时关闭，否则supervisor没有追踪到end，不会允许到end哪里
+            emitter.close()
+        }
+        return num
+    }
 }
 
