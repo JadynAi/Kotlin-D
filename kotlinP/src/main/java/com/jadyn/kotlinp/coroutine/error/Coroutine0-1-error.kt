@@ -29,25 +29,23 @@ abstract class BaseHandleErrorTest : BaseMainTest() {
     private fun testSupervisor() {
         launch {
             println("start")
-            supervisorScope {
-                val channel = Channel<Float>()
-                launch {
-                    channel.receiveAsFlow().collect {
+            val channel = Channel<Float>()
+            launch {
+                channel.receiveAsFlow().collect {
 //                        printWithThreadName("collect $it")
-                    }
                 }
-                repeat(5) {
-                    // CoroutineExceptionHandler不能应用于async,cancel 的话在这里cancel会取消掉
-//                    if (it == 2) {
-//                        cancel()
-//                    }
-                    try {
-                        async(Dispatchers.IO) {
-                            testC(it, channel)
-                        }.await()
-                    } catch (e: Exception) {
-                        printWithThreadName("catch exception ${e.message}")
+            }
+            repeat(5) {
+                // CoroutineExceptionHandler不能应用于async,cancel 的话在这里cancel会取消掉
+                    if (it == 2) {
+                        cancel()
                     }
+                try {
+                    async(Dispatchers.IO) {
+                        testC(it, channel)
+                    }.await()
+                } catch (e: Exception) {
+                    printWithThreadName("catch exception ${e.message}")
                 }
             }
             // 确保channel close掉，才会执行到这里
@@ -160,10 +158,10 @@ class HandleErrorTest : BaseHandleErrorTest() {
             delay(100)
             emitter.send(it.toFloat())
         }
-        if (num == 4) {
-            // 使用完要及时关闭，否则supervisor没有追踪到end，不会允许到end哪里
-            emitter.close()
-        }
+//        if (num == 4) {
+//            // 使用完要及时关闭，否则supervisor没有追踪到end，不会允许到end哪里
+//            emitter.close()
+//        }
         return num
     }
 }
