@@ -10,6 +10,7 @@ import com.jadyn.ai.kotlind.base.KD
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.event
+import com.jadynai.kotlindiary.coroutine.CoroutineActivity
 import com.jadynai.kotlindiary.designMode.DesignModeActivity
 import com.jadynai.kotlindiary.show.ShowActivity
 import com.jadynai.kotlindiary.thread.ThreadActivity
@@ -55,6 +56,9 @@ class MainActivity : AppCompatActivity() {
             AndroidSchedulers.from(Looper.myLooper())
         }
 
+        coroutine_tv.click { 
+            start<CoroutineActivity>()
+        }
     }
 
     override fun onPause() {

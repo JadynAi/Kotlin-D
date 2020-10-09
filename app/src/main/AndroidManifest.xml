@@ -35,6 +35,7 @@
         <activity android:name="com.jadynai.kotlindiary.canvas.CanvasActivity"/>
         <activity android:name="com.jadynai.kotlindiary.designMode.DesignModeActivity"/>
         <activity android:name=".StickyHeaderActivity" />
+        <activity android:name=".coroutine.CoroutineActivity" />
 
         <service
             android:name="com.jadynai.kotlindiary.binder.MessengerService"

@@ -1,15 +1,10 @@
 package com.jadyn.kotlinp.coroutine.error
 
 import com.jadyn.kotlinp.coroutine.BaseMainTest
-import com.jadyn.kotlinp.coroutine.mainExecutors
 import com.jadyn.kotlinp.coroutine.printWithThreadName
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
-import java.lang.IllegalStateException
-import kotlin.Exception
-import kotlin.coroutines.AbstractCoroutineContextElement
-import kotlin.coroutines.CoroutineContext
 
 /**
  *JadynAi since 2020/9/28
@@ -18,7 +13,15 @@ fun main() {
     HandleErrorTest().run()
 }
 
+var tScope: CoroutineScope? = null
+
+var tJob: Job? = null
+
 abstract class BaseHandleErrorTest : BaseMainTest() {
+    init {
+        tScope = this
+    }
+
     override fun run() {
 //        testSuspend()
 //        testAsync()
@@ -27,7 +30,7 @@ abstract class BaseHandleErrorTest : BaseMainTest() {
     }
 
     private fun testSupervisor() {
-        launch {
+        tJob = launch {
             println("start")
             val channel = Channel<Float>()
             launch {
@@ -35,17 +38,16 @@ abstract class BaseHandleErrorTest : BaseMainTest() {
 //                        printWithThreadName("collect $it")
                 }
             }
-            repeat(5) {
-                // CoroutineExceptionHandler不能应用于async,cancel 的话在这里cancel会取消掉
-                    if (it == 2) {
-                        cancel()
+            supervisorScope {
+                repeat(5) {
+                    // CoroutineExceptionHandler不能应用于async,cancel 的话在这里cancel会取消掉
+                    try {
+                        async(Dispatchers.IO) {
+                            testC(it, channel)
+                        }.await()
+                    } catch (e: Exception) {
+                        printWithThreadName("catch exception ${e.message}")
                     }
-                try {
-                    async(Dispatchers.IO) {
-                        testC(it, channel)
-                    }.await()
-                } catch (e: Exception) {
-                    printWithThreadName("catch exception ${e.message}")
                 }
             }
             // 确保channel close掉，才会执行到这里
@@ -150,8 +152,12 @@ class HandleErrorTest : BaseHandleErrorTest() {
     }
 
     override suspend fun testC(num: Int, emitter: Channel<Float>): Int {
-        if (num == 2) {
-            throw IllegalStateException("exception!!!")
+        if (num == 3) {
+//            throw IllegalStateException("exception!!!")
+        }
+        if (num == 3) {
+            // 模拟界面销毁
+            tJob?.cancel(CancellationException("page destroy"))
         }
         printWithThreadName("test ccc go $num")
         repeat(5) {

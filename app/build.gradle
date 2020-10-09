@@ -44,6 +44,7 @@ dependencies {
     
     api project(':kotlinD')
     api project(':acrobat')
+    api project(path: ':kotlinP')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 
