@@ -25,8 +25,38 @@ abstract class BaseHandleErrorTest : BaseMainTest() {
     override fun run() {
 //        testSuspend()
 //        testAsync()
-        testSupervisor()
+//        testSupervisor()
 //        testCoroutineScope()
+        testWithContext()
+        launch {
+            println("other coroutine try cancel")
+            delay(1000)
+            tScope?.cancel()
+            println("other coroutine already cancel ${tScope == null}")
+        }
+    }
+
+    private fun testWithContext() {
+        launch {
+            println("start")
+            val channel = Channel<Float>()
+            launch {
+                channel.receiveAsFlow().collect {
+//                        printWithThreadName("collect $it")
+                }
+            }
+            repeat(7) {
+                try {
+                    withContext(Dispatchers.IO) {
+                        testC(it, channel)
+                    }
+                } catch (e: Exception) {
+                    printWithThreadName("catch exception ${e.message}")
+                }
+            }
+            // 确保channel close掉，才会执行到这里
+            println("end")
+        }
     }
 
     private fun testSupervisor() {
@@ -155,13 +185,9 @@ class HandleErrorTest : BaseHandleErrorTest() {
         if (num == 3) {
 //            throw IllegalStateException("exception!!!")
         }
-        if (num == 3) {
-            // 模拟界面销毁
-            tJob?.cancel(CancellationException("page destroy"))
-        }
         printWithThreadName("test ccc go $num")
         repeat(5) {
-            delay(100)
+            delay(160)
             emitter.send(it.toFloat())
         }
 //        if (num == 4) {

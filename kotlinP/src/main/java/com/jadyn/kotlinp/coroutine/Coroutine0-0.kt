@@ -34,8 +34,15 @@ fun main() {
 
 open class BaseMainTest : CoroutineScope {
 
-    override val coroutineContext: CoroutineContext
-        get() = SupervisorJob() + mainExecutors.asCoroutineDispatcher()
+    // 这种复现方法，类中有一个成员变量 private final CoroutineContext coroutineContext
+    // 也就是说外部在调用的时候，永远都是同一个对象
+    override val coroutineContext = SupervisorJob() + mainExecutors.asCoroutineDispatcher()
+
+    // 2020/10/9-15:40 使用这种写法，外部的Scope使用cancel就无法正常工作，wh……at？？？这什么原理
+    // 2020/10/9-15:43 这种复写方法，会导致外部调用的时候每次都会生成一个新的对象，从而无法确保是同一个context对象
+    // private final CoroutineContext coroutineContext，也就是说外部再调用的时候永远都是会新生成一个新的scope
+//    override val coroutineContext: CoroutineContext
+//        get() = SupervisorJob() + mainExecutors.asCoroutineDispatcher()
 
     open fun run() {
         launch {
