@@ -29,7 +29,7 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                     }
                 }
                 supervisorScope {
-                    repeat(5) {
+                    repeat(7) {
                         // CoroutineExceptionHandler不能应用于async,cancel 的话在这里cancel会取消掉
                         try {
                             async(Dispatchers.IO) {
@@ -44,18 +44,18 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                 println("end")
             }
         }
-        textView5.click { 
+        textView5.click {
             cancel()
         }
     }
 
     suspend fun testC(num: Int, emitter: Channel<Float>): Int {
-        if (num == 3) {
-//            throw IllegalStateException("exception!!!")
+        if (num == 2) {
+            throw IllegalStateException("exception!!!")
         }
         printWithThreadName("test ccc go $num")
         repeat(5) {
-            delay(500)
+            delay(200)
             emitter.send(it.toFloat())
         }
 //        if (num == 4) {
