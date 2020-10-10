@@ -31,7 +31,7 @@ abstract class BaseHandleErrorTest : BaseMainTest() {
         launch {
             println("other coroutine try cancel")
             delay(1000)
-            tScope?.cancel()
+//            tScope?.cancel()
             println("other coroutine already cancel ${tScope == null}")
         }
     }
@@ -189,6 +189,12 @@ class HandleErrorTest : BaseHandleErrorTest() {
         repeat(5) {
             delay(160)
             emitter.send(it.toFloat())
+        }
+        if (num == 2) {
+            launch {
+                delay(1000)
+                printWithThreadName("launch join")
+            }.join()
         }
 //        if (num == 4) {
 //            // 使用完要及时关闭，否则supervisor没有追踪到end，不会允许到end哪里
