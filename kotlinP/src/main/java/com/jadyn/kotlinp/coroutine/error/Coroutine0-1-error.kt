@@ -40,12 +40,13 @@ abstract class BaseHandleErrorTest : BaseMainTest() {
         launch {
             println("start")
             val channel = Channel<Float>()
-            launch {
-                channel.receiveAsFlow().collect {
-//                        printWithThreadName("collect $it")
-                }
-            }
+            val receiveAsFlow = channel.receiveAsFlow()
             repeat(7) {
+                launch {
+                    receiveAsFlow.collect {
+                        printWithThreadName("collect $it")
+                    }
+                }
                 try {
                     withContext(Dispatchers.IO) {
                         testC(it, channel)
@@ -188,13 +189,11 @@ class HandleErrorTest : BaseHandleErrorTest() {
         printWithThreadName("test ccc go $num")
         repeat(5) {
             delay(160)
+            if (it == 2 && num == 4) {
+                tScope?.cancel()
+            }
+            println("repeat go $it")
             emitter.send(it.toFloat())
-        }
-        if (num == 2) {
-            launch {
-                delay(1000)
-                printWithThreadName("launch join")
-            }.join()
         }
 //        if (num == 4) {
 //            // 使用完要及时关闭，否则supervisor没有追踪到end，不会允许到end哪里
