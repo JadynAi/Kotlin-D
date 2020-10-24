@@ -28,6 +28,17 @@ val mainExecutors by lazy {
     }
 }
 
+val singleExecutors by lazy {
+    Executors.newSingleThreadExecutor {
+        val t = Thread(Thread.currentThread().threadGroup, it,
+                "single",
+                0)
+        if (t.isDaemon) t.isDaemon = false
+        if (t.priority != Thread.NORM_PRIORITY) t.priority = Thread.NORM_PRIORITY
+        t
+    }
+}
+
 fun main() {
     BaseMainTest().run()
 }
