@@ -19,7 +19,10 @@ fun main() {
 class SuspendBaseTest : BaseMainTest() {
 
     override fun run() {
-        launch {
+//        val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+//            printWithThreadName("throwable ${throwable.message}")
+//        }
+        launch() {
             printWithThreadName("start")
             val channel = Channel<Int>()
             launch {
@@ -27,7 +30,7 @@ class SuspendBaseTest : BaseMainTest() {
                     printWithThreadName("顶层channel collect $it")
                 }
             }
-            repeat(1) {
+            repeat(4) {
                 try {
                     withContext(Dispatchers.IO) {
                         runWithContext(it, channel)
@@ -65,10 +68,10 @@ class SuspendBaseTest : BaseMainTest() {
 }
 
 suspend fun testSuspendInCollect() = suspendCancellableCoroutine<Unit> {
-   singleExecutors.execute{
-       Thread.sleep(2000)
-       it.resumeWithException(Exception("collect in suspend failed"))
-   }
+    singleExecutors.execute {
+        Thread.sleep(2000)
+        it.resumeWithException(Exception("collect in suspend failed"))
+    }
 }
 
 suspend fun awaitTest(num: Int) = suspendCancellableCoroutine<Channel<Int>> {
