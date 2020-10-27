@@ -50,6 +50,11 @@ class SuspendBaseTest : BaseMainTest() {
             val awaitTest = awaitTest(num)
             awaitTest.receiveAsFlow().collect {
                 delay(200)
+                if (it == 1) {
+                    printWithThreadName("suspend in collect start")
+                    testSuspendInCollect()
+                    printWithThreadName("suspend in collect end")
+                }
                 channel.send(it)
                 printWithThreadName("collect $it")
             }
@@ -57,6 +62,13 @@ class SuspendBaseTest : BaseMainTest() {
             1024
         }.await()
     }
+}
+
+suspend fun testSuspendInCollect() = suspendCancellableCoroutine<Unit> {
+   singleExecutors.execute{
+       Thread.sleep(2000)
+       it.resumeWithException(Exception("collect in suspend failed"))
+   }
 }
 
 suspend fun awaitTest(num: Int) = suspendCancellableCoroutine<Channel<Int>> {
