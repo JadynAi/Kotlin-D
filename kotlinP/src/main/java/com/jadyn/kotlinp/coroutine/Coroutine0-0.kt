@@ -57,13 +57,19 @@ open class BaseMainTest : CoroutineScope {
 
     open fun run() {
         launch {
-            delay(1000)
-            printWithThreadName("launch finish")
+            val async = async {
+                printWithThreadNameAndTime("launch start")
+                delay(1000)
+                printWithThreadName("launch finish")
+            }
+            val async1 = async() {
+                printWithThreadNameAndTime("global launch start")
+                delay(500)
+                printWithThreadName("global launch finish")
+            }
+            delay(3000)
+//            async.await()
+//            async1.await()
         }
-        launch {
-            delay(500)
-            printWithThreadName("global launch finish")
-        }
-        printWithThreadName("run finish")
     }
 }
