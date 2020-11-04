@@ -7,9 +7,13 @@ import com.jadyn.kotlinp.coroutine.printWithThreadName
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlin.concurrent.thread
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  *JadynAi since 2020/10/9
@@ -22,58 +26,82 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coroutine)
         textView2.click {
-            launch {
-                println("start")
-                val channel = Channel<Float>()
-                launch {
-                    channel.receiveAsFlow().collect {
-//                        printWithThreadName("collect $it")
-                    }
-                }
-//                supervisorScope {
-//                    repeat(7) {
-//                        // CoroutineExceptionHandler不能应用于async,cancel 的话在这里cancel会取消掉
-//                        try {
-//                            async(Dispatchers.IO) {
-//                                testC(it, channel)
-//                            }.await()
-//                        } catch (e: Exception) {
-//                            printWithThreadName("catch exception ${e.message}")
-//                        }
-//                    }
-//                }
-                repeat(7) {
-                    // CoroutineExceptionHandler不能应用于async,cancel 的话在这里cancel会取消掉
-                    try {
-                        withContext(threadContext) {
-                            testC(it, channel)
-                        }
-                    } catch (e: Exception) {
-                        printWithThreadName("catch exception ${e.message}")
-                    }
-                }
-                // 确保channel close掉，才会执行到这里
-                println("end")
-            }
+            run()
         }
         textView5.click {
             cancel()
         }
     }
 
-    suspend fun testC(num: Int, emitter: Channel<Float>): Int {
-        if (num == 2) {
-            throw IllegalStateException("exception!!!")
+    fun run() {
+        launch {
+            launch {
+                val channel = Channel<Int>(Channel.UNLIMITED)
+                // launch Handler 的Exception 一定要层层处理，否则还是会抛出来
+                channel.invokeOnClose {
+                    printWithThreadName("channel close")
+                }
+                launch {
+                    while (isActive && !channel.isClosedForSend) {
+                        withTimeout(2000) {
+                            val c = channel.receive()
+                            printWithThreadName("receive $c")
+                        }
+                    }
+                }
+                fakeRunData(channel)
+            }
         }
-        printWithThreadName("test ccc go $num")
-        repeat(5) {
-            delay(200)
-            emitter.send(it.toFloat())
+    }
+
+    private fun destroy() {
+        cancel()
+    }
+
+
+    suspend fun <T> withTimeoutException(timeMillis: Long, block: suspend CoroutineScope.() -> T): T {
+        try {
+            return withTimeout(timeMillis, block)
+        } catch (e: Exception) {
+            throw Exception("time out")
         }
-//        if (num == 4) {
-//            // 使用完要及时关闭，否则supervisor没有追踪到end，不会允许到end哪里
-//            emitter.close()
-//        }
-        return num
+    }
+
+    suspend fun fakeSendData(channel: Channel<Int>) = suspendCancellableCoroutine<Unit> { m ->
+        thread {
+            repeat(6) {
+                if (it == 3) {
+                    m.resumeWithException(Exception("klklklsdadasdasdadadasd"))
+                    Thread.sleep(3000)
+                } else {
+                    Thread.sleep(500)
+                }
+                printWithThreadName("offer $it")
+                channel.offer(it)
+            }
+//            m.resume(Unit)
+        }
+        m.invokeOnCancellation {
+            printWithThreadName("asdasdadasd $isActive")
+        }
+    }
+
+    fun fakeRunData(channel: Channel<Int>) {
+        thread {
+            repeat(6) {
+                if (it == 3) {
+                    Thread.sleep(3000)
+                } else {
+                    Thread.sleep(500)
+                }
+                printWithThreadName("offer $it")
+                channel.offer(it)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cancel()
     }
 }

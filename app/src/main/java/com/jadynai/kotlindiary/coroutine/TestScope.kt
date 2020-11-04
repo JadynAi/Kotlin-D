@@ -12,8 +12,7 @@ import kotlin.coroutines.CoroutineContext
  */
 class TestScope : CoroutineScope {
 
-    override val coroutineContext: CoroutineContext
-        get() = SupervisorJob() + Dispatchers.Main
+    override val coroutineContext: CoroutineContext = SupervisorJob() + Dispatchers.Main
 
     override fun toString(): String {
         return "test scope"
