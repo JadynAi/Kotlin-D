@@ -27,20 +27,17 @@ class Channel0TimeOutTest : BaseMainTest() {
 
     override fun run() {
         val channel = Channel<Int>(Channel.UNLIMITED)
-       launch(CoroutineExceptionHandler { coroutineContext, throwable -> 
-           // handler 会忽视CancellationException,而timeOut 抛出的就是TimeoutCancellationException，继承自会忽视CancellationException
-           printWithThreadName("catch exception ${throwable.message}")
+        // launch Handler 的Exception 一定要层层处理，否则还是会抛出来
+       launch(CoroutineExceptionHandler { coroutineContext, throwable ->
        }) {
-           launch() {
+           launch(CoroutineExceptionHandler { coroutineContext, throwable ->
+               // handler 会忽视CancellationException,而timeOut 抛出的就是TimeoutCancellationException，继承自会忽视CancellationException
+               printWithThreadName("catch exception ${throwable.message}")
+           }) {
                while (!channel.isClosedForSend) {
-                   try {
-                       withTimeout(2000) {
-                           val c = channel.receive()
-                           printWithThreadName("receive $c")
-                       }
-                   } catch (e: Exception) {
-                       channel.close()
-                       throw Exception("asasas")
+                   withTimeoutException(2000) {
+                       val c = channel.receive()
+                       printWithThreadName("receive $c")
                    }
                }
            }
@@ -56,27 +53,13 @@ class Channel0TimeOutTest : BaseMainTest() {
            }
        }
     }
-
-
-    class TimeOutChannel<T>(val channel: Channel<T>) {
-
-        val timer = object : CountDownTimer(1000, 1) {
-            override fun onFinish() {
-                printWithThreadName("on finish")
-                throw TimeoutException("time out!!!!!!")
-            }
-
-            override fun onTick(millisUntilFinished: Long) {
-                printWithThreadName("on tick $millisUntilFinished")
-            }
-        }.start()
-
-        suspend inline fun collect(crossinline action: suspend (value: T) -> Unit) {
-            channel.receiveAsFlow().collect {
-                timer.cancel()
-                action.invoke(it)
-                timer.start()
-            }
+    
+    
+    suspend fun <T> withTimeoutException(timeMillis: Long, block: suspend CoroutineScope.() -> T): T {
+        return try {
+            withTimeout(timeMillis, block)
+        } catch (e: Exception) {
+            throw Exception(e.message)
         }
     }
 }
