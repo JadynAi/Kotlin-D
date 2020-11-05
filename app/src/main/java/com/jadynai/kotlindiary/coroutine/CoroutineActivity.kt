@@ -3,14 +3,12 @@ package com.jadynai.kotlindiary.coroutine
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.click
+import com.jadyn.ai.kotlind.utils.getReal
 import com.jadyn.kotlinp.coroutine.printWithThreadName
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.channels.*
 import kotlin.concurrent.thread
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -18,6 +16,7 @@ import kotlin.coroutines.resumeWithException
 /**
  *JadynAi since 2020/10/9
  */
+@ExperimentalCoroutinesApi
 class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
 
     private val threadContext by lazy { FixThreadPool("test IO").asCoroutineDispatcher() }
@@ -35,23 +34,55 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
 
     fun run() {
         launch {
-            launch {
-                val channel = Channel<Int>(Channel.UNLIMITED)
-                // launch Handler 的Exception 一定要层层处理，否则还是会抛出来
-                channel.invokeOnClose {
-                    printWithThreadName("channel close")
+            val produce = produce<Int>(capacity = Channel.UNLIMITED) {
+                invokeOnClose {
+                    // 正常运行完就不会接受到throwable，但是如果遇到异常，这个throwable就有值了
+                    printWithThreadName("invoke channel close waibu ${it?.message.getReal("Nau")} active ${isActive}")
                 }
-                launch {
-                    while (isActive && !channel.isClosedForSend) {
-                        withTimeout(2000) {
-                            val c = channel.receive()
-                            printWithThreadName("receive $c")
-                        }
-                    }
+                // 这里面是一个全新的协程，请注意异步线程的挂起问题，否则channel会直接close掉
+                try {
+                    fakeRunData(this)
+                    printWithThreadName("run after ${isActive}")
+                } catch (e: Exception) {
+                    printWithThreadName("catch channel run ${e.message}")
                 }
-                fakeRunData(channel)
+            }
+            printWithThreadName("start while ")
+            while (isActive && !produce.isClosedForReceive) {
+                // 如果使用receive就是try catch
+                val v = withTimeout(2000) { produce.receiveOrNull() }
+                printWithThreadName("receive $v")
+            }
+            printWithThreadName("run end over")
+        }
+    }
+
+    suspend fun fakeRunData(channel: ProducerScope<Int>) = suspendCancellableCoroutine<Unit> { m ->
+        thread {
+            repeat(6) {
+                if (it == 2) {
+                    m.resumeWithException(Exception("adasdasda"))
+                    Thread.sleep(1000)
+                } else {
+                    Thread.sleep(500)
+                }
+//                printWithThreadName("offer $it")
+                if (!channel.isClosedForSend) {
+                    channel.offer(it)
+                }
+            }
+            if (!m.isCompleted) {
+                m.resume(Unit)
             }
         }
+        m.invokeOnCancellation {
+            printWithThreadName("suspend invoke cancel")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cancel()
     }
 
     private fun destroy() {
@@ -65,43 +96,5 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         } catch (e: Exception) {
             throw Exception("time out")
         }
-    }
-
-    suspend fun fakeSendData(channel: Channel<Int>) = suspendCancellableCoroutine<Unit> { m ->
-        thread {
-            repeat(6) {
-                if (it == 3) {
-                    m.resumeWithException(Exception("klklklsdadasdasdadadasd"))
-                    Thread.sleep(3000)
-                } else {
-                    Thread.sleep(500)
-                }
-                printWithThreadName("offer $it")
-                channel.offer(it)
-            }
-//            m.resume(Unit)
-        }
-        m.invokeOnCancellation {
-            printWithThreadName("asdasdadasd $isActive")
-        }
-    }
-
-    fun fakeRunData(channel: Channel<Int>) {
-        thread {
-            repeat(6) {
-                if (it == 3) {
-                    Thread.sleep(3000)
-                } else {
-                    Thread.sleep(500)
-                }
-                printWithThreadName("offer $it")
-                channel.offer(it)
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        cancel()
     }
 }
