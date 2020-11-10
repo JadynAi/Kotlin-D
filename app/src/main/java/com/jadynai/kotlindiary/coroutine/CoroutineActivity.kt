@@ -4,11 +4,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.utils.getReal
+import com.jadyn.kotlinp.coroutine.channel.receive
 import com.jadyn.kotlinp.coroutine.printWithThreadName
+import com.jadyn.kotlinp.coroutine.singleExecutors
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.concurrent.thread
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -25,10 +29,46 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coroutine)
         textView2.click {
-            run()
+            launch {
+                withContext(singleExecutors.asCoroutineDispatcher()) {
+                    async {
+                        testSuspend()
+                    }.await()
+                }
+            }
         }
         textView5.click {
             cancel()
+        }
+    }
+
+    suspend fun testSuspend() = suspendCancellableCoroutine<Unit> {
+        it.invokeOnCancellation {
+            printWithThreadName("invoke cancel")
+        }
+        it.resume(Unit)
+        thread {
+            repeat(20) {
+                Thread.sleep(300)
+            }
+        }
+    }
+
+    fun runActor() {
+        launch {
+            val receive = receive<Int>(Channel.UNLIMITED) {
+                receiveAsFlow().collect {
+                    printWithThreadName("receive collect $it")
+                }
+            }
+            printWithThreadName("start with context")
+            thread {
+                repeat(10) {
+                    Thread.sleep(500)
+                    printWithThreadName("thread offer $it")
+                    receive.offer(it)
+                }
+            }
         }
     }
 

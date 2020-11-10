@@ -32,16 +32,15 @@
     </com.jadynai.kotlindiary.view.ViewW>
 
 
-    <androidx.appcompat.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/view_w"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
 
-    </androidx.appcompat.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.jadynai.kotlindiary.view.ViewP
         android:id="@+id/parent_0"
