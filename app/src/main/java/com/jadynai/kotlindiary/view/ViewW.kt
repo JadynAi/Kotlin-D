@@ -3,13 +3,13 @@ package com.jadynai.kotlindiary.view
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.*
-import android.widget.FrameLayout
 import android.widget.RelativeLayout
-import android.widget.TextView
 import kotlin.math.abs
 
 /**
@@ -196,46 +196,32 @@ class ViewChild @JvmOverloads constructor(
 
 class ViewText @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : ViewGroup(context, attrs, defStyleAttr) {
+) : View(context, attrs, defStyleAttr) {
 
-    private val tv by lazy {
-        val textView = TextView(context)
-        textView.setTextColor(Color.RED)
-        textView.textSize = 12f
-        textView.gravity = Gravity.CENTER
-        val layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-        layoutParams.gravity = Gravity.CENTER
-        textView.layoutParams = layoutParams
-        textView
-    }
 
-    private val bgPaint by lazy {
-        val p = Paint(Paint.ANTI_ALIAS_FLAG)
-        p.color = Color.RED
-        p.alpha = 122
-        p.style = Paint.Style.FILL
-        p
-    }
+    init {
+        post {
+            
+            val drawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(Color.RED, Color.GREEN))
+            drawable.cornerRadius = height * 0.5f
+            background = drawable
+            drawable.callback = object : Drawable.Callback {
+                override fun unscheduleDrawable(who: Drawable, what: Runnable) {
+                }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        tv.measure(widthMeasureSpec, heightMeasureSpec)
-    }
+                override fun invalidateDrawable(who: Drawable) {
+                    background = who
+                }
 
-    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        tv.layout(l, t, r, b)
-    }
+                override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
+                }
 
-    override fun dispatchDraw(canvas: Canvas) {
-        super.dispatchDraw(canvas)
-        tv.text = "adadad"
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), bgPaint)
-        tv.draw(canvas)
+            }
+        }
     }
+}
 
-    override fun onDrawForeground(canvas: Canvas) {
-        super.onDrawForeground(canvas)
-    }
+class AnimDrawable : AnimationDrawable() {
 
 }
         

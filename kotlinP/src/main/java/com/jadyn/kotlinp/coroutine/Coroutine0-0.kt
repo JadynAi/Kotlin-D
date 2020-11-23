@@ -1,9 +1,12 @@
 package com.jadyn.kotlinp.coroutine
 
 import kotlinx.coroutines.*
+import java.util.*
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.suspendCoroutine
+import kotlin.random.Random
 
 /**
  *JadynAi since 2020/9/19
@@ -56,20 +59,32 @@ open class BaseMainTest : CoroutineScope {
 //        get() = SupervisorJob() + mainExecutors.asCoroutineDispatcher()
 
     open fun run() {
-        launch {
-            val async = async {
-                printWithThreadNameAndTime("launch start")
-                delay(1000)
-                printWithThreadName("launch finish")
-            }
-            val async1 = async() {
-                printWithThreadNameAndTime("global launch start")
-                delay(500)
-                printWithThreadName("global launch finish")
-            }
-            delay(3000)
-//            async.await()
-//            async1.await()
-        }
+//        launch {
+//            printWithThreadNameAndTime("start")
+//            val s = arrayListOf<Deferred<Double>>()
+//            for (i in 0..5) {
+//                val t = test()
+//                s.add(t)
+//            }
+//            s.awaitAll()
+//            printWithThreadNameAndTime("end")
+//            test1()
+//            printWithThreadName("test1 end")
+//        }
+        val d = arrayListOf(0, 0, 0, 1, 2, -1)
+        val d1 = ArrayList(d)
+        d.clear()
+        d.addAll(arrayListOf(3, 3, 9, 10, 11))
+        printWithThreadName("d1 ${d1} ddd $d")
+    }
+
+    private fun test() = async(Dispatchers.IO) {
+        delay(3000)
+        printWithThreadNameAndTime("test happen")
+        Random(5).nextDouble()
+    }
+
+    private suspend fun test1() = withContext(Dispatchers.IO) {
+        delay(5000)
     }
 }
