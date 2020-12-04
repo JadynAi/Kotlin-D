@@ -1,15 +1,20 @@
 package com.jadynai.kotlindiary.view
 
+import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
+import android.graphics.*
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.*
+import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
+import com.jadyn.ai.kotlind.utils.dp2px
+import com.jadyn.ai.kotlind.utils.parseColor
+import java.util.*
 import kotlin.math.abs
 
 /**
@@ -194,31 +199,157 @@ class ViewChild @JvmOverloads constructor(
     }
 }
 
+class ViewFrame @JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
+
+    private val path by lazy { Path() }
+    private var pathMeasure: PathMeasure? = null
+
+    private val paint by lazy {
+        val p = Paint(Paint.ANTI_ALIAS_FLAG)
+        p.color = parseColor("#ffee00")
+        p.style = Paint.Style.STROKE
+        p.strokeWidth = 16f
+        p
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        if (path.isEmpty) {
+            path.moveTo(0f, 0f)
+            path.lineTo(width.toFloat(), 0f)
+//            path.moveTo(width.toFloat(), 0f)
+            path.lineTo(width.toFloat(), height.toFloat())
+//            path.moveTo(width.toFloat(), height.toFloat())
+            path.lineTo(0f, height.toFloat())
+//            path.moveTo(0f, height.toFloat())
+            path.lineTo(0f, 0f)
+            path.close()
+            pathMeasure = PathMeasure(path, false)
+        }
+    }
+
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        val p = Path()
+        pathMeasure!!.getSegment(0f, pathMeasure!!.length * 0.8f, p, false)
+        canvas?.drawPath(p, paint)
+    }
+}
+
 class ViewText @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
+    private val cb by lazy {
+        object : Drawable.Callback {
+            override fun unscheduleDrawable(who: Drawable, what: Runnable) {
+            }
 
-    init {
-        post {
-            
-            val drawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(Color.RED, Color.GREEN))
-            drawable.cornerRadius = height * 0.5f
-            background = drawable
-            drawable.callback = object : Drawable.Callback {
-                override fun unscheduleDrawable(who: Drawable, what: Runnable) {
-                }
+            override fun invalidateDrawable(who: Drawable) {
+                invalidate()
+            }
 
-                override fun invalidateDrawable(who: Drawable) {
-                    background = who
-                }
+            override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
+            }
 
-                override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
-                }
+        }
+    }
 
+    private var drawable: GradientDrawable? = null
+    private var valueAnimator: ValueAnimator? = null
+    private var radius = dp2px(12f).toFloat()
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        if (drawable == null) {
+            val intArrayOf = intArrayOf(
+                    parseColor("#f8c002"),
+                    parseColor("#ffca02"),
+                    parseColor("#FFD200"),
+                    parseColor("#FFEE00")
+            )
+//            vald intArrayOf = intArrayOf(Color.WHITE, Color.BLACK)
+            val d = GradientDrawable()
+            d.colors = intArrayOf
+            d.cornerRadius = radius
+            background = d
+            d.callback = cb
+            d.gradientType = GradientDrawable.RADIAL_GRADIENT
+            val wF = width.toFloat()
+            val hF = height.toFloat()
+            d.gradientRadius = wF * 0.65f
+            drawable = d
+            val path = Path()
+            val yGap = hF * 0.2f
+            val r = radius * 1.2f
+            path.moveTo(r, -yGap)
+            path.lineTo(wF - r, -yGap)
+            path.quadTo(wF - r * 0.5f, r * 0.5f, wF, r)
+            path.lineTo(wF, hF - r)
+            path.quadTo(wF - r * 0.5f, hF - r * 0.5f, wF - r, hF)
+            path.lineTo(r, hF + yGap)
+            path.close()
+            val pathMeasure = PathMeasure(path, true)
+            val v = ValueAnimator()
+            v.duration = 10000
+            v.setFloatValues(0f, pathMeasure.length)
+            v.interpolator = LinearInterpolator()
+            v.repeatCount = ValueAnimator.INFINITE
+            val xy = floatArrayOf(0f, 0f)
+            v.addUpdateListener {
+                val fl = it.animatedValue as Float
+                pathMeasure.getPosTan(fl, xy, null)
+                Log.d("cece", "onLayout: xy ${Arrays.toString(xy)}")
+                drawable?.setGradientCenter(xy[0] / wF, xy[1] / hF)
+            }
+            valueAnimator = v
+            v.start()
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        Log.d("cece", "onDetachedFromWindow: ")
+        valueAnimator?.end()
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        Log.d("cecece", "onVisibilityChanged: $visibility")
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        Log.d("cecece", "onWindowVisibilityChanged: $visibility")
+    }
+
+    override fun dispatchVisibilityChanged(changedView: View, visibility: Int) {
+        super.dispatchVisibilityChanged(changedView, visibility)
+        Log.d("cecece", "dispatchVisibilityChanged: $visibility")
+        if (visibility != VISIBLE) {
+            valueAnimator?.pause()
+        } else {
+            if (valueAnimator?.isStarted == true) {
+                valueAnimator?.resume()
+            } else {
+                valueAnimator?.start()
             }
         }
     }
+
+    override fun dispatchWindowVisibilityChanged(visibility: Int) {
+        super.dispatchWindowVisibilityChanged(visibility)
+        Log.d("cecece", "dispatchWindowVisibilityChanged: $visibility")
+    }
+
+//    override fun onDraw(canvas: Canvas?) {
+//        super.onDraw(canvas)
+//        cXY?.let {
+//            canvas?.drawCircle(it[0], it[1], 5f, p)
+//        }
+//    }
 }
 
 class AnimDrawable : AnimationDrawable() {

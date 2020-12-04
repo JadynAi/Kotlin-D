@@ -5,6 +5,7 @@ import java.util.*
 import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlin.random.Random
 
@@ -71,14 +72,11 @@ open class BaseMainTest : CoroutineScope {
 //            test1()
 //            printWithThreadName("test1 end")
 //        }
-        val d = arrayListOf(0, 0, 0, 1, 2, -1)
-        val d1 = ArrayList(d)
-        d.clear()
-        d.addAll(arrayListOf(3, 3, 9, 10, 11))
-        printWithThreadName("d1 ${d1} ddd $d")
+        
     }
 
     private fun test() = async(Dispatchers.IO) {
+        printWithThreadNameAndTime("test start")
         delay(3000)
         printWithThreadNameAndTime("test happen")
         Random(5).nextDouble()

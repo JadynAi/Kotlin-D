@@ -3,9 +3,12 @@ package com.jadynai.kotlindiary.view
 import android.os.Bundle
 import android.view.Choreographer
 import androidx.appcompat.app.AppCompatActivity
+import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadynai.kotlindiary.R
+import com.jadynai.kotlindiary.coroutine.CoroutineActivity
 import kotlinx.android.synthetic.main.activity_view.*
+import kotlinx.android.synthetic.main.activity_view_gaussian_blur_anim.*
 
 /**
  *@version:
@@ -18,9 +21,10 @@ class ViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view)
-        
+        setContentView(R.layout.activity_view_gaussian_blur_anim)
 
+        ddddd.click {
+        }
 //        view_w.click {
 //            Thread {
 //                for (i in 0..300 step 20) {
@@ -36,10 +40,10 @@ class ViewActivity : AppCompatActivity() {
 //            true
 //        }
 
-        text_one.click { 
-            Choreographer.getInstance().postFrameCallback { 
-            }
-            parent_3.invalidate()
-        }
+//        text_one.click { 
+//            Choreographer.getInstance().postFrameCallback { 
+//            }
+//            parent_3.invalidate()
+//        }
     }
 }
