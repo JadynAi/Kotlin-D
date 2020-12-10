@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jadyn.ai.kotlind.function.ui.event
 import com.jadyn.ai.kotlind.utils.TooFastChecker
+import com.jadyn.ai.kotlind.utils.setSafeNoNone
 
 /**
  *@version:
@@ -32,11 +33,6 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
     }
 
     var emptyEvent: (() -> Unit)? = null
-
-    /**
-     *  diff utils item compare
-     * */
-    private var itemCompare: ((D, D) -> Boolean)? = null
 
     private var bind: AcroViewHolder<D>.() -> Unit = {}
 
@@ -94,17 +90,22 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
         return acrobatMgr.getItemConfig(position)
     }
 
-    fun setData(dataList: ArrayList<D>): AcrobatAdapter<D> {
+    fun setData(dataList: List<D>,
+                itemCompare: ((old: D, new: D) -> Boolean)? = null): AcrobatAdapter<D> {
         if (dataList.isEmpty()) {
-            emptyEvent?.apply {
-                this()
-            }
+            emptyEvent?.invoke()
         }
-        val diffCallBack = DiffCallback(acrobatMgr.data, dataList)
+        // 比较数据需要构建两个不同对象的list，否则对比会出问题
+        val diffCallBack = DiffCallback(ArrayList(acrobatMgr.data), dataList, itemCompare)
         val calculateDiff = DiffUtil.calculateDiff(diffCallBack)
-        calculateDiff.dispatchUpdatesTo(this)
         acrobatMgr.setData(dataList)
+        calculateDiff.dispatchUpdatesTo(this)
         return this
+    }
+
+    fun setDataForceNotify(dataList: List<D>) {
+        acrobatMgr.setData(dataList)
+        notifyDataSetChanged()
     }
 
     fun getData(): ArrayList<D> {
@@ -115,11 +116,6 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
 
     fun bindEvent(click: AcroViewHolder<D>.() -> Unit): AcrobatAdapter<D> {
         this.bind = click
-        return this
-    }
-
-    fun itemCompareRule(rule: (D, D) -> Boolean): AcrobatAdapter<D> {
-        this.itemCompare = rule
         return this
     }
 
@@ -137,30 +133,24 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
         }
     }
 
-    fun putTag(@IntRange(from = 1, to = 3) id: Int, tag: Any): AcrobatAdapter<D> {
+    fun putTag(@IntRange(from = 1) id: Int, tag: Any): AcrobatAdapter<D> {
         tagMap.put(id, tag)
         return this
     }
 
-    fun notifyItemChangedSafe(pos: Int) {
-        if (pos > -1 && pos < acrobatMgr.data.size) {
-            notifyItemChanged(pos)
-        }
+    fun changItemData(pos: Int, newData: D) {
+        acrobatMgr.data.setSafeNoNone(pos, newData)
     }
 
-    private inner class DiffCallback(private var oldData: List<D>,
-                                     private var newData: List<D>) : DiffUtil.Callback() {
+    private inner class DiffCallback(private var oldData: List<D>, private var newData: List<D>,
+                                     private val itemCompare: ((D, D) -> Boolean)? = null) : DiffUtil.Callback() {
 
-        override fun getOldListSize(): Int {
-            return oldData.size
-        }
+        override fun getOldListSize(): Int = oldData.size
 
-        override fun getNewListSize(): Int {
-            return newData.size
-        }
+        override fun getNewListSize(): Int = newData.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return acrobatMgr.getItemConfig(oldItemPosition) == acrobatMgr.getItemConfig(newItemPosition)
+            return acrobatMgr.getItemConfig(oldItemPosition, oldData) == acrobatMgr.getItemConfig(newItemPosition, newData)
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -35,7 +35,7 @@ class AcrobatMgr<D>(private val a: AcrobatAdapter<D>) {
         data.addAll(list)
     }
 
-    fun getItemConfig(position: Int): Int {
+    fun getItemConfig(position: Int, d: List<D> = data): Int {
         if (items.isEmpty()) {
             throw RuntimeException("item must config")
         }
@@ -43,7 +43,7 @@ class AcrobatMgr<D>(private val a: AcrobatAdapter<D>) {
             return 0
         }
         items.forEachIndexed { index, acrobatItem ->
-            if (acrobatItem.isMeetData(data[position], position)) {
+            if (acrobatItem.isMeetData(d[position], position)) {
                 return index
             }
         }

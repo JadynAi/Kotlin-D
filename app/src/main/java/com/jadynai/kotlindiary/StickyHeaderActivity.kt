@@ -5,8 +5,10 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.TextPaint
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jadyn.ai.acrobat.recyclerview.AcrobatAdapter
 import com.jadyn.ai.acrobat.recyclerview.itemdecoration.GroupInfo
 import com.jadyn.ai.acrobat.recyclerview.itemdecoration.StickyHeaderDecor
@@ -42,6 +44,18 @@ class StickyHeaderActivity : AppCompatActivity() {
             }
         }.setData(womens)
 
+        recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                Log.d("cece", "onScrolled: $dy")
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                Log.d("cece", "onScrollStateChanged: $newState")
+            }
+        })
+
         recycler_view.apply {
             layoutManager = GridLayoutManager(this@StickyHeaderActivity, 3)
 //                    .let {
@@ -72,7 +86,7 @@ class StickyHeaderActivity : AppCompatActivity() {
         }
 
         change_tv.setOnClickListener {
-            //            acrobatAdapter.setData(newData)
+            recycler_view.smoothScrollBy(0, 5)
         }
     }
 }
@@ -81,7 +95,7 @@ class Girl(var name: String, var info: GroupInfo)
 
 fun getData(): ArrayList<Girl> {
     val list = arrayListOf<Girl>()
-    for (i in 0 until 4) {
+    for (i in 0 until 2) {
         list.add(Girl("刘诗诗", GroupInfo(i, 4, "刘诗诗")))
     }
     for (i in 0 until 11) {

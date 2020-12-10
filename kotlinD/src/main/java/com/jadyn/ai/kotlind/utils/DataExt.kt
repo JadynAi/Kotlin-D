@@ -62,6 +62,17 @@ fun <T> ArrayList<T>.removeAtSafe(index: Int) {
     removeAt(index)
 }
 
+fun <T> MutableList<T>.setSafeNoNone(index: Int, t: T): Boolean {
+    if (isEmpty()) {
+        return false
+    }
+    if (index in 0..lastIndex) {
+        this[index] = t
+        return true
+    }
+    return false
+}
+
 val <D> Deque<D>.firstSafe: D?
     get() {
         return try {
