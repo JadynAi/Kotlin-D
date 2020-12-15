@@ -86,7 +86,8 @@ class StickyHeaderActivity : AppCompatActivity() {
         }
 
         change_tv.setOnClickListener {
-            recycler_view.smoothScrollBy(0, 5)
+            recycler_view.smoothScrollBy(0, 2)
+            recycler_view.smoothScrollBy(0, -2)
         }
     }
 }
@@ -98,14 +99,14 @@ fun getData(): ArrayList<Girl> {
     for (i in 0 until 2) {
         list.add(Girl("刘诗诗", GroupInfo(i, 4, "刘诗诗")))
     }
-    for (i in 0 until 11) {
-        list.add(Girl("李冰冰", GroupInfo(i, 11, "李冰冰")))
-    }
-    for (i in 0 until 9) {
-        list.add(Girl("新垣结衣", GroupInfo(i, 9, "新垣结衣")))
-    }
-    for (i in 0 until 5) {
-        list.add(Girl("石原里美", GroupInfo(i, 5, "石原里美")))
-    }
+//    for (i in 0 until 11) {
+//        list.add(Girl("李冰冰", GroupInfo(i, 11, "李冰冰")))
+//    }
+//    for (i in 0 until 9) {
+//        list.add(Girl("新垣结衣", GroupInfo(i, 9, "新垣结衣")))
+//    }
+//    for (i in 0 until 5) {
+//        list.add(Girl("石原里美", GroupInfo(i, 5, "石原里美")))
+//    }
     return list
 }

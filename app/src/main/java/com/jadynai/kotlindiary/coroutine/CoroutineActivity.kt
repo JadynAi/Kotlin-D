@@ -1,9 +1,12 @@
 package com.jadynai.kotlindiary.coroutine
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.jadyn.ai.kotlind.function.ui.click
+import com.jadyn.kotlinp.coroutine.concurrent.Mutex0_0
+import com.jadyn.kotlinp.coroutine.concurrent.Mutex0_1
 import com.jadyn.kotlinp.coroutine.printWithThreadName
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_coroutine.*
@@ -21,13 +24,28 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coroutine)
         textView2.click {
-            lifecycleScope.launch() {
-                go(this)
+            lifecycleScope.launch {
+                testCoroutinScope()
             }
         }
         textView5.click {
-            job?.cancel("asdad", Throwable("sdadasd"))
+            lifecycleScope.launch {
+                job?.join()
+                Log.d("cece", "onCreate: end")
+            }
         }
+    }
+
+    suspend fun testCoroutinScope() {
+        job?.cancelAndJoin()
+        job = coroutineScope {
+            launch(Dispatchers.IO) {
+                Log.d("cece", "testCoroutinScope: start")
+                delay(3000)
+            }
+        }
+        job!!.join()
+        Log.d("cece", "testCoroutinScope: join end")
     }
 
     suspend fun go(coroutineScope: CoroutineScope) {

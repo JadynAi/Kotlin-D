@@ -1,5 +1,6 @@
 package com.jadynai.kotlindiary.view
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Choreographer
 import androidx.appcompat.app.AppCompatActivity
@@ -45,5 +46,7 @@ class ViewActivity : AppCompatActivity() {
 //            }
 //            parent_3.invalidate()
 //        }
+        text_res_drawable_tv.setCompoundDrawablesWithIntrinsicBounds(null,
+                ResourceCircleDrawable(30f, Color.YELLOW, R.drawable.adasd), null, null)
     }
 }

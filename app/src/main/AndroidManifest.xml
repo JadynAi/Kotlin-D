@@ -3,43 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.jadynai.kotlindiary">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:name=".AppApplication"
+        android:icon="@drawable/cat"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.jadynai.kotlindiary.binder.BinderActivity">
-        </activity>
+        <activity android:name="com.jadynai.kotlindiary.binder.BinderActivity"></activity>
         <activity android:name="com.jadynai.kotlindiary.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.jadynai.kotlindiary.RecyclerViewActivity"/>
-        <activity android:name="com.jadynai.kotlindiary.show.ShowActivity"
-            android:process=":remote"
-            />
-        <activity android:name="com.jadynai.kotlindiary.thread.ThreadActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name="com.jadynai.kotlindiary.data.DataCodeActivity"/>
-        <activity android:name="com.jadynai.kotlindiary.view.ViewActivity"/>
-        <activity android:name="com.jadynai.kotlindiary.canvas.CanvasActivity"/>
-        <activity android:name="com.jadynai.kotlindiary.designMode.DesignModeActivity"/>
+        <activity android:name="com.jadynai.kotlindiary.RecyclerViewActivity" />
+        <activity
+            android:name="com.jadynai.kotlindiary.show.ShowActivity"
+            android:process=":remote" />
+        <activity
+            android:name="com.jadynai.kotlindiary.thread.ThreadActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.jadynai.kotlindiary.data.DataCodeActivity" />
+        <activity android:name="com.jadynai.kotlindiary.view.ViewActivity" />
+        <activity android:name="com.jadynai.kotlindiary.canvas.CanvasActivity" />
+        <activity android:name="com.jadynai.kotlindiary.designMode.DesignModeActivity" />
         <activity android:name=".StickyHeaderActivity" />
         <activity android:name=".coroutine.CoroutineActivity" />
 
         <service
             android:name="com.jadynai.kotlindiary.binder.MessengerService"
-            android:process=":remote"/>
+            android:process=":remote" />
     </application>
 
 </manifest>

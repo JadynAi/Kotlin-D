@@ -4,16 +4,22 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.AnimationDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.*
+import android.graphics.drawable.shapes.OvalShape
+import android.graphics.drawable.shapes.RectShape
+import android.graphics.drawable.shapes.Shape
 import android.util.AttributeSet
 import android.util.Log
 import android.view.*
 import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
+import androidx.annotation.DrawableRes
+import androidx.core.graphics.drawable.RoundedBitmapDrawable
+import com.jadyn.ai.kotlind.base.KD
+import com.jadyn.ai.kotlind.function.ui.getResDrawable
 import com.jadyn.ai.kotlind.utils.dp2px
 import com.jadyn.ai.kotlind.utils.parseColor
+import com.jadynai.kotlindiary.R
 import java.util.*
 import kotlin.math.abs
 
@@ -352,7 +358,23 @@ class ViewText @JvmOverloads constructor(
 //    }
 }
 
-class AnimDrawable : AnimationDrawable() {
+class ResourceCircleDrawable(r: Float, color: Int, @DrawableRes private val resID: Int) : GradientDrawable() {
 
+    init {
+        val dpValue = dp2px(r * 2)
+        shape = OVAL
+        setSize(dpValue, dpValue)
+        setColor(color)
+//        colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+    }
+
+    override fun draw(canvas: Canvas) {
+        super.draw(canvas)
+        BitmapFactory.decodeResource(KD.applicationWrapper().resources, resID)
+                ?.let {
+                    canvas.drawBitmap(it, (intrinsicWidth - it.width) * 0.5f, 
+                            (intrinsicHeight - it.height) * 0.5f, null)
+                }
+    }
 }
         
