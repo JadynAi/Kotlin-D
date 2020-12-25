@@ -15,6 +15,7 @@ import com.jadynai.kotlindiary.designMode.DesignModeActivity
 import com.jadynai.kotlindiary.show.ShowActivity
 import com.jadynai.kotlindiary.thread.ThreadActivity
 import com.jadynai.kotlindiary.view.ViewActivity
+import com.jadynai.kotlindiary.websocket.WebSocketClientActivity
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -48,14 +49,17 @@ class MainActivity : AppCompatActivity() {
                 Thread.sleep(1000)
             }
             start<DesignModeActivity>()
-            
+
             Observable.just("")
 
             AndroidSchedulers.from(Looper.myLooper())
         }
 
-        coroutine_tv.click { 
+        coroutine_tv.click {
             start<CoroutineActivity>()
+        }
+        web_socket_tv.click {
+            start<WebSocketClientActivity>()
         }
     }
 

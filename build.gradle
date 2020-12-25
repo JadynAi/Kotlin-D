@@ -4,6 +4,9 @@ buildscript {
     ext.support_version = '27.1.1'
     repositories {
         google()
+        maven {
+            url uri('/Users/insta360/Insta360/maven')
+        }
         jcenter()
     }
     dependencies {
@@ -19,6 +22,9 @@ buildscript {
 allprojects {
     repositories {
         google()
+        maven {
+            url uri('/Users/insta360/Insta360/maven')
+        }
         jcenter()
     }
 

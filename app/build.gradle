@@ -30,6 +30,11 @@ androidExtensions {
     experimental = true
 }
 
+//apply plugin: 'com.jadyn.trace-plugin'
+//
+//systrace {
+//    pacListFile = ""
+//}
 
 dependencies {
     testImplementation 'junit:junit:4.12'
@@ -47,6 +52,7 @@ dependencies {
     api project(path: ':kotlinP')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.jadyn.trace_tool:TraceDTools:1.1.0'
 
     implementation "io.reactivex.rxjava2:rxjava:2.2.6"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
