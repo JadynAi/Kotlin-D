@@ -6,6 +6,7 @@ import android.view.Choreographer
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
+import com.jadyn.ai.kotlind.function.ui.roundHeight
 import com.jadynai.kotlindiary.R
 import com.jadynai.kotlindiary.coroutine.CoroutineActivity
 import kotlinx.android.synthetic.main.activity_view.*
@@ -46,7 +47,8 @@ class ViewActivity : AppCompatActivity() {
 //            }
 //            parent_3.invalidate()
 //        }
-        text_res_drawable_tv.setCompoundDrawablesWithIntrinsicBounds(null,
-                ResourceCircleDrawable(30f, Color.YELLOW, R.drawable.adasd), null, null)
+//        text_res_drawable_tv.setCompoundDrawablesWithIntrinsicBounds(null,
+//                ResourceCircleDrawable(30f, Color.YELLOW, R.drawable.adasd), null, null)
+        text_res_drawable_tv.roundHeight(Color.RED)
     }
 }

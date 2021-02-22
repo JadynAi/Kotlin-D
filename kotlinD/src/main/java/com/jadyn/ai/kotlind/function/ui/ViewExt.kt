@@ -18,6 +18,7 @@ import androidx.annotation.DrawableRes
 import androidx.viewpager.widget.ViewPager
 import com.jadyn.ai.kotlind.utils.dp2px
 import com.jadyn.ai.kotlind.utils.parseColor
+import com.jadyn.ai.kotlind.utils.screenHeight
 
 /**
  *@version:
@@ -131,9 +132,7 @@ inline fun View.forSureGetSize(crossinline callback: () -> Unit) {
 * */
 fun View.roundHeight(solidColor: Int = Color.WHITE, strokeW: Float = 0f,
                      strokeColor: Int = Color.TRANSPARENT) {
-    post {
-        roundInternal(height * 0.5f, solidColor, strokeW, strokeColor)
-    }
+    roundInternal(screenHeight * 0.5f, solidColor, strokeW, strokeColor)
 }
 
 fun View.roundHeightLR(vararg solidColors: String,
@@ -145,9 +144,7 @@ fun View.roundHeightLR(vararg solidColors: String,
 fun View.roundHeightLR(solidColors: IntArray,
                        strokeW: Float = 0f,
                        strokeColor: Int = Color.TRANSPARENT) {
-    forSureGetSize {
-        roundInternal(height * 0.5f, solidColors, GradientDrawable.Orientation.LEFT_RIGHT, strokeW, strokeColor)
-    }
+    roundInternal(screenHeight * 0.5f, solidColors, GradientDrawable.Orientation.LEFT_RIGHT, strokeW, strokeColor)
 }
 
 /**
