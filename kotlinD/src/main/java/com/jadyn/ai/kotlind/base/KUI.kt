@@ -37,12 +37,16 @@ class KUI {
             forceSetFactory2.invoke(null, lf, object : LayoutInflater.Factory2 {
                 override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? {
                     Log.d("KD", "onCreateView: parent view")
-                    return activity.onCreateView(parent, name, context, attrs)
+                    val view = activity.onCreateView(parent, name, context, attrs)
+                    tryBindKUIAttrs(view, attrs)
+                    return view
                 }
 
                 override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
                     Log.d("KD", "onCreateView: name string")
-                    return activity.onCreateView(name, context, attrs)
+                    val view = activity.onCreateView(name, context, attrs)
+                    tryBindKUIAttrs(view, attrs)
+                    return view
                 }
             })
         }

@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <declare-styleable name="decorate_view" tools:ignore="ResourceName">
+        <attr name="layout_round_background" format="dimension" >
+            <enum name="fill_parent1" value="-1" />
+            <enum name="match_parent2" value="-1" />
+            <enum name="wrap_content3" value="-2" />
+        </attr>
+    </declare-styleable>
+
+</resources>

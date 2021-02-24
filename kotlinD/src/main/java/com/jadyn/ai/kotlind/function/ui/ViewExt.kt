@@ -1,5 +1,6 @@
 package com.jadyn.ai.kotlind.function.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Color
 import android.graphics.Rect
@@ -7,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
+import android.os.Build
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
@@ -14,8 +16,10 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
+import android.widget.ProgressBar
 import androidx.annotation.DrawableRes
 import androidx.viewpager.widget.ViewPager
+import com.jadyn.ai.kotlind.utils.dp
 import com.jadyn.ai.kotlind.utils.dp2px
 import com.jadyn.ai.kotlind.utils.parseColor
 import com.jadyn.ai.kotlind.utils.screenHeight
@@ -95,27 +99,27 @@ fun View.updateWH(width: Int = layoutParams.width, height: Int = layoutParams.he
 /**
  * crossinline 间不能有return
  * */
-inline fun View.forSureGetSize(crossinline callback: () -> Unit) {
+inline fun View.forSureGetSize(crossinline callback: View.() -> Unit) {
     if (height <= 0) {
         if (visibility == View.GONE) {
             addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
                 override fun onLayoutChange(v: View?, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
                     if (height > 0) {
-                        callback.invoke()
-                        post { removeOnLayoutChangeListener(this) }
+                        callback()
+                        removeOnLayoutChangeListener(this)
                     }
                 }
             })
         } else {
             post {
                 if (height > 0) {
-                    callback.invoke()
+                    callback()
                 } else {
                     addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
                         override fun onLayoutChange(v: View?, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
                             if (height > 0) {
-                                callback.invoke()
-                                post { removeOnLayoutChangeListener(this) }
+                                callback()
+                                removeOnLayoutChangeListener(this)
                             }
                         }
                     })
@@ -124,7 +128,7 @@ inline fun View.forSureGetSize(crossinline callback: () -> Unit) {
         }
         return
     }
-    callback.invoke()
+    callback()
 }
 
 /*
@@ -135,10 +139,48 @@ fun View.roundHeight(solidColor: Int = Color.WHITE, strokeW: Float = 0f,
     roundInternal(screenHeight * 0.5f, solidColor, strokeW, strokeColor)
 }
 
+fun View.roundHeightSelected(normalColor: Int, stateColor: Int) {
+    forSureGetSize {
+        roundInternal(height * 0.5f, normalColor, 0f, Color.TRANSPARENT) {
+            background = it.tintSelected(normalColor, stateColor)
+        }
+    }
+}
+
+fun View.roundHeightEnabled(normalColor: Int, stateColor: Int) {
+    forSureGetSize {
+        roundInternal(height * 0.5f, normalColor, 0f, Color.TRANSPARENT) {
+            background = it.tintEnable(normalColor, stateColor)
+        }
+    }
+}
+
+fun View.roundHeightEnabled(normalColors: IntArray, stateColors: IntArray) {
+    forSureGetSize {
+        enabled(roundDrawable(height * 0.5f, normalColors, GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT),
+                roundDrawable(height * 0.5f, stateColors, GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT))
+    }
+}
+
+fun View.roundHeightEnabled(normalColors: Array<String>, stateColors: Array<String>) {
+    forSureGetSize {
+        enabled(roundDrawable(height * 0.5f, normalColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT),
+                roundDrawable(height * 0.5f, stateColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT))
+    }
+}
+
 fun View.roundHeightLR(vararg solidColors: String,
                        strokeW: Float = 0f,
                        strokeColor: Int = Color.TRANSPARENT) {
     roundHeightLR(solidColors.map { parseColor(it) }.toIntArray(), strokeW, strokeColor)
+}
+
+fun View.roundHeightTB(vararg solidColors: String,
+                       strokeW: Float = 0f,
+                       strokeColor: Int = Color.TRANSPARENT) {
+    forSureGetSize {
+        roundInternal(height * 0.5f, solidColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.TOP_BOTTOM, strokeW, strokeColor)
+    }
 }
 
 fun View.roundHeightLR(solidColors: IntArray,
@@ -151,10 +193,9 @@ fun View.roundHeightLR(solidColors: IntArray,
  * 四个角，r的size必须为4。分别为左上，右上、右下、左下
  * */
 fun View.roundArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
-                    strokeColor: Int = Color.TRANSPARENT) {
-    roundInternalArray(r.map {
-        dp2px(it).toFloat()
-    }.toFloatArray(), solidColor, strokeW, strokeColor)
+                    strokeColor: Int = Color.TRANSPARENT, dashW: Float = 0f,
+                    dashGap: Float = 0f) {
+    roundInternalArray(r.map { it.dp.toFloat() }.toFloatArray(), solidColor, strokeW, strokeColor, dashW, dashGap)
 }
 
 fun View.roundArrayLR(r: FloatArray, solidColors: IntArray, strokeW: Float = 0f,
@@ -163,8 +204,9 @@ fun View.roundArrayLR(r: FloatArray, solidColors: IntArray, strokeW: Float = 0f,
 }
 
 fun View.round(r: Float = 2f, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
-               strokeColor: Int = Color.TRANSPARENT) {
-    roundInternal(dp2px(r).toFloat(), solidColor, strokeW, strokeColor)
+               strokeColor: Int = Color.TRANSPARENT, dashW: Float = 0f,
+               dashGap: Float = 0f) {
+    roundInternal(r.dp.toFloat(), solidColor, strokeW, strokeColor, dashW, dashGap)
 }
 
 fun View.roundLR(r: Float = 2f, solidColors: IntArray, strokeW: Float = 0f,
@@ -172,24 +214,32 @@ fun View.roundLR(r: Float = 2f, solidColors: IntArray, strokeW: Float = 0f,
     roundInternal(r, solidColors, GradientDrawable.Orientation.LEFT_RIGHT, strokeW, strokeColor)
 }
 
-fun View.roundInternal(r: Float = dp2px(2f).toFloat(), solidColor: Int = Color.WHITE,
-                       strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
-    this.background = roundDrawable(r, solidColor, strokeW, strokeColor)
+fun View.roundInternal(r: Float = 2f.dp.toFloat(), solidColor: Int = Color.WHITE,
+                       strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT,
+                       dashW: Float = 0f,
+                       dashGap: Float = 0f,
+                       drawableSetCallback: (Drawable) -> Unit = {}) {
+    val roundDrawable = roundDrawable(r, solidColor, strokeW, strokeColor, dashW, dashGap)
+    this.background = roundDrawable
+    drawableSetCallback.invoke(roundDrawable)
     //避免子View影响到背景
     this.clipToOutline = true
 }
 
-fun View.roundInternal(r: Float = dp2px(2f).toFloat(), solidColor: IntArray,
+fun View.roundInternal(r: Float = 2f.dp.toFloat(), solidColor: IntArray,
                        orientation: GradientDrawable.Orientation,
-                       strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT) {
-    this.background = roundDrawable(r, solidColor, orientation, strokeW, strokeColor)
+                       strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT,
+                       dashW: Float = 0f,
+                       dashGap: Float = 0f) {
+    this.background = roundDrawable(r, solidColor, orientation, strokeW, strokeColor, dashW, dashGap)
     //避免子View影响到背景
     this.clipToOutline = true
 }
 
 fun View.roundInternalArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
-                            strokeColor: Int = Color.TRANSPARENT) {
-    this.background = roundDrawable(r, solidColor, strokeW, strokeColor)
+                            strokeColor: Int = Color.TRANSPARENT, dashW: Float = 0f,
+                            dashGap: Float = 0f) {
+    this.background = roundDrawable(r, solidColor, strokeW, strokeColor, dashW, dashGap)
     //避免子View影响到背景
     this.clipToOutline = true
 }
@@ -197,8 +247,10 @@ fun View.roundInternalArray(r: FloatArray, solidColor: Int = Color.WHITE, stroke
 fun View.roundInternalArray(r: FloatArray, solidColors: IntArray,
                             orientation: GradientDrawable.Orientation,
                             strokeW: Float = 0f,
-                            strokeColor: Int = Color.TRANSPARENT) {
-    this.background = roundDrawable(r, solidColors, strokeW, strokeColor, orientation)
+                            strokeColor: Int = Color.TRANSPARENT,
+                            dashW: Float = 0f,
+                            dashGap: Float = 0f) {
+    this.background = roundDrawable(r, solidColors, strokeW, strokeColor, dashW, dashGap, orientation)
     //避免子View影响到背景
     this.clipToOutline = true
 }
@@ -288,6 +340,7 @@ fun View.selectedColor(normalColor: Int, checkedColor: Int) {
     this.background = getSelectedDrawable(ColorDrawable(normalColor), ColorDrawable(checkedColor))
 }
 
+@SuppressLint("ClickableViewAccessibility")
 fun View.event(click: ((View) -> Unit)? = null, doubleTap: ((MotionEvent?) -> Unit)? = null,
                longPress: ((MotionEvent?) -> Unit)? = null,
                onTouch: ((MotionEvent) -> Unit)? = null) {
@@ -325,9 +378,8 @@ fun View.event(click: ((View) -> Unit)? = null, doubleTap: ((MotionEvent?) -> Un
 
 fun ViewGroup.clipChild(isClip: Boolean) {
     clipToPadding = isClip
-    clipChildren = false
+    clipChildren = isClip
 }
-
 
 fun View.hideSoftKeyboard() {
     val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -412,6 +464,11 @@ fun View.getLocationOnScreen(): IntArray {
     return array
 }
 
+fun View.getRectLocationOnScreen(): Rect {
+    val array = getLocationOnScreen()
+    return Rect(array[0], array[1], array[0] + width, array[1] + height)
+}
+
 fun View.getLocationOnWindow(): IntArray {
     val array = IntArray(2)
     getLocationInWindow(array)
@@ -488,4 +545,17 @@ fun View.copyBackgroundColor(other: View): Boolean {
         return true
     }
     return false
+}
+
+fun ProgressBar.setMaxHeightSafe(v: Int) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        maxHeight = 4f.dp
+    } else {
+        try {
+            val declaredField = this::class.java.getDeclaredField("mMaxHeight")
+            declaredField.isAccessible = true
+            declaredField.setInt(this, 4f.dp)
+        } catch (e: Exception) {
+        }
+    }
 }

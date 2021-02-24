@@ -8,9 +8,12 @@ import android.text.InputFilter
 import android.text.Spanned
 import android.text.TextUtils
 import android.util.Log
+import android.util.TypedValue
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.core.text.PrecomputedTextCompat
+import androidx.core.widget.TextViewCompat
 import com.jadyn.ai.kotlind.utils.toGBK
 
 /**
@@ -20,49 +23,67 @@ import com.jadyn.ai.kotlind.utils.toGBK
  *@Since:2018/7/4
  *@ChangeList:
  */
-fun TextView.drawable(textDrawable: TextDrawable.() -> Unit) {
-    val d = TextDrawable()
-    d.textDrawable()
-    this.setCompoundDrawablesWithIntrinsicBounds(d.dl, d.dt, d.dr, d.db)
+
+
+fun TextView.drawLeft(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
+                      d: (Int, Int) -> Drawable = ::getPressDrawable) {
+    setCompoundDrawablesWithIntrinsicBounds(d(normalRes, selectRes),
+            compoundDrawables.getOrNull(1), compoundDrawables.getOrNull(2), compoundDrawables.getOrNull(3))
 }
 
-class TextDrawable(var dl: Drawable? = null, var dt: Drawable? = null, var dr: Drawable? = null, var db: Drawable? = null) {
+fun TextView.drawTop(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
+                     d: (Int, Int) -> Drawable = ::getPressDrawable) {
+    drawTop(d(normalRes, selectRes))
+}
 
-    fun drawLeft(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
-                 drwable: (Int, Int) -> Drawable = ::getPressDrawable) {
-        dl = drwable(normalRes, selectRes)
-    }
+fun TextView.drawTop(d: Drawable) {
+    setCompoundDrawablesWithIntrinsicBounds(null, d, null, null)
+}
 
-    fun drawTop(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
-                drwable: (Int, Int) -> Drawable = ::getPressDrawable) {
-        dt = drwable(normalRes, selectRes)
-    }
+fun TextView.drawRight(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
+                       d: (Int, Int) -> Drawable = ::getPressDrawable) {
+    setCompoundDrawablesWithIntrinsicBounds(compoundDrawables.getOrNull(0),
+            compoundDrawables.getOrNull(1), d(normalRes, selectRes), compoundDrawables.getOrNull(3))
+}
 
-    fun drawRight(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
-                  drwable: (Int, Int) -> Drawable = ::getPressDrawable) {
-        dr = drwable(normalRes, selectRes)
-    }
+fun TextView.drawRight(normal: Drawable?, state: Drawable?, d: (Drawable?, Drawable?) -> Drawable = ::getPressDrawable) {
+    drawRight(d(normal, state))
+}
 
-    fun drawBottom(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int = -1,
-                   drwable: (Int, Int) -> Drawable = ::getPressDrawable) {
-        db = drwable(normalRes, selectRes)
-    }
+fun TextView.drawRight(d: Drawable?) {
+    setCompoundDrawablesRelativeWithIntrinsicBounds(compoundDrawables.getOrNull(0),
+            compoundDrawables.getOrNull(1), d, compoundDrawables.getOrNull(3))
+}
+
+fun TextView.drawBottom(d: Drawable?) {
+    setCompoundDrawablesRelativeWithIntrinsicBounds(compoundDrawables.getOrNull(0),
+            compoundDrawables.getOrNull(1), compoundDrawables.getOrNull(2), d)
+}
+
+fun TextView.drawBottom(normal: Drawable?, state: Drawable?, d: (Drawable?, Drawable?) -> Drawable = ::getPressDrawable) {
+    drawBottom(d(normal, state))
 }
 
 fun TextView.pressTextColor(normalColor: Int, pressColor: Int) {
-    val list = ColorStateList(arrayOf(intArrayOf(R.attr.state_pressed),
+    val list = ColorStateList(arrayOf(intArrayOf(android.R.attr.state_pressed),
             intArrayOf()), intArrayOf(pressColor, normalColor))
     this.setTextColor(list)
 }
 
+fun TextView.enableTextColor(normalColor: Int, enable: Int) {
+    val list = ColorStateList(arrayOf(intArrayOf(android.R.attr.state_enabled),
+            intArrayOf()), intArrayOf(enable, normalColor))
+    this.setTextColor(list)
+}
+
 fun TextView.selectTextColor(normalColor: Int, pressColor: Int) {
-    val list = ColorStateList(arrayOf(intArrayOf(R.attr.state_selected),
+    val list = ColorStateList(arrayOf(intArrayOf(android.R.attr.state_selected),
             intArrayOf()), intArrayOf(pressColor, normalColor))
     this.setTextColor(list)
 }
 
 fun TextView.checkedTextColor(normalColor: Int, pressColor: Int) {
-    val list = ColorStateList(arrayOf(intArrayOf(R.attr.state_checked),
+    val list = ColorStateList(arrayOf(intArrayOf(android.R.attr.state_checked),
             intArrayOf()), intArrayOf(pressColor, normalColor))
     this.setTextColor(list)
 }
@@ -130,4 +151,19 @@ fun EditText.maxInputNum(num: Int) {
             return source ?: ""
         }
     })
+}
+
+/**
+ * 异步测量text，有效减少text绘制耗时问题
+ * */
+fun TextView.preFutureText(s: CharSequence) {
+    val params = TextViewCompat.getTextMetricsParams(this)
+    val precomputedText = PrecomputedTextCompat.create(s, params)
+    TextViewCompat.setPrecomputedText(this, precomputedText)
+}
+
+fun TextView.autoSize(minSize: Int, maxSize: Int, step: Int = 1) {
+    TextViewCompat.setAutoSizeTextTypeWithDefaults(this, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM)
+    TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(this, minSize, maxSize,
+            step, TypedValue.COMPLEX_UNIT_SP)
 }

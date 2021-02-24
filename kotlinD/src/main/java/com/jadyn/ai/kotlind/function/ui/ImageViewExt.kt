@@ -1,8 +1,11 @@
 package com.jadyn.ai.kotlind.function.ui
 
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import com.jadyn.ai.kotlind.R
 
 /**
  *@version:
@@ -32,4 +35,17 @@ fun ImageView.select(@DrawableRes normalRes: Int, @DrawableRes selectRes: Int) {
 fun ImageView.select(normal: Drawable, press: Drawable) {
     val sd = getSelectedDrawable(normal, press)
     setImageDrawable(sd)
+}
+
+fun ImageView.activated(normal: Drawable?, state: Drawable?) {
+    if (normal == null || state == null) {
+        return
+    }
+    val sd = getActivatedDrawable(normal, state)
+    setImageDrawable(sd)
+}
+
+fun ImageView.tintEnable(@ColorInt normalColor: Int, @ColorInt stateColor: Int) {
+    imageTintList = ColorStateList(arrayOf(intArrayOf(android.R.attr.state_enabled), intArrayOf()),
+            intArrayOf(stateColor, normalColor))
 }

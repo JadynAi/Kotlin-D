@@ -35,6 +35,9 @@ fun dp2px(dpValue: Float): Int {
     return (dpValue * scale + 0.5f).toInt()
 }
 
+val Float.dp
+    get() = dp2px(this)
+
 fun toastS(string: String) {
     Toast.makeText(KD.applicationWrapper(), string, Toast.LENGTH_SHORT).show()
 }
