@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_res_drawable_tv"
         android:layout_width="300dp"
         android:layout_height="100dp"
@@ -17,10 +17,13 @@
         android:gravity="center"
         android:text="asdadasdasdaasdasdasdasdasdasd"
         android:textColor="@android:color/black"
+        app:layout_111="height111"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_round_background="match_parent2" />
+        app:round="12dp"
+        app:round_stroke="10dp"
+        />
 
 
     <com.jadynai.kotlindiary.view.ViewText
