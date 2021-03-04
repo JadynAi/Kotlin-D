@@ -19,10 +19,7 @@ import android.widget.CompoundButton
 import android.widget.ProgressBar
 import androidx.annotation.DrawableRes
 import androidx.viewpager.widget.ViewPager
-import com.jadyn.ai.kotlind.utils.dp
-import com.jadyn.ai.kotlind.utils.dp2px
-import com.jadyn.ai.kotlind.utils.parseColor
-import com.jadyn.ai.kotlind.utils.screenHeight
+import com.jadyn.ai.kotlind.utils.*
 
 /**
  *@version:
@@ -136,37 +133,29 @@ inline fun View.forSureGetSize(crossinline callback: View.() -> Unit) {
 * */
 fun View.roundHeight(solidColor: Int = Color.WHITE, strokeW: Float = 0f,
                      strokeColor: Int = Color.TRANSPARENT) {
-    roundInternal(screenHeight * 0.5f, solidColor, strokeW, strokeColor)
+    roundInternal(screenWidth.toFloat(), solidColor, strokeW, strokeColor)
 }
 
 fun View.roundHeightSelected(normalColor: Int, stateColor: Int) {
-    forSureGetSize {
-        roundInternal(height * 0.5f, normalColor, 0f, Color.TRANSPARENT) {
-            background = it.tintSelected(normalColor, stateColor)
-        }
+    roundInternal(screenWidth.toFloat(), normalColor, 0f, Color.TRANSPARENT) {
+        background = it.tintSelected(normalColor, stateColor)
     }
 }
 
 fun View.roundHeightEnabled(normalColor: Int, stateColor: Int) {
-    forSureGetSize {
-        roundInternal(height * 0.5f, normalColor, 0f, Color.TRANSPARENT) {
-            background = it.tintEnable(normalColor, stateColor)
-        }
+    roundInternal(screenWidth.toFloat(), normalColor, 0f, Color.TRANSPARENT) {
+        background = it.tintEnable(normalColor, stateColor)
     }
 }
 
 fun View.roundHeightEnabled(normalColors: IntArray, stateColors: IntArray) {
-    forSureGetSize {
-        enabled(roundDrawable(height * 0.5f, normalColors, GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT),
-                roundDrawable(height * 0.5f, stateColors, GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT))
-    }
+    enabled(roundDrawable(screenWidth.toFloat(), normalColors, GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT),
+            roundDrawable(screenWidth.toFloat(), stateColors, GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT))
 }
 
 fun View.roundHeightEnabled(normalColors: Array<String>, stateColors: Array<String>) {
-    forSureGetSize {
-        enabled(roundDrawable(height * 0.5f, normalColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT),
-                roundDrawable(height * 0.5f, stateColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT))
-    }
+    enabled(roundDrawable(screenWidth.toFloat(), normalColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT),
+            roundDrawable(screenWidth.toFloat(), stateColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT))
 }
 
 fun View.roundHeightLR(vararg solidColors: String,
@@ -178,15 +167,13 @@ fun View.roundHeightLR(vararg solidColors: String,
 fun View.roundHeightTB(vararg solidColors: String,
                        strokeW: Float = 0f,
                        strokeColor: Int = Color.TRANSPARENT) {
-    forSureGetSize {
-        roundInternal(height * 0.5f, solidColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.TOP_BOTTOM, strokeW, strokeColor)
-    }
+    roundInternal(screenWidth.toFloat(), solidColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.TOP_BOTTOM, strokeW, strokeColor)
 }
 
 fun View.roundHeightLR(solidColors: IntArray,
                        strokeW: Float = 0f,
                        strokeColor: Int = Color.TRANSPARENT) {
-    roundInternal(screenHeight * 0.5f, solidColors, GradientDrawable.Orientation.LEFT_RIGHT, strokeW, strokeColor)
+    roundInternal(screenWidth.toFloat(), solidColors, GradientDrawable.Orientation.LEFT_RIGHT, strokeW, strokeColor)
 }
 
 /**
