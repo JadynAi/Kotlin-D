@@ -8,6 +8,9 @@ fun main() {
     print("result $p")
 }
 
+/**
+ * 是否是回文字符串
+ * */
 fun isPalindrome(s: String): Boolean {
     if (s.length <= 1) {
         return true
