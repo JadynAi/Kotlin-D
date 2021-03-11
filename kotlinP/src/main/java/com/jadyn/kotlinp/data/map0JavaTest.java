@@ -6,6 +6,6 @@ package com.jadyn.kotlinp.data;
 class map0JavaTest {
 
     public static int test1() {
-        return (1 << 30); 
+        return (333 << 1); 
     }
 }
