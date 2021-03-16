@@ -2,6 +2,7 @@ package com.jadynai.kotlindiary.view
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.Choreographer
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.start
@@ -26,6 +27,14 @@ class ViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_view_gaussian_blur_anim)
 
         ddddd.click {
+            val sparseArray = SparseArray<String>(7)
+            val s = arrayListOf(1, 3, 5, 7, 2, 10, 11, 20, 15, 9)
+            s.shuffle()
+            print("shuffle s $s")
+            s.forEach {
+                sparseArray.put(it, "sss$it")
+            }
+            s
         }
 //        view_w.click {
 //            Thread {

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <declare-styleable name="kui" tools:ignore="ResourceName">
+    <declare-styleable name="kui_attr" tools:ignore="ResourceName">
         <attr name="round" format="dimension" >
             <enum name="height" value="-250" />
         </attr>
