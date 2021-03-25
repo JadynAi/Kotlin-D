@@ -3,6 +3,7 @@ package com.jadynai.kotlindiary
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -63,6 +64,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("cece", "onResume: ")
+    }
+
     override fun onPause() {
         super.onPause()
         Log.d("cece", "main : onPause")
@@ -71,6 +77,26 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.d("cece", "main : onStop")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.d("cece", "onSaveInstanceState: ")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        Log.d("cece", "onSaveInstanceState: double params")
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        Log.d("cece", "onRestoreInstanceState: ")
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+        Log.d("cece", "onRestoreInstanceState: double params")
     }
 }
 

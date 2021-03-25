@@ -14,8 +14,7 @@ fun main(args: Array<String>) {
 
 class A : CoroutineScope {
 
-    override val coroutineContext: CoroutineContext
-        get() = SupervisorJob() + mainExecutors.asCoroutineDispatcher()
+    override val coroutineContext: CoroutineContext = SupervisorJob() + mainExecutors.asCoroutineDispatcher()
 
     fun run() {
         launch {

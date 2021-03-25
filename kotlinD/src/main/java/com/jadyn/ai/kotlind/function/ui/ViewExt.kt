@@ -536,7 +536,7 @@ fun View.copyBackgroundColor(other: View): Boolean {
 
 fun ProgressBar.setMaxHeightSafe(v: Int) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        maxHeight = 4f.dp
+//        maxHeight = 4f.dp
     } else {
         try {
             val declaredField = this::class.java.getDeclaredField("mMaxHeight")

@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <declare-styleable name="kui" tools:ignore="ResourceName">
-        <attr name="layout_round_bg" format="dimension" >
-            <enum name="height" value="-250" />
-        </attr>
-    </declare-styleable>
+<!--    <declare-styleable name="kui" tools:ignore="ResourceName">-->
+<!--        <attr name="layout_round_bg" format="dimension" >-->
+<!--            <enum name="height" value="-250" />-->
+<!--        </attr>-->
+<!--    </declare-styleable>-->
 
 </resources>
