@@ -7,7 +7,10 @@ import kotlin.math.min
  *JadynAi since 3/25/21
  */
 fun main() {
-    print("sort ${Arrays.toString(insertSort(arrayOf(3, 1, 9, 10, 7, 5, 4)))}")
+//    print("sort ${Arrays.toString(fastSort(arrayOf(3, 1, 9, 10, 7, 5, 4)))}")
+    val array = arrayOf(3, 1, 9, 10, 7, 5, 4)
+    fastSort(array, 0, array.size)
+    print("sort ${Arrays.toString(array)}")
 }
 
 // 选择排序，每一轮选出最小的值
@@ -40,7 +43,8 @@ fun bubbleSort(array: Array<Int>): Array<Int> {
     return array
 }
 
-// 插入排序
+// 插入排序，插入排序的核心思想就是把当前index之前的序列看作有序序列，从而和当前index
+// 的值比较，小的就交换到前面去
 fun insertSort(array: Array<Int>): Array<Int> {
     for (i in 1..array.lastIndex) {
         val i1 = array[i]
@@ -57,4 +61,25 @@ fun insertSort(array: Array<Int>): Array<Int> {
         println(Arrays.toString(array))
     }
     return array
+}
+
+// 快速排序
+fun fastSort(array: Array<Int>, start: Int, end: Int) {
+    if (end <= start) {
+        return
+    }
+    val base = array[start]
+    var curBaseIndex = start
+    for (i in start + 1 until end) {
+        val v = array[i]
+        if (v <= base) {
+            array[i] = base
+            array[curBaseIndex] = v
+            curBaseIndex = i
+        } else {
+            
+        }
+    }
+    fastSort(array, start, curBaseIndex)
+    fastSort(array, curBaseIndex + 1, end)
 }
