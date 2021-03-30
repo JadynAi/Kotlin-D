@@ -1,7 +1,6 @@
 package com.jadyn.kotlinp.leetcode.sort
 
 import java.util.*
-import kotlin.math.min
 
 /**
  *JadynAi since 3/25/21
@@ -69,17 +68,24 @@ fun fastSort(array: Array<Int>, start: Int, end: Int) {
         return
     }
     val base = array[start]
-    var curBaseIndex = start
-    for (i in start + 1 until end) {
-        val v = array[i]
-        if (v <= base) {
-            array[i] = base
-            array[curBaseIndex] = v
-            curBaseIndex = i
-        } else {
-            
+    var left = start
+    var right = end - 1
+    while (left < right) {
+        while (array[right] > base && left < right) {
+            right--
+        }
+        while (array[left] <= base && left < right) {
+            left++
+        }
+        if (left < right) {
+            val v = array[left]
+            array[left] = array[right]
+            array[right] = v
         }
     }
-    fastSort(array, start, curBaseIndex)
-    fastSort(array, curBaseIndex + 1, end)
+    array[start] = array[left]
+    array[left] = base
+    println("${Arrays.toString(array)} left is $left right $right")
+    fastSort(array, start, left)
+    fastSort(array, left + 1, end)
 }
