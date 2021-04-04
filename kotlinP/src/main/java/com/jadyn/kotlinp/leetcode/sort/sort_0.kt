@@ -1,6 +1,8 @@
 package com.jadyn.kotlinp.leetcode.sort
 
+import com.jadyn.kotlinp.leetcode.thought.merge
 import java.util.*
+import kotlin.math.log
 
 /**
  *JadynAi since 3/25/21
@@ -8,8 +10,8 @@ import java.util.*
 fun main() {
 //    print("sort ${Arrays.toString(fastSort(arrayOf(3, 1, 9, 10, 7, 5, 4)))}")
     val array = arrayOf(6, 10, 7, 9, 8, 11)
-    insertSort(array)
-    print("sort ${Arrays.toString(array)}")
+//    print("sort ${Arrays.toString(mergeSort(array))}")
+    print("${log(16f,2f)} ${Math.log(16.0)}")
 }
 
 // 选择排序，每一轮选出最小的值
@@ -90,4 +92,43 @@ fun fastSort(array: Array<Int>, start: Int, end: Int) {
     println("${Arrays.toString(array)} left is $left right $right")
     fastSort(array, start, left)
     fastSort(array, left + 1, end)
+}
+
+// 归并排序，这个临时的数组newArray就是个工具数组，只是为了排好序后替换原来的数组
+fun mergeSort(array: Array<Int>): Array<Int> {
+    val newArray = Array(array.size) { -1 }
+    println("input array ${Arrays.toString(array)}")
+    mergeSortInner(array, 0, array.lastIndex, newArray)
+    return array
+}
+
+fun mergeSortInner(array: Array<Int>, start: Int, end: Int, newArray: Array<Int>) {
+    if (start >= end) return
+    val mid = (start + end) / 2
+    println("cur start $start end $end mid $mid")
+    mergeSortInner(array, start, mid, newArray)
+    mergeSortInner(array, mid + 1, end, newArray)
+    var left = start
+    var right = mid + 1
+    var index = 0
+    while (left <= mid && right <= end) {
+        if (array[left] < array[right]) {
+            newArray[index++] = array[left++]
+        } else {
+            newArray[index++] = array[right++]
+        }
+    }
+    println("cur new array ${Arrays.toString(newArray)} left $left right $right index $index")
+    while (left <= mid) {
+        newArray[index++] = array[left++]
+    }
+    while (right <= end) {
+        newArray[index++] = array[right++]
+    }
+    println("after new array ${Arrays.toString(newArray)} left $left right $right index $index")
+    var j = start
+    for (i in 0 until index) {
+        array[j++] = newArray[i]
+    }
+    println("array cur ${Arrays.toString(array)}")
 }
