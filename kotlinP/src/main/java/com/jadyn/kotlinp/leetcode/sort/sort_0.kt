@@ -7,8 +7,8 @@ import java.util.*
  */
 fun main() {
 //    print("sort ${Arrays.toString(fastSort(arrayOf(3, 1, 9, 10, 7, 5, 4)))}")
-    val array = arrayOf(3, 1, 9, 10, 7, 5, 4)
-    fastSort(array, 0, array.size)
+    val array = arrayOf(6, 10, 7, 9, 8, 11)
+    insertSort(array)
     print("sort ${Arrays.toString(array)}")
 }
 
@@ -28,16 +28,17 @@ fun chooseSort(array: Array<Int>): Array<Int> {
     return array
 }
 
-// 冒泡排序，让大的值浮上去
+// 冒泡排序，让大的值浮上去，递减循环
 fun bubbleSort(array: Array<Int>): Array<Int> {
-    for (i in 0 until array.lastIndex) {
-        for (j in i + 1 until array.size) {
-            if (array[i] > array[j]) {
+    for (i in 1 until array.size) {
+        for (j in 0..array.lastIndex - i) {
+            if (array[j] > array[j + 1]) {
                 val jv = array[j]
-                array[j] = array[i]
-                array[i] = jv
+                array[j] = array[j + 1]
+                array[j + 1] = jv
             }
         }
+        println("cur i $i arrays is ${Arrays.toString(array)}")
     }
     return array
 }
@@ -49,7 +50,6 @@ fun insertSort(array: Array<Int>): Array<Int> {
         val i1 = array[i]
         l@ for (j in i - 1 downTo 0) {
             if (i1 > array[j]) {
-                array[j + 1] = i1
                 break@l
             } else {
                 val jv = array[j]
@@ -68,6 +68,8 @@ fun fastSort(array: Array<Int>, start: Int, end: Int) {
         return
     }
     val base = array[start]
+    // 为什么双指针的left不能从start+1开始，因为这样就是默认右侧比start小了，当
+    // 右侧的所有值比start大的话，left就不应该自增
     var left = start
     var right = end - 1
     while (left < right) {
