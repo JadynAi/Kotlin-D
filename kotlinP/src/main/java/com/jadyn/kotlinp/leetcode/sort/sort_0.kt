@@ -11,7 +11,12 @@ fun main() {
 //    print("sort ${Arrays.toString(fastSort(arrayOf(3, 1, 9, 10, 7, 5, 4)))}")
     val array = arrayOf(6, 10, 7, 9, 8, 11)
 //    print("sort ${Arrays.toString(mergeSort(array))}")
-    print("${log(16f,2f)} ${Math.log(16.0)}")
+    print("${log(16f, 2f)} ${Math.log(16.0)}")
+
+}
+
+fun merge(array: Array<Int>, start: Int, end: Int, toolArray: Array<Int>) {
+    
 }
 
 // 选择排序，每一轮选出最小的值
