@@ -16,7 +16,10 @@ import android.widget.RelativeLayout
 import androidx.annotation.DrawableRes
 import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import com.jadyn.ai.kotlind.base.KD
+import com.jadyn.ai.kotlind.function.ui.clipChild
 import com.jadyn.ai.kotlind.function.ui.getResDrawable
+import com.jadyn.ai.kotlind.function.ui.roundDrawable
+import com.jadyn.ai.kotlind.utils.dp
 import com.jadyn.ai.kotlind.utils.dp2px
 import com.jadyn.ai.kotlind.utils.parseColor
 import com.jadynai.kotlindiary.R
@@ -234,13 +237,20 @@ class ViewFrame @JvmOverloads constructor(
             path.close()
             pathMeasure = PathMeasure(path, false)
         }
+        
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    private val indicatorDrawable by lazy {
+        roundDrawable(3f.dp.toFloat(), intArrayOf(parseColor("#FFEE00"), parseColor("#FFD200")))
+    }
+
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val p = Path()
-        pathMeasure!!.getSegment(0f, pathMeasure!!.length * 0.8f, p, false)
-        canvas?.drawPath(p, paint)
+//        val p = Path()
+//        pathMeasure!!.getSegment(0f, pathMeasure!!.length * 0.8f, p, false)
+//        canvas.drawPath(p, paint)
+        indicatorDrawable.setBounds(0, -8, 50, height + 8)
+        indicatorDrawable.draw(canvas)
     }
 }
 
@@ -372,7 +382,7 @@ class ResourceCircleDrawable(r: Float, color: Int, @DrawableRes private val resI
         super.draw(canvas)
         BitmapFactory.decodeResource(KD.applicationWrapper().resources, resID)
                 ?.let {
-                    canvas.drawBitmap(it, (intrinsicWidth - it.width) * 0.5f, 
+                    canvas.drawBitmap(it, (intrinsicWidth - it.width) * 0.5f,
                             (intrinsicHeight - it.height) * 0.5f, null)
                 }
     }

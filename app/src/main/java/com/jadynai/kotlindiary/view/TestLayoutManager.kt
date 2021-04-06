@@ -1,13 +1,18 @@
-package com.jadynai.kotlindiary.view
-
-
-/**
- *@version:
- *@FileDescription:
- *@Author:Jing
- *@Since:2019-08-15
- *@ChangeList:
- */
+//package com.jadynai.kotlindiary.view
+//
+//import android.graphics.Rect
+//import android.util.Log
+//import android.util.SparseArray
+//import androidx.recyclerview.widget.RecyclerView
+//
+//
+///**
+// *@version:
+// *@FileDescription:
+// *@Author:Jing
+// *@Since:2019-08-15
+// *@ChangeList:
+// */
 //class TestLayoutManager : RecyclerView.LayoutManager() {
 //    override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
 //        return RecyclerView.LayoutParams(
