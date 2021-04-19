@@ -26,16 +26,16 @@ class ViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_gaussian_blur_anim)
 
-        ddddd.click {
-            val sparseArray = SparseArray<String>(7)
-            val s = arrayListOf(1, 3, 5, 7, 2, 10, 11, 20, 15, 9)
-            s.shuffle()
-            print("shuffle s $s")
-            s.forEach {
-                sparseArray.put(it, "sss$it")
-            }
-            s
-        }
+//        ddddd.click {
+//            val sparseArray = SparseArray<String>(7)
+//            val s = arrayListOf(1, 3, 5, 7, 2, 10, 11, 20, 15, 9)
+//            s.shuffle()
+//            print("shuffle s $s")
+//            s.forEach {
+//                sparseArray.put(it, "sss$it")
+//            }
+//            s
+//        }
 //        view_w.click {
 //            Thread {
 //                for (i in 0..300 step 20) {

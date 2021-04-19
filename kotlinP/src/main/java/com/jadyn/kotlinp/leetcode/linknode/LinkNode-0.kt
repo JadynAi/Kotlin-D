@@ -101,6 +101,12 @@ fun reverseNode1(f: ListNode?): ListNode? {
     return pre
 }
 
+fun reverseNode2(head: ListNode?): ListNode? {
+    val fakeHead = ListNode(-1)
+    fakeHead.next = head
+    return fakeHead.next
+}
+
 //--------------base function-----------------------
 val ListNode?.vv: Int
     get() = this?.v ?: -1

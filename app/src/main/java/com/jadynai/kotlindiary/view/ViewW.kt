@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.*
 import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.annotation.DrawableRes
 import androidx.core.graphics.drawable.RoundedBitmapDrawable
@@ -37,7 +38,7 @@ class ViewW @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0
-) : ViewGroup(context, attrs, defStyle) {
+) : FrameLayout(context, attrs, defStyle) {
 
     private val TAG = "ViewTest"
 
@@ -53,94 +54,79 @@ class ViewW @JvmOverloads constructor(
         }
     })
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        Log.d(TAG, "onMeasure : $widthMeasureSpec : $heightMeasureSpec")
-        //求二进制低30位
-        val width = MeasureSpec.getSize(widthMeasureSpec)
-        //求二进制高两位
-        val modeW = MeasureSpec.getMode(widthMeasureSpec)
-
-        val height = MeasureSpec.getSize(heightMeasureSpec)
-        val modeH = MeasureSpec.getMode(heightMeasureSpec)
-
-
-        val childCount = childCount
-        Log.d(TAG, "measure child count: ")
-        var frameW = 0
-        var frameH = 0
-        for (i in 0 until childCount) {
-            val child = getChildAt(i)
-            measureChild(child, widthMeasureSpec, heightMeasureSpec)
-            val params = child.layoutParams as MarginLayoutParams
-            val childW = child.measuredWidth + params.leftMargin + params.rightMargin
-            val childH = child.measuredHeight + params.topMargin + params.bottomMargin
-        }
-
-        setMeasuredDimension(
-                if (modeW == MeasureSpec.EXACTLY) width else 300,
-                if (modeH == MeasureSpec.EXACTLY) height else 300
-        )
-    }
-
-    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        Log.d(TAG, "onLayout: ")
-        var curHeight = 0
-        for (i in 0 until childCount) {
-            val child = getChildAt(i)
-            val params = child.layoutParams as MarginLayoutParams
-            val childW = child.measuredWidth + params.leftMargin + params.rightMargin
-            val childH = child.measuredHeight + params.topMargin + params.bottomMargin
-
-            child.layout(paddingLeft, curHeight, childW, curHeight + childH)
-            curHeight += childH
-        }
-    }
+//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+//        Log.d(TAG, "onMeasure : $widthMeasureSpec : $heightMeasureSpec")
+//        //求二进制低30位
+//        val width = MeasureSpec.getSize(widthMeasureSpec)
+//        //求二进制高两位
+//        val modeW = MeasureSpec.getMode(widthMeasureSpec)
+//
+//        val height = MeasureSpec.getSize(heightMeasureSpec)
+//        val modeH = MeasureSpec.getMode(heightMeasureSpec)
+//
+//
+//        val childCount = childCount
+//        Log.d(TAG, "measure child count: ")
+//        var frameW = 0
+//        var frameH = 0
+//        for (i in 0 until childCount) {
+//            val child = getChildAt(i)
+//            measureChild(child, widthMeasureSpec, heightMeasureSpec)
+//            val params = child.layoutParams as MarginLayoutParams
+//            val childW = child.measuredWidth + params.leftMargin + params.rightMargin
+//            val childH = child.measuredHeight + params.topMargin + params.bottomMargin
+//        }
+//
+//        setMeasuredDimension(
+//                if (modeW == MeasureSpec.EXACTLY) width else 300,
+//                if (modeH == MeasureSpec.EXACTLY) height else 300
+//        )
+//    }
+//
+//    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+//        Log.d(TAG, "onLayout: ")
+//        var curHeight = 0
+//        for (i in 0 until childCount) {
+//            val child = getChildAt(i)
+//            val params = child.layoutParams as MarginLayoutParams
+//            val childW = child.measuredWidth + params.leftMargin + params.rightMargin
+//            val childH = child.measuredHeight + params.topMargin + params.bottomMargin
+//
+//            child.layout(paddingLeft, curHeight, childW, curHeight + childH)
+//            curHeight += childH
+//        }
+//    }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         val dispatchTouchEvent = super.dispatchTouchEvent(ev)
         Log.d(TAG, "dispatchTouchEvent :$dispatchTouchEvent and ${ev?.action}")
-        ev?.pointerCount
-        return dispatchTouchEvent
+        return false
     }
 
-    private var downx = 0f
-
-//    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-//        ev?.apply {
-//            var intercept = false
-//            intercept = when (action) {
-//                MotionEvent.ACTION_DOWN -> {
-//                    false
-//                }
-//                else -> {
-//                    true
-//                }
-//            }
-//            return intercept
-//        }
-//        val onInterceptTouchEvent = super.onInterceptTouchEvent(ev)
-//        Log.d(TAG, "onInterceptTouchEvent:$onInterceptTouchEvent ${ev?.action}")
-//        return true
-//    }
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        val onInterceptTouchEvent = super.onInterceptTouchEvent(ev)
+        Log.d(TAG, "onInterceptTouchEvent:$onInterceptTouchEvent ${ev?.action}")
+        return onInterceptTouchEvent
+    }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         Log.d(TAG, "onTouchEvent: ${event?.action}")
         return super.onTouchEvent(event)
     }
 
-    override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
-        return MarginLayoutParams(context, attrs)
-    }
-
-    override fun generateDefaultLayoutParams(): LayoutParams {
-        return MarginLayoutParams(MarginLayoutParams.WRAP_CONTENT,
-                MarginLayoutParams.WRAP_CONTENT)
-    }
-
-    override fun generateLayoutParams(p: LayoutParams?): LayoutParams {
-        return MarginLayoutParams(p)
-    }
+//    override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
+//        return MarginLayoutParams(context, attrs)
+//    }
+//
+//    override fun generateDefaultLayoutParams(): LayoutParams {
+//        return MarginLayoutParams(MarginLayoutParams.WRAP_CONTENT,
+//                MarginLayoutParams.WRAP_CONTENT)
+//    }
+//
+//    override fun generateLayoutParams(p: LayoutParams?): LayoutParams {
+//        return MarginLayoutParams(p)
+//    }
 }
 
 class ViewP @JvmOverloads constructor(
