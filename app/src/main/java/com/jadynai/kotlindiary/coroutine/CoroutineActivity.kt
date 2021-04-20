@@ -11,6 +11,7 @@ import com.jadyn.kotlinp.coroutine.printWithThreadName
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Semaphore
 
 /**
  *JadynAi since 2020/10/9
@@ -20,35 +21,44 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
 
     var job: Job? = null
 
+    private val semaphore by lazy { Semaphore(1) }
+
+    private val asyncTest by lazy {
+        async(start = CoroutineStart.LAZY) {
+            semaphore.acquire()
+            delay(10000)
+            semaphore.release()
+            "wait end"
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coroutine)
+        lifecycleScope.launch { asyncTest.await() }
         textView2.click {
+            Log.d("cece", "onCreate: click 2")
             lifecycleScope.launch {
-                testCoroutinScope()
+                semaphore.acquire()
+                semaphore.release()
+                Log.d("cece", "onCreate: test 2 ${asyncTest.await()}")
             }
         }
         textView5.click {
+            Log.d("cece", "onCreate: click 5")
             lifecycleScope.launch {
-                job?.join()
-                Log.d("cece", "onCreate: end")
+                semaphore.acquire()
+                Log.d("cece", "onCreate: test 5 ${asyncTest.await()}")
+                semaphore.release()
             }
         }
     }
 
     suspend fun testCoroutinScope() {
-        job?.cancelAndJoin()
-        job = coroutineScope {
-            launch(Dispatchers.IO) {
-                Log.d("cece", "testCoroutinScope: start")
-                delay(3000)
-            }
-        }
-        job!!.join()
-        Log.d("cece", "testCoroutinScope: join end")
+
     }
 
-    suspend fun go(coroutineScope: CoroutineScope) {
+    private suspend fun go(coroutineScope: CoroutineScope) {
         printWithThreadName("go start")
         job?.cancelAndJoin()
         printWithThreadName("go end join")
