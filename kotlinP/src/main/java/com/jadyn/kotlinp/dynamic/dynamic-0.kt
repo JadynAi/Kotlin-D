@@ -12,11 +12,24 @@ fun main() {
  * */
 fun fib(n: Int): Int {
     if (n < 2) return n
-    val array = arrayOfNulls<Int>(n + 1)
-    array[0] = 0
-    array[1] = 1
+    var pre = 0
+    var cur = 1
     for (i in 2..n) {
-        array[i] = array[i - 1]!! + array[i - 2]!!
+        val sum = pre + cur
+        pre = cur
+        cur = sum
     }
-    return array[n]!!
+    return cur
+}
+
+fun coinChange(coins: IntArray, amount: Int): Int {
+    if (amount == 0) return 0
+    if (amount < 0) return -1
+    coins.forEach {
+        val subProblem = coinChange(coins, amount - it)
+        if (subProblem == -1) {
+            return@forEach
+        }
+    }
+    return -1
 }
