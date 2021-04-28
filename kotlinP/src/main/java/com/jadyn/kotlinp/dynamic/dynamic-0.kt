@@ -8,7 +8,8 @@ import kotlin.math.max
 fun main() {
 //    println("fib result ${maxSubArray(intArrayOf(-2, 1, -3, 4, -1, 2, 1, -5, 4))}")
 //    println("counts ${climbStairs(4)}")
-    println("max profit ${maxProfit1(intArrayOf(3, 3, 6, 7, 1, 6, 5, 4, 10))}")
+//    println("max profit ${maxProfit1(intArrayOf(3, 3, 6, 7, 1, 6, 5, 4, 10))}")
+    println("机器人路径 ${uniquePaths1(3, 7)}")
 }
 
 /**
@@ -99,4 +100,52 @@ fun maxProfit1(prices: IntArray): Int {
         max = Math.max(max, pre)
     }
     return max
+}
+
+/**
+ * 一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为 “Start” ）。
+ * 机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 “Finish” ）。
+ * 问总共有多少条不同的路径？
+ * */
+fun uniquePaths(m: Int, n: Int): Int {
+    val dp = Array<IntArray>(m) {
+        if (it == 0) {
+            IntArray(n) { 1 }
+        } else {
+            IntArray(n) { na -> if (na == 0) 1 else 0 }
+        }
+    }
+//    dp.forEachIndexed { index, ints ->
+//        ints.forEachIndexed { j, na ->
+//            // 4/28/21-10:13 PM 这么写的判断条件，为什么不直接从1开始遍历呢？
+//            // 固化、固化！
+//            if (index != 0 && j != 0) {
+//                dp[index][j] = dp[index - 1][j] + dp[index][j - 1]
+//            }
+//        }
+//    }
+    for (i in 1 until m) {
+        for (j in 1 until n) {
+            dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+        }
+    }
+    return dp[m - 1][n - 1]
+}
+
+/**
+ * 优化机器人的控件复杂度为O(n)
+ * 相当于把短数组按照max次数过了一遍
+ * d[j] 就相当于是cur dp[j-1]相当于是pre
+ * */
+fun uniquePaths1(m: Int, n: Int): Int {
+    val min = Math.min(m, n)
+    val max = Math.max(m, n)
+    val dp = IntArray(min) { 1 }
+    for (i in 1 until max) {
+        for (j in 1 until min) {
+            println("i $i j $j  dp ${dp[j]}")
+            dp[j] += dp[j - 1]
+        }
+    }
+    return dp[min - 1]
 }

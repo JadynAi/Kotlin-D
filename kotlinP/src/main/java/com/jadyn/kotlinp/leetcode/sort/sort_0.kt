@@ -15,7 +15,7 @@ fun main() {
 
 }
 
-fun merge(array: Array<Int>, start: Int, end: Int, toolArray: Array<Int>) {
+fun fastSort1(array: Array<Int>, start: Int, end: Int) {
     
 }
 
