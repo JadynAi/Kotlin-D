@@ -14,7 +14,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name="com.jadynai.kotlindiary.binder.BinderActivity"></activity>
-        <activity android:name="com.jadynai.kotlindiary.MainActivity">
+        <activity
+            android:name="com.jadynai.kotlindiary.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

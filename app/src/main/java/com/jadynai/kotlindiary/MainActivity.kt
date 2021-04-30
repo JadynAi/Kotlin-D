@@ -2,6 +2,7 @@ package com.jadynai.kotlindiary
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.os.PersistableBundle
 import android.util.Log
@@ -77,6 +78,9 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.d("cece", "main : onStop")
+        Handler(Looper.getMainLooper()).postDelayed({
+            Runtime.getRuntime().exit(1)
+        }, 2000)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -97,6 +101,11 @@ class MainActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         Log.d("cece", "onRestoreInstanceState: double params")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("cece", "onDestroy: ")
     }
 }
 

@@ -32,6 +32,8 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         }
     }
 
+    private val hashMap = HashMap<Int, String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coroutine)
@@ -39,23 +41,30 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         textView2.click {
             Log.d("cece", "onCreate: click 2")
             lifecycleScope.launch {
-                semaphore.acquire()
-                semaphore.release()
-                Log.d("cece", "onCreate: test 2 ${asyncTest.await()}")
+                Log.d("cece", "onCreate: launch succeed")
+                val testCoroutineScope = testCoroutineScope()
+                Log.d("cece", "onCreate: hasm map 1000 final result $testCoroutineScope")
             }
         }
         textView5.click {
             Log.d("cece", "onCreate: click 5")
-            lifecycleScope.launch {
-                semaphore.acquire()
-                Log.d("cece", "onCreate: test 5 ${asyncTest.await()}")
-                semaphore.release()
+            if (hashMap.containsKey(1000)) {
+                hashMap.remove(1000)
+            } else {
+                hashMap[1000] = "test1000"
             }
+            lifecycleScope.coroutineContext.cancel()
         }
     }
 
-    suspend fun testCoroutinScope() {
-
+    private suspend inline fun testCoroutineScope() = withContext(Dispatchers.IO) {
+        withTimeoutOrNull(5000) {
+            while (!hashMap.containsKey(1000)) {
+                delay(100)
+            }
+            Log.d("cece", "testCoroutineScope: after hash map")
+            hashMap[1000]
+        }
     }
 
     private suspend fun go(coroutineScope: CoroutineScope) {
