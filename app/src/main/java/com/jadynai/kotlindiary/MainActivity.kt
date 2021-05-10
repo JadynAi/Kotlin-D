@@ -78,9 +78,6 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.d("cece", "main : onStop")
-        Handler(Looper.getMainLooper()).postDelayed({
-            Runtime.getRuntime().exit(1)
-        }, 2000)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

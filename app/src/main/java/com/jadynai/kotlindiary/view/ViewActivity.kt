@@ -2,6 +2,7 @@ package com.jadynai.kotlindiary.view
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.util.SparseArray
 import android.view.Choreographer
 import androidx.appcompat.app.AppCompatActivity
@@ -24,8 +25,8 @@ class ViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("MeasureFlow", "onCreate: ")
         setContentView(R.layout.activity_view_gaussian_blur_anim)
-
 //        ddddd.click {
 //            val sparseArray = SparseArray<String>(7)
 //            val s = arrayListOf(1, 3, 5, 7, 2, 10, 11, 20, 15, 9)
@@ -58,6 +59,16 @@ class ViewActivity : AppCompatActivity() {
 //        }
 //        text_res_drawable_tv.setCompoundDrawablesWithIntrinsicBounds(null,
 //                ResourceCircleDrawable(30f, Color.YELLOW, R.drawable.adasd), null, null)
-        text_res_drawable_tv.roundHeight(Color.RED)
+//        text_res_drawable_tv.roundHeight(Color.RED)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("MeasureFlow", "onStart: ")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("MeasureFlow", "onResume: ")
     }
 }

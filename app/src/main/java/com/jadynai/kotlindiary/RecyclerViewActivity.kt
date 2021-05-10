@@ -42,7 +42,7 @@ class RecyclerViewActivity : AppCompatActivity() {
         }
 
         change_tv.setOnClickListener {
-            //            acrobatAdapter.setData(newData)
+//            acrobatAdapter.setData(newData)
         }
     }
 }

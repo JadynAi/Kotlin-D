@@ -1,5 +1,7 @@
 package com.jadyn.ai.acrobat.recyclerview
 
+import android.os.SystemClock
+import android.util.Log
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
@@ -24,9 +26,6 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
     private val acrobatMgr by lazy {
         AcrobatMgr(this)
     }
-    internal val tagMap by lazy {
-        SparseArray<Any>(1)
-    }
 
     init {
         acrobatMgr.create()
@@ -41,8 +40,9 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AcroViewHolder<D> {
+        val startTime = SystemClock.uptimeMillis()
         val acrobatItem = acrobatMgr.items[viewType]
-        val view = LayoutInflater.from(parent.context).inflate(acrobatItem.getResId(), parent, false)
+        val view = acrobatItem.getView(parent)
         val viewHolder = AcroViewHolder(view, acrobatItem)
         if (acrobatItem.hasEvent()) {
             view.event({
@@ -67,7 +67,8 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
         }
         viewHolder.bind()
         viewHolder.doBindEvent()
-        acrobatItem.onViewCreate(parent, view, viewHolder)
+        viewHolder.onCreateViewHolder(parent, view)
+        Log.d("AcrobatAdapter", "onCreateViewHolder cost: ${SystemClock.uptimeMillis() - startTime}")
         return viewHolder
     }
 
@@ -79,10 +80,10 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
 
     override fun onBindViewHolder(holder: AcroViewHolder<D>, position: Int,
                                   payloads: MutableList<Any>) {
-        if (payloads.isNotEmpty()) {
-            holder.acrobatItem.showItem(acrobatMgr.data[position], position, holder.itemView, payloads)
-        } else {
+        if (payloads.isNullOrEmpty()) {
             super.onBindViewHolder(holder, position, payloads)
+        } else {
+            holder.acrobatItem.showItem(acrobatMgr.data[position], position, holder.itemView, payloads)
         }
     }
 
@@ -133,11 +134,6 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
         }
     }
 
-    fun putTag(@IntRange(from = 1) id: Int, tag: Any): AcrobatAdapter<D> {
-        tagMap.put(id, tag)
-        return this
-    }
-
     fun changItemData(pos: Int, newData: D) {
         acrobatMgr.data.setSafeNoNone(pos, newData)
     }
@@ -180,6 +176,10 @@ class AcrobatAdapter<D>(create: AcrobatMgr<D>.() -> Unit) :
         fun longPress(l: (View, pos: Int) -> Unit) {
             check(!acrobatItem.hasEvent()) { "item has inner event!!!" }
             longPress = l
+        }
+
+        fun onCreateViewHolder(parent: ViewGroup, view: View) {
+            acrobatItem.onViewCreate(parent, view, this)
         }
 
         internal fun doBindEvent() {

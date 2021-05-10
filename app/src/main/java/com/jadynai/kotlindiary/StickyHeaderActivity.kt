@@ -1,17 +1,18 @@
 package com.jadynai.kotlindiary
 
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
 import android.os.Bundle
-import android.text.TextPaint
 import android.util.Log
+import android.util.SizeF
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jadyn.ai.acrobat.recyclerview.AcrobatAdapter
+import com.jadyn.ai.acrobat.recyclerview.AsyncViewHolderView
+import com.jadyn.ai.acrobat.recyclerview.itemdecoration.DividerGrid
 import com.jadyn.ai.acrobat.recyclerview.itemdecoration.GroupInfo
-import com.jadyn.ai.acrobat.recyclerview.itemdecoration.StickyHeaderDecor
+import com.jadyn.ai.kotlind.function.ui.click
+import com.jadyn.ai.kotlind.utils.dp2px
 import com.jadyn.ai.kotlind.utils.toastS
 import kotlinx.android.synthetic.main.activity_recycler_view.*
 import kotlinx.android.synthetic.main.item_test.view.*
@@ -26,6 +27,8 @@ import kotlinx.android.synthetic.main.item_test.view.*
  */
 class StickyHeaderActivity : AppCompatActivity() {
 
+    val array = arrayListOf<(View) -> Unit>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler_view)
@@ -33,9 +36,17 @@ class StickyHeaderActivity : AppCompatActivity() {
         val womens = getData()
         val acrobatAdapter = AcrobatAdapter<Girl> {
             itemDSL {
-                resId(R.layout.item_test)
+                getView {
+                    AsyncViewHolderView(this@StickyHeaderActivity, R.layout.item_test, SizeF(1f, 1f))
+                }
                 showItem { d, pos, view ->
-                    view.item_tv.text = "Item文本${d.name}"
+                    Log.d("ceceItem", "showItem: pos $pos")
+                    (view as AsyncViewHolderView).doWhenTargetViewInflated {
+                        view.item_tv.text = "Item文本${d.name}"
+                    }
+                }
+                onViewCreate { parent, view, viewHolder ->
+                    Log.d("ceceItem", "onCreate: oldPosition: ${viewHolder.oldPosition} pos :${viewHolder.adapterPosition}")
                 }
                 onClick { d, pos ->
                     toastS("cece$d")
@@ -56,38 +67,21 @@ class StickyHeaderActivity : AppCompatActivity() {
             }
         })
 
-        recycler_view.apply {
-            layoutManager = GridLayoutManager(this@StickyHeaderActivity, 3)
-//                    .let {
-//                it.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-//                    override fun getSpanSize(position: Int): Int {
-//                        return womens[position].info.getSpanSize(it)
-//                    }
-//                }
-//                it
-//            }
-            setHasFixedSize(true)
-            addItemDecoration(StickyHeaderDecor(this, {
-                getData()[it].info
-            }, 20, false, 50, { canvas, info, l, t, r, b ->
-                canvas.drawRect(Rect(l, t, r, b), Paint().apply {
-                    color = Color.BLUE
-                })
-                val textPaint = TextPaint().apply {
-                    color = Color.WHITE
-                }
-                val titleX = l + 10
-                val titleY = b - textPaint.fontMetrics.descent
-                //绘制Title
-                canvas.drawText("test${info.data}", titleX.toFloat(),
-                        titleY, textPaint)
-            }))
-            adapter = acrobatAdapter
-        }
+        recycler_view.layoutManager = GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
+        (recycler_view.layoutManager as GridLayoutManager).initialPrefetchItemCount = 10
+        recycler_view.setItemViewCacheSize(3)
+        recycler_view.addItemDecoration(DividerGrid(dp2px(5f), false))
+        recycler_view.adapter = acrobatAdapter
 
         change_tv.setOnClickListener {
-            recycler_view.smoothScrollBy(0, 2)
-            recycler_view.smoothScrollBy(0, -2)
+            acrobatAdapter.setDataForceNotify(getData())
+        }
+        change_tv2.click {
+            acrobatAdapter.notifyItemChanged(10)
+        }
+        val d = 1000
+        change_tv1.click {
+            acrobatAdapter.setData(getData())
         }
     }
 }
@@ -99,14 +93,17 @@ fun getData(): ArrayList<Girl> {
     for (i in 0 until 2) {
         list.add(Girl("刘诗诗", GroupInfo(i, 4, "刘诗诗")))
     }
-//    for (i in 0 until 11) {
-//        list.add(Girl("李冰冰", GroupInfo(i, 11, "李冰冰")))
-//    }
-//    for (i in 0 until 9) {
-//        list.add(Girl("新垣结衣", GroupInfo(i, 9, "新垣结衣")))
-//    }
-//    for (i in 0 until 5) {
-//        list.add(Girl("石原里美", GroupInfo(i, 5, "石原里美")))
-//    }
+    for (i in 0 until 11) {
+        list.add(Girl("李冰冰", GroupInfo(i, 11, "李冰冰")))
+    }
+    for (i in 0 until 9) {
+        list.add(Girl("新垣结衣", GroupInfo(i, 9, "新垣结衣")))
+    }
+    for (i in 0 until 5) {
+        list.add(Girl("石原里美", GroupInfo(i, 5, "石原里美")))
+    }
+    for (i in 0 until 5) {
+        list.add(Girl("测测不了", GroupInfo(i, 5, "安静的骄傲啊")))
+    }
     return list
 }

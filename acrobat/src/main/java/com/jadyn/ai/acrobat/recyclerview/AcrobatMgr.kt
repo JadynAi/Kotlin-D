@@ -9,8 +9,8 @@ package com.jadyn.ai.acrobat.recyclerview
  */
 class AcrobatMgr<D>(private val a: AcrobatAdapter<D>) {
 
-    internal val items: ArrayList<AcrobatItem<D>> by lazy {
-        ArrayList<AcrobatItem<D>>()
+    val items: ArrayList<AcrobatItem<D>> by lazy {
+        arrayListOf<AcrobatItem<D>>()
     }
 
     internal val data by lazy {
@@ -19,13 +19,11 @@ class AcrobatMgr<D>(private val a: AcrobatAdapter<D>) {
 
     fun item(create: () -> AcrobatItem<D>) {
         val item = create()
-        item.adapter = a
         items.add(item)
     }
 
-    fun itemDSL(create: AcrobatDSL<D>.() -> Unit) {
-        val acrobatDSL = AcrobatDSL<D>()
-        acrobatDSL.adapter = a
+    fun itemDSL(create: AcrobatDSLBuilder<D>.() -> Unit) {
+        val acrobatDSL = AcrobatDSLBuilder<D>()
         acrobatDSL.create()
         items.add(acrobatDSL.build())
     }
