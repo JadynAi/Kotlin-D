@@ -1,13 +1,16 @@
 package com.jadynai.kotlindiary.view
 
 import android.graphics.Color
-import android.os.Bundle
+import android.os.*
 import android.util.Log
 import android.util.SparseArray
 import android.view.Choreographer
+import android.view.LayoutInflater
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
+import com.jadyn.ai.kotlind.function.ui.filterViewIsInstanceOnce
 import com.jadyn.ai.kotlind.function.ui.roundHeight
 import com.jadynai.kotlindiary.R
 import com.jadynai.kotlindiary.coroutine.CoroutineActivity
@@ -23,6 +26,8 @@ import kotlinx.android.synthetic.main.activity_view_gaussian_blur_anim.*
  */
 class ViewActivity : AppCompatActivity() {
 
+    private val testNoParentView by lazy { ViewP(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("MeasureFlow", "onCreate: ")
@@ -37,17 +42,13 @@ class ViewActivity : AppCompatActivity() {
 //            }
 //            s
 //        }
-//        view_w.click {
-//            Thread {
-//                for (i in 0..300 step 20) {
-//                    view_w.scrollBy(0, -i)
-//                    SystemClock.sleep(100)
-//                    Log.d("cece", "view scroll ${view_w.scrollY}")
-//                }
-//            }.start()
-//        }
-
-
+        var p = 0f
+        view_wwwww.setProgressColor(Color.RED)
+        view_wwwww.setRound(30f)
+        view_wwwww.click {
+            p += 10f
+            view_wwwww.setProgress(p)
+        }
 //        view_w.setOnTouchListener { v, event -> 
 //            true
 //        }

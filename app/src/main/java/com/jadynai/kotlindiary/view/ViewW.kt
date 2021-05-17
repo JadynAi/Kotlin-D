@@ -1,30 +1,24 @@
 package com.jadynai.kotlindiary.view
 
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.*
-import android.graphics.drawable.shapes.OvalShape
-import android.graphics.drawable.shapes.RectShape
-import android.graphics.drawable.shapes.Shape
+import android.os.Build
+import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.*
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.annotation.DrawableRes
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
+import androidx.annotation.FloatRange
 import com.jadyn.ai.kotlind.base.KD
-import com.jadyn.ai.kotlind.function.ui.clipChild
-import com.jadyn.ai.kotlind.function.ui.getResDrawable
-import com.jadyn.ai.kotlind.function.ui.roundDrawable
 import com.jadyn.ai.kotlind.utils.dp
 import com.jadyn.ai.kotlind.utils.dp2px
 import com.jadyn.ai.kotlind.utils.parseColor
-import com.jadynai.kotlindiary.R
-import java.util.*
 import kotlin.math.abs
 
 /**
@@ -98,21 +92,9 @@ class ViewW @JvmOverloads constructor(
 //        }
 //    }
 
-    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        val dispatchTouchEvent = super.dispatchTouchEvent(ev)
-        Log.d(TAG, "dispatchTouchEvent :$dispatchTouchEvent and ${ev?.action}")
-        return false
-    }
-
-    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        val onInterceptTouchEvent = super.onInterceptTouchEvent(ev)
-        Log.d(TAG, "onInterceptTouchEvent:$onInterceptTouchEvent ${ev?.action}")
-        return onInterceptTouchEvent
-    }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        Log.d(TAG, "onTouchEvent: ${event?.action}")
-        return super.onTouchEvent(event)
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        Log.d("cecececece", "onDraw: test handler async draw end")
     }
 
 //    override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
@@ -135,7 +117,7 @@ class ViewP @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        Log.d("cece", " id : $id ondraw")
+        Log.d("cecela", " id : $id ondraw")
     }
 }
 
@@ -194,50 +176,126 @@ class ViewChild @JvmOverloads constructor(
     }
 }
 
-class ViewFrame @JvmOverloads constructor(
+class VideoFrameLoadingView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr) {
+
+    private var total = 1
+    private var isPrepareLoading = true
 
     private val path by lazy { Path() }
-    private var pathMeasure: PathMeasure? = null
+    private val pathMeasure by lazy { PathMeasure() }
+    private val segmentPath by lazy { Path() }
+    private val bgRect by lazy {
+        RectF(0f, 0f, 0f, 0f)
+    }
 
     private val paint by lazy {
         val p = Paint(Paint.ANTI_ALIAS_FLAG)
         p.color = parseColor("#ffee00")
         p.style = Paint.Style.STROKE
-        p.strokeWidth = 16f
+        p.strokeWidth = 10f.dp.toFloat()
+        // 2021/5/17-18:10 画笔末端设置为圆角
+        p.strokeCap = Paint.Cap.ROUND
         p
+    }
+
+    private val bgPaint by lazy {
+        val p = Paint(Paint.ANTI_ALIAS_FLAG)
+        p.color = parseColor("#80000000")
+        p.style = Paint.Style.FILL
+        p
+    }
+
+    private val tv by lazy {
+        val textView = TextView(context)
+        textView.setTextColor(Color.WHITE)
+        textView.textSize = 28f
+        textView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+        textView.gravity = Gravity.CENTER
+        textView.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        textView
+    }
+
+    private var curRound = 0f
+
+    fun setRound(r: Float) {
+        curRound = r.dp.toFloat()
+        // 2021/5/17-18:09 path 转角设置为圆角
+//        paint.pathEffect = CornerPathEffect(curRound)
+//        bgPaint.pathEffect = CornerPathEffect(curRound * 0.5f)
+        if (width <= 0) return
+        setPath()
+    }
+
+    fun setProgressColor(color: Int) {
+        paint.setColor(color)
+    }
+
+    fun setProgressColor(colorS: String) {
+        setProgressColor(parseColor(colorS))
+    }
+
+    fun setProgressWidth(w: Float) {
+        paint.strokeWidth = w.dp.toFloat()
+    }
+
+    fun setProgress(@FloatRange(from = 0.0, to = 100.0) fl: Float) {
+        val curLength = pathMeasure.length * fl / 100
+        segmentPath.reset()
+        pathMeasure.getSegment(0f, curLength, segmentPath, true)
+        tv.text = "progress $fl"
+        if (Looper.getMainLooper().thread != Thread.currentThread()) {
+            postInvalidate()
+        } else {
+            invalidate()
+        }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        tv.measure(widthMeasureSpec, heightMeasureSpec)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        if (path.isEmpty) {
-            path.moveTo(0f, 0f)
-            path.lineTo(width.toFloat(), 0f)
-//            path.moveTo(width.toFloat(), 0f)
-            path.lineTo(width.toFloat(), height.toFloat())
-//            path.moveTo(width.toFloat(), height.toFloat())
-            path.lineTo(0f, height.toFloat())
-//            path.moveTo(0f, height.toFloat())
-            path.lineTo(0f, 0f)
-            path.close()
-            pathMeasure = PathMeasure(path, false)
+        tv.layout(left, top, right, bottom)
+        setPath()
+        bgRect.set(0f + paint.strokeWidth, 0f + paint.strokeWidth,
+                width.toFloat() - paint.strokeWidth,
+                height.toFloat() - paint.strokeWidth)
+    }
+
+    private fun setPath() {
+        path.reset()
+        path.moveTo(curRound, paint.strokeWidth * 0.5f)
+        path.addRoundRect(0f + paint.strokeWidth * 0.5f, 0f + paint.strokeWidth * 0.5f,
+                width.toFloat() - paint.strokeWidth * 0.5f,
+                height.toFloat() - paint.strokeWidth * 0.5f,
+                curRound, curRound,
+                Path.Direction.CW)
+        pathMeasure.setPath(path, true)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        tv.layout(0, 0, w, h)
+    }
+
+    override fun dispatchDraw(canvas: Canvas) {
+        super.dispatchDraw(canvas)
+        if (isPrepareLoading) {
+            canvas.drawRect(bgRect, bgPaint)
+            canvas.drawPath(segmentPath, paint)
+            tv.draw(canvas)
         }
-        
     }
 
-    private val indicatorDrawable by lazy {
-        roundDrawable(3f.dp.toFloat(), intArrayOf(parseColor("#FFEE00"), parseColor("#FFD200")))
+    fun stopProgress() {
+        isPrepareLoading = false
+        invalidate()
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-//        val p = Path()
-//        pathMeasure!!.getSegment(0f, pathMeasure!!.length * 0.8f, p, false)
-//        canvas.drawPath(p, paint)
-        indicatorDrawable.setBounds(0, -8, 50, height + 8)
-        indicatorDrawable.draw(canvas)
-    }
 }
 
 class ViewText @JvmOverloads constructor(
@@ -303,7 +361,6 @@ class ViewText @JvmOverloads constructor(
             v.addUpdateListener {
                 val fl = it.animatedValue as Float
                 pathMeasure.getPosTan(fl, xy, null)
-                Log.d("cece", "onLayout: xy ${Arrays.toString(xy)}")
                 drawable?.setGradientCenter(xy[0] / wF, xy[1] / hF)
             }
             valueAnimator = v
