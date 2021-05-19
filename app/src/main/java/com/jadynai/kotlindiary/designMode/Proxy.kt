@@ -1,25 +1,26 @@
 package com.jadynai.kotlindiary.designMode
 
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Method
+
 /**
- *@version:
- *@FileDescription: 代理模式
- *@Author:Jing
- *@Since:2019-08-16
- *@ChangeList:
+ *JadynAi since 2021/5/19
  */
-interface ProductB {
-    fun buildProduct()
+interface Test {
+
+    fun testGO()
 }
 
-class ProductBu : ProductB {
-    override fun buildProduct() {
+class TestImpl : Test {
+    override fun testGO() {
+        println("test impl go go go !")
+    }
+
+}
+
+class TestInvocationHandler(private val target: Any) : InvocationHandler {
+    override fun invoke(proxy: Any?, method: Method?, args: Array<out Any>?): Any? {
+        return method?.invoke(target, *(args ?: emptyArray()))
     }
 }
 
-class Proxy : ProductB {
-
-    private lateinit var productB: ProductB
-
-    override fun buildProduct() {
-    }
-}

@@ -47,14 +47,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         design_mode_tv.click {
-            for (i in 1..10) {
-                Thread.sleep(1000)
-            }
             start<DesignModeActivity>()
-
-            Observable.just("")
-
-            AndroidSchedulers.from(Looper.myLooper())
         }
 
         coroutine_tv.click {
