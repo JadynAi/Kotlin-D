@@ -21,7 +21,7 @@ class DesignModeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_design_mode)
 
         proxy_tv.click {
-            (Proxy.newProxyInstance(Test::class.java.classLoader, Test::class.java.interfaces,
+            (Proxy.newProxyInstance(Test::class.java.classLoader, arrayOf(Test::class.java),
                     TestInvocationHandler(TestImpl())) as Test).testGO()
         }
     }

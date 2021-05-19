@@ -6,7 +6,11 @@ import java.lang.reflect.Method
 /**
  *JadynAi since 2021/5/19
  */
-interface Test {
+interface ATest {
+
+}
+
+interface Test : ATest {
 
     fun testGO()
 }
