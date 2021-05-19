@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.jadyn.ai.kotlind.function.ui.click
+import com.jadyn.ai.kotlind.function.ui.setVisible
 import com.jadyn.kotlinp.coroutine.concurrent.Mutex0_0
 import com.jadyn.kotlinp.coroutine.concurrent.Mutex0_1
 import com.jadyn.kotlinp.coroutine.printWithThreadName
@@ -38,13 +39,24 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coroutine)
         lifecycleScope.launch { asyncTest.await() }
+        val s = java.util.concurrent.Semaphore(1)
+        Thread {
+            s.acquire()
+            Thread.sleep(10000)
+            s.release()
+        }.start()
         textView2.click {
             Log.d("cece", "onCreate: click 2")
-            lifecycleScope.launch {
-                Log.d("cece", "onCreate: launch succeed")
-                val testCoroutineScope = testCoroutineScope()
-                Log.d("cece", "onCreate: hasm map 1000 final result $testCoroutineScope")
-            }
+//            lifecycleScope.launch {
+            // 2021/5/19-16:30 协程的semaphore不会阻塞主线程
+            coroutine_progress.setVisible(true)
+//                semaphore.acquire()
+//                semaphore.release()
+            coroutine_progress.setVisible(false)
+//            }
+            s.acquire()
+            s.release()
+            Log.d("cece", "onCreate: click 2 end")
         }
         textView5.click {
             Log.d("cece", "onCreate: click 5")

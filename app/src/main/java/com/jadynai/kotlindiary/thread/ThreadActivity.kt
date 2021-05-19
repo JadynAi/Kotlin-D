@@ -10,8 +10,11 @@ import kotlinx.android.synthetic.main.activity_thread.*
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.Semaphore
+import java.util.concurrent.ThreadFactory
 import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.thread
 
 /**
  *@version:
@@ -36,7 +39,20 @@ class ThreadActivity : AppCompatActivity() {
     }
 
     private val fixThread by lazy {
-        Executors.newFixedThreadPool(1) as ThreadPoolExecutor
+        Executors.newSingleThreadExecutor(object : ThreadFactory {
+            private val group by lazy {
+                System.getSecurityManager()?.threadGroup ?: Thread.currentThread().threadGroup
+            }
+            private val threadNum = AtomicInteger(1)
+
+            override fun newThread(r: Runnable?): Thread {
+                Log.d("ThreadActivity", "newThread: ")
+                val t = Thread(group, r, "AsyncView-${threadNum.getAndIncrement()}", 0)
+                if (t.isDaemon) t.isDaemon = false
+                if (t.priority != Thread.NORM_PRIORITY) t.priority = Thread.NORM_PRIORITY
+                return t
+            }
+        })
     }
     private val semaphore = Semaphore(1)
 
@@ -57,16 +73,31 @@ class ThreadActivity : AppCompatActivity() {
         }
 
         thread_pool_test.click {
-            fixThread.submit {
-                for (i in 0..100) {
+            fixThread.execute {
+                for (i in 0..3) {
                     Thread.sleep(500)
                     Log.d("ThreadActivity", "onCreate: i$i")
                 }
+                Log.d("ThreadActivity", "onCreate: finish")
             }
         }
 
         thread_pool_stop.click {
-            fixThread.shutdown()
+            val a = Semaphore(1)
+            val b = Semaphore(1)
+            Thread {
+                a.acquire()
+                Thread.sleep(3000)
+                b.acquire()
+                Thread.sleep(9000)
+                b.release()
+                a.release()
+            }.start()
+            Thread {
+                b.acquire()
+                Thread.sleep(1000)
+                a.release()
+            }.start()
         }
 
     }
