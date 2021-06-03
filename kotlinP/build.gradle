@@ -30,6 +30,13 @@ dependencies {
 
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
+
+    def work_version = "2.5.0"
+    // (Java only)
+    api "androidx.work:work-runtime:$work_version"
+
+    // Kotlin + coroutines
+//    api "androidx.work:work-runtime-ktx:$work_version"
     
     
     implementation "androidx.core:core-ktx:1.3.2"

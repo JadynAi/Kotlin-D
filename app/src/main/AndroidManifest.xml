@@ -39,6 +39,7 @@
         <activity
             android:name=".websocket.WebSocketClientActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".workmanager.WorkManagerActivity" />
 
         <service
             android:name="com.jadynai.kotlindiary.binder.MessengerService"
