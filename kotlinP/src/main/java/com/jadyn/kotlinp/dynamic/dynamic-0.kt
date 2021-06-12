@@ -9,7 +9,7 @@ fun main() {
 //    println("fib result ${maxSubArray(intArrayOf(-2, 1, -3, 4, -1, 2, 1, -5, 4))}")
 //    println("counts ${climbStairs(4)}")
 //    println("max profit ${maxProfit1(intArrayOf(3, 3, 6, 7, 1, 6, 5, 4, 10))}")
-    println("机器人路径 ${uniquePaths1(3, 7)}")
+    println("机器人路径 ${Test.judgeWordIsInMatrix("SEARCH")}")
 }
 
 /**
