@@ -35,7 +35,7 @@ val empty = lock.newCondition()
 
 fun produce1() {
     lock.lock()
-    if (list.size >= MAX_SIZE) {
+    while (list.size >= MAX_SIZE) {
         try {
             full.await()
         } catch (e: Exception) {
@@ -50,7 +50,7 @@ fun produce1() {
 
 fun consume1() {
     lock.lock()
-    if (list.isEmpty()) {
+    while (list.isEmpty()) {
         try {
             empty.await()
         } catch (e: Exception) {
