@@ -33,7 +33,7 @@ dependencies {
 
     def work_version = "2.5.0"
     // (Java only)
-    api "androidx.work:work-runtime:$work_version"
+//    api "androidx.work:work-runtime:$work_version"
 
     // Kotlin + coroutines
 //    api "androidx.work:work-runtime-ktx:$work_version"

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_design_mode.*
+import java.io.IOException
 import java.lang.reflect.Proxy
 
 /**
@@ -25,4 +26,5 @@ class DesignModeActivity : AppCompatActivity() {
                     TestInvocationHandler(TestImpl())) as Test).testGO()
         }
     }
+
 }

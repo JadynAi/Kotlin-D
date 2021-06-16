@@ -38,7 +38,7 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coroutine)
-        lifecycleScope.launch { asyncTest.await() }
+        lifecycleScope.launch(block = ::test121)
         val s = java.util.concurrent.Semaphore(1)
         Thread {
             s.acquire()
@@ -67,6 +67,10 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
             }
             lifecycleScope.coroutineContext.cancel()
         }
+    }
+
+    private suspend fun test121(coroutineScope: CoroutineScope) {
+        asyncTest.await()
     }
 
     private suspend inline fun testCoroutineScope() = withContext(Dispatchers.IO) {

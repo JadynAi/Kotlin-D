@@ -2,6 +2,7 @@ package com.jadynai.kotlindiary.thread
 
 import android.content.Context
 import android.os.Bundle
+import android.os.HandlerThread
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.click
@@ -61,11 +62,14 @@ class ThreadActivity : AppCompatActivity() {
         setContentView(R.layout.activity_thread)
 
         textView.click {
-            val consumer = Consumer()
-            val producer = Producer()
-
-            producer.start()
-            consumer.start()
+//            val consumer = Consumer()
+//            val producer = Producer()
+//
+//            producer.start()
+//            consumer.start()
+            for (i in 0..1000) {
+                HandlerThread("test$i").start()
+            }
         }
 
         textView3.click {
