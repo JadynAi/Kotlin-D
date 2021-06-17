@@ -67,9 +67,15 @@ class ThreadActivity : AppCompatActivity() {
 //
 //            producer.start()
 //            consumer.start()
-            for (i in 0..1000) {
-                HandlerThread("test$i").start()
-            }
+//            for (i in 0..1000) {
+//                HandlerThread("test$i").start()
+//            }
+            val thread = Thread()
+            thread.start()
+            thread.priority = 2
+            val currentTimeMillis = System.currentTimeMillis()
+            Thread.sleep(30)
+            Log.d("cecece", "onCreate: ${System.currentTimeMillis() - currentTimeMillis}")
         }
 
         textView3.click {

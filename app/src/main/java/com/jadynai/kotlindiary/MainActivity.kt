@@ -16,6 +16,7 @@ import com.jadynai.kotlindiary.coroutine.CoroutineActivity
 import com.jadynai.kotlindiary.designMode.DesignModeActivity
 import com.jadynai.kotlindiary.show.ShowActivity
 import com.jadynai.kotlindiary.thread.ThreadActivity
+import com.jadynai.kotlindiary.thread.ThreadJavaActivity
 import com.jadynai.kotlindiary.view.ViewActivity
 import com.jadynai.kotlindiary.websocket.WebSocketClientActivity
 import io.reactivex.Observable
@@ -33,9 +34,11 @@ class MainActivity : AppCompatActivity() {
             start<ShowActivity>()
         }
 
-        thread_tv.click {
+        thread_tv.event(click = {
             start<ThreadActivity>()
-        }
+        }, doubleTap = {
+            start<ThreadJavaActivity>()
+        })
 
         view_tv.click {
             start<ViewActivity>()
