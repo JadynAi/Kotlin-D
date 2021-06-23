@@ -90,5 +90,17 @@
         android:layout_marginTop="20dp"
         android:text="WebSocket"
         />
+    
+    <TextView
+        android:id="@+id/redux_tv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="ReDux"
+        />
 
 </LinearLayout>

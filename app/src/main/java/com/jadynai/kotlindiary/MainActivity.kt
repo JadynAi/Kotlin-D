@@ -14,6 +14,7 @@ import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.event
 import com.jadynai.kotlindiary.coroutine.CoroutineActivity
 import com.jadynai.kotlindiary.designMode.DesignModeActivity
+import com.jadynai.kotlindiary.mvredux.MVReduxActivity
 import com.jadynai.kotlindiary.show.ShowActivity
 import com.jadynai.kotlindiary.thread.ThreadActivity
 import com.jadynai.kotlindiary.thread.ThreadJavaActivity
@@ -58,6 +59,9 @@ class MainActivity : AppCompatActivity() {
         }
         web_socket_tv.click {
             start<WebSocketClientActivity>()
+        }
+        redux_tv.click {
+            start<MVReduxActivity>()
         }
     }
 

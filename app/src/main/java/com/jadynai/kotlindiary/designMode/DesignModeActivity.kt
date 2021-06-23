@@ -17,6 +17,7 @@ import java.lang.reflect.Proxy
  */
 class DesignModeActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_design_mode)
@@ -25,6 +26,10 @@ class DesignModeActivity : AppCompatActivity() {
             (Proxy.newProxyInstance(Test::class.java.classLoader, arrayOf(Test::class.java),
                     TestInvocationHandler(TestImpl())) as Test).testGO()
         }
+    }
+
+    inline fun test1() {
+
     }
 
 }
