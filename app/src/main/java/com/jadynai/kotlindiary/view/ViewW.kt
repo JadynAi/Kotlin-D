@@ -222,8 +222,7 @@ class VideoFrameLoadingView @JvmOverloads constructor(
     fun setRound(r: Float) {
         curRound = r.dp.toFloat()
         // 2021/5/17-18:09 path 转角设置为圆角
-//        paint.pathEffect = CornerPathEffect(curRound)
-//        bgPaint.pathEffect = CornerPathEffect(curRound * 0.5f)
+        bgPaint.pathEffect = CornerPathEffect(curRound)
         if (width <= 0) return
         setPath()
     }
@@ -261,19 +260,26 @@ class VideoFrameLoadingView @JvmOverloads constructor(
         super.onLayout(changed, left, top, right, bottom)
         tv.layout(left, top, right, bottom)
         setPath()
-        bgRect.set(0f + paint.strokeWidth, 0f + paint.strokeWidth,
-                width.toFloat() - paint.strokeWidth,
-                height.toFloat() - paint.strokeWidth)
+        bgRect.set(0f, 0f, width.toFloat(), height.toFloat())
     }
 
     private fun setPath() {
         path.reset()
-        path.moveTo(curRound, paint.strokeWidth * 0.5f)
-        path.addRoundRect(0f + paint.strokeWidth * 0.5f, 0f + paint.strokeWidth * 0.5f,
-                width.toFloat() - paint.strokeWidth * 0.5f,
-                height.toFloat() - paint.strokeWidth * 0.5f,
-                curRound, curRound,
-                Path.Direction.CW)
+        val gap = paint.strokeWidth * 0.5f
+        path.moveTo(curRound, gap)
+        if (curRound > 0) {
+            path.lineTo(width.toFloat() - curRound, gap)
+            path.quadTo(width.toFloat() - gap, gap, width.toFloat() - gap, curRound)
+            path.lineTo(width.toFloat() - gap, height - curRound)
+            path.quadTo(width.toFloat() - gap, height.toFloat() - gap, width - curRound,
+                    height.toFloat() - gap)
+            path.lineTo(curRound, height.toFloat() - gap)
+            path.quadTo(gap, height.toFloat() - gap, gap, height - curRound)
+            path.lineTo(gap, curRound)
+            path.quadTo(gap, gap, curRound, gap)
+        } else {
+            path.addRect(0f, 0f, width.toFloat(), height.toFloat(), Path.Direction.CW)
+        }
         pathMeasure.setPath(path, true)
     }
 
