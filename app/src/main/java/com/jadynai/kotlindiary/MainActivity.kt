@@ -2,26 +2,21 @@ package com.jadynai.kotlindiary
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.jadyn.ai.kotlind.base.KD
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.event
 import com.jadynai.kotlindiary.coroutine.CoroutineActivity
+import com.jadynai.kotlindiary.data.DataCodeActivity
 import com.jadynai.kotlindiary.designMode.DesignModeActivity
 import com.jadynai.kotlindiary.mvredux.MVReduxActivity
 import com.jadynai.kotlindiary.show.ShowActivity
 import com.jadynai.kotlindiary.thread.ThreadActivity
 import com.jadynai.kotlindiary.thread.ThreadJavaActivity
 import com.jadynai.kotlindiary.view.ViewActivity
-import com.jadynai.kotlindiary.websocket.WebSocketClientActivity
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -57,8 +52,8 @@ class MainActivity : AppCompatActivity() {
         coroutine_tv.click {
             start<CoroutineActivity>()
         }
-        web_socket_tv.click {
-            start<WebSocketClientActivity>()
+        data_code_tv.click {
+            start<DataCodeActivity>()
         }
         redux_tv.click {
             start<MVReduxActivity>()

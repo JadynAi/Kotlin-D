@@ -80,7 +80,7 @@
         />
     
     <TextView
-        android:id="@+id/web_socket_tv"
+        android:id="@+id/data_code_tv"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@android:color/holo_blue_dark"
@@ -88,7 +88,7 @@
         android:textSize="20sp"
         android:gravity="center"
         android:layout_marginTop="20dp"
-        android:text="WebSocket"
+        android:text="DataCode"
         />
     
     <TextView

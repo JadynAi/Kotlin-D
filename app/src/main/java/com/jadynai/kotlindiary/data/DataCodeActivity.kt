@@ -1,9 +1,13 @@
 package com.jadynai.kotlindiary.data
 
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.jadynai.kotlindiary.R
+import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  *@version:
@@ -17,17 +21,26 @@ class DataCodeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_data_code)
-
-        val stack = Stack<Int>()
-        stack.isNotEmpty().apply { }
-        val removeAt = arrayListOf("").removeAt(1)
-
-        val arrayList = ArrayList<Int>()
-        arrayList.subList(0, 1)
-        val intArray = IntArray(2)
-        val copyOfRange = Arrays.copyOfRange(intArray, 0, 2)
-        if (stack.isEmpty()) {
-            val i = stack.size / 2
+        getAllFiles(File(Environment.getExternalStorageDirectory().absolutePath + "/DCIM/")).forEach {
+            Log.d("cece", "onCreate: ${it.name}")
         }
+    }
+
+    private fun getAllFiles(file: File): ArrayList<File> {
+        val files = ArrayList<File>()
+        val stack = LinkedList<File>()
+        stack.addLast(file)
+        while (stack.isNotEmpty()) {
+            val poll = stack.poll()!!
+            val listFiles = poll.listFiles()
+            listFiles?.forEach {
+                if (it.isDirectory) {
+                    stack.addLast(it)
+                } else {
+                    files.add(it)
+                }
+            }
+        }
+        return files
     }
 }
