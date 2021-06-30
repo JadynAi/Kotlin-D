@@ -267,19 +267,15 @@ class VideoFrameLoadingView @JvmOverloads constructor(
         path.reset()
         val gap = paint.strokeWidth * 0.5f
         path.moveTo(curRound, gap)
-        if (curRound > 0) {
-            path.lineTo(width.toFloat() - curRound, gap)
-            path.quadTo(width.toFloat() - gap, gap, width.toFloat() - gap, curRound)
-            path.lineTo(width.toFloat() - gap, height - curRound)
-            path.quadTo(width.toFloat() - gap, height.toFloat() - gap, width - curRound,
-                    height.toFloat() - gap)
-            path.lineTo(curRound, height.toFloat() - gap)
-            path.quadTo(gap, height.toFloat() - gap, gap, height - curRound)
-            path.lineTo(gap, curRound)
-            path.quadTo(gap, gap, curRound, gap)
-        } else {
-            path.addRect(0f, 0f, width.toFloat(), height.toFloat(), Path.Direction.CW)
-        }
+        path.lineTo(width.toFloat() - curRound, gap)
+        path.quadTo(width.toFloat() - gap, gap, width.toFloat() - gap, curRound)
+        path.lineTo(width.toFloat() - gap, height - curRound)
+        path.quadTo(width.toFloat() - gap, height.toFloat() - gap, width - curRound,
+                height.toFloat() - gap)
+        path.lineTo(curRound, height.toFloat() - gap)
+        path.quadTo(gap, height.toFloat() - gap, gap, height - curRound)
+        path.lineTo(gap, curRound)
+        path.quadTo(gap, gap, curRound, gap)
         pathMeasure.setPath(path, true)
     }
 

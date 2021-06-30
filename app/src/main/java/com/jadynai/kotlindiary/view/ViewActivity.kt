@@ -44,7 +44,7 @@ class ViewActivity : AppCompatActivity() {
 //        }
         var p = 0f
         view_wwwww.setProgressColor(Color.RED)
-        view_wwwww.setRound(30f)
+//        view_wwwww.setRound(30f)
         view_wwwww.click {
             p += 10f
             view_wwwww.setProgress(p)
