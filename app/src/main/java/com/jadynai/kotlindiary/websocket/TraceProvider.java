@@ -14,7 +14,7 @@ public class TraceProvider extends ContentProvider {
     public boolean onCreate() {
         Context context = getContext();
         if (context != null) {
-            TraceServerMgr.getInstance().startServer(context);
+//            TraceServerMgr.getInstance().startServer(context);
         }
         return true;
     }
