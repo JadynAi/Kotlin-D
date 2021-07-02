@@ -1,5 +1,6 @@
 package com.jadynai.kotlindiary.coroutine
 
+import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -13,8 +14,12 @@ import com.jadynai.kotlindiary.R
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.sync.Semaphore
+import java.nio.file.Path
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 /**
@@ -36,14 +41,9 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         }
     }
 
-    private val defer: Deferred<String> = async(start = CoroutineStart.LAZY) {
+    private val defer: Deferred<PointF> = async(start = CoroutineStart.LAZY) {
         delay(3000)
-        try {
-            testAsynException()
-        } catch (e: Throwable) {
-            // 2021/6/30-10:25 抛出throwable就要catch throwable，但是throwable一般不要这么catch
-            "sdadasdasda"
-        }
+        testAsynException()
     }
 
     private val hashMap = HashMap<Int, String>()
@@ -81,16 +81,16 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
 //            lifecycleScope.coroutineContext.cancel()
             lifecycleScope.launch {
                 val await = defer.await()
-                Log.d("CoroutineActivity", "onCreate: ${await}")
+                Log.d("CoroutineActivity", "onCreate: ${await} hascode ${await.hashCode()}")
             }
         }
     }
 
-    private suspend fun testAsynException() = suspendCancellableCoroutine<String> {
+    private suspend fun testAsynException() = suspendCancellableCoroutine<PointF> {
         it.invokeOnCancellation { }
         Schedulers.io().scheduleDirect {
             Thread.sleep(3000)
-            it.resumeWithException(Throwable("asdasdasdad"))
+            it.resume(PointF(1f, 1f))
         }
     }
 
