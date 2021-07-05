@@ -74,14 +74,37 @@ fun getS(@StringRes id: Int, vararg formatArgs: Any): String {
  * 给文本末端附带drawable
  * */
 fun String.drawableEnd(@DrawableRes id: Int, padding: Float = 0f, size: android.util.Size? = null): CharSequence {
-    val drawable = getResDrawable(id)
-    drawable ?: return this
+    return drawableEnd(getResDrawable(id), padding, size)
+}
+
+fun String.drawableEnd(d: Drawable?, padding: Float = 0f, size: android.util.Size? = null): CharSequence {
+    d ?: return this
     val ps = dp2px(padding)
-    drawable.setBounds(ps, 0, ps + (size?.width ?: drawable.intrinsicWidth), size?.height ?: drawable.intrinsicHeight)
-    val imgSpan = ImageSpan(drawable)
+    d.setBounds(ps, 0, ps + (size?.width ?: d.intrinsicWidth), size?.height ?: d.intrinsicHeight)
+    val imgSpan = ImageSpan(d)
     val sp = SpannableString("$this ")
     sp.setSpan(imgSpan, sp.length - 1, sp.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
     sp.setSpan(CenterVerticalSpan(), 0, sp.length - 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+    return sp
+}
+
+fun String.drawableTop(@DrawableRes id: Int, padding: Float = 0f, size: android.util.Size? = null): CharSequence {
+    val bitmap = BitmapFactory.decodeResource(KD.applicationWrapper().resources, id)
+    bitmap ?: return this
+    val ps = dp2px(padding)
+    val finalB = if (size != null) Bitmap.createScaledBitmap(bitmap, size.width, size.height, true)
+    else bitmap
+    val createBitmap = if (padding == 0f) finalB else {
+        val c = Bitmap.createBitmap(finalB.width, finalB.height + ps, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(c)
+        canvas.drawColor(Color.TRANSPARENT)
+        canvas.drawBitmap(finalB, 0f, 0f, null)
+        c
+    }
+    val imgSpan = ImageSpan(KD.applicationWrapper(), createBitmap)
+    val sp = SpannableString("c\n$this")
+    sp.setSpan(imgSpan, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+    sp.setSpan(CenterVerticalSpan(), 1, sp.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
     return sp
 }
 
@@ -95,8 +118,7 @@ class CenterVerticalSpan : MetricAffectingSpan() {
     }
 
     private fun getBaselineShift(tp: TextPaint): Int {
-//        val total = tp.ascent() + tp.descent()
-//        return (total / 2f).toInt()
-        return -tp.descent().toInt()
+        val total = abs(tp.fontMetrics.top) + abs(tp.fontMetrics.bottom)
+        return -(total / 2f - tp.fontMetrics.bottom).toInt()
     }
 }

@@ -546,3 +546,20 @@ fun ProgressBar.setMaxHeightSafe(v: Int) {
         }
     }
 }
+
+fun Array<out View>.setVisible(b: Boolean) {
+    forEach { it.setVisible(b) }
+}
+
+@SuppressLint("ClickableViewAccessibility")
+fun View.setOnGestureListener(listener: GestureDetector.OnGestureListener?) {
+    listener?.let {
+        val gestureDetector = GestureDetector(context, it)
+        setOnTouchListener { _, event ->
+            gestureDetector.onTouchEvent(event)
+            true
+        }
+    } ?: run {
+        setOnTouchListener(null)
+    }
+}

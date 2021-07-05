@@ -98,6 +98,19 @@ fun getStateDrawable(nor: Drawable?, checked: Drawable?, @AttrRes state: Int): S
     return sd
 }
 
+fun getStateDrawable(nor: Drawable?, vararg stateDrawables: Pair<Drawable?, Int>): StateListDrawable {
+    val sd = StateListDrawable()
+    stateDrawables.forEach {
+        it.first?.let { drawable ->
+            sd.addState(intArrayOf(it.second), drawable)
+        }
+    }
+    nor?.apply {
+        sd.addState(intArrayOf(), this)
+    }
+    return sd
+}
+
 fun getLevelDrawable(@DrawableRes vararg ids: Int): Drawable {
     val list = ids.map {
         getResDrawable(it)!!
@@ -131,6 +144,17 @@ fun roundDrawable(r: Float = dp2px(2f).toFloat(),
                   dashGap: Float = 0f
 ): GradientDrawable {
     return roundDrawable(floatArrayOf(r, r, r, r), solidColors, strokeW, strokeColor, dashW, dashGap, orientation)
+}
+
+fun roundDrawable(r: Float = dp2px(2f).toFloat(),
+                  solidColors: Array<String> = arrayOf("#ffffff"),
+                  orientation: GradientDrawable.Orientation = GradientDrawable.Orientation.TOP_BOTTOM,
+                  strokeW: Float = 0f,
+                  strokeColor: Int = Color.TRANSPARENT,
+                  dashW: Float = 0f,
+                  dashGap: Float = 0f
+): GradientDrawable {
+    return roundDrawable(floatArrayOf(r, r, r, r), solidColors.map { parseColor(it) }.toIntArray(), strokeW, strokeColor, dashW, dashGap, orientation)
 }
 
 fun roundDrawable(rArray: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
@@ -215,9 +239,9 @@ fun Drawable?.rotate(degree: Float): Drawable? {
         rotateDrawable.pivotX = 0.5f
         rotateDrawable.pivotY = 0.5f
         // 设置level让drawable旋转
-        rotateDrawable.level = 10000
         rotateDrawable.fromDegrees = degree
         rotateDrawable.toDegrees = degree
+        rotateDrawable.level = 10000
         return rotateDrawable
     }
     return null
@@ -278,29 +302,5 @@ class ResourceCircleDrawable(r: Float, color: Int, @DrawableRes private val resI
                     canvas.drawBitmap(it, (intrinsicWidth - it.width) * 0.5f,
                             (intrinsicHeight - it.height) * 0.5f, null)
                 }
-    }
-}
-
-class PaddingDrawable(@DrawableRes private val resID: Int,
-                      val paddingTop: Int = 0,
-                      val paddingLeft: Int = 0,
-                      val paddingRight: Int = 0,
-                      val paddingBottom: Int = 0) : GradientDrawable() {
-
-    val b: Bitmap? = BitmapFactory.decodeResource(KD.applicationWrapper().resources, resID)
-
-    init {
-        b?.let {
-            shape = RECTANGLE
-            setSize(paddingLeft + it.width + paddingRight, paddingTop + it.height + paddingRight)
-        }
-//        colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
-    }
-
-    override fun draw(canvas: Canvas) {
-        super.draw(canvas)
-        b?.let {
-            canvas.drawBitmap(it, 0f, 0f, null)
-        }
     }
 }

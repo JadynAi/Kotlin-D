@@ -8,7 +8,10 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
+import androidx.fragment.app.Fragment
 import java.io.Serializable
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 /**
  *@version:
@@ -97,6 +100,34 @@ fun bundleOf(vararg pairs: Pair<String, Any?>) = Bundle(pairs.size).apply {
                     throw IllegalArgumentException("Illegal value type $valueType for key \"$key\"")
                 }
             }
+        }
+    }
+}
+
+fun <T> booArg(key: String) = IntentDelegate<T>(key, null)
+
+fun <T> booArg(key: String, def: T) = IntentDelegate1(key, def)
+
+class IntentDelegate<T>(private val key: String,
+                        private val def: T?) : ReadOnlyProperty<Any, T?> {
+
+    override fun getValue(thisRef: Any, property: KProperty<*>): T? {
+        @Suppress("UNCHECKED_CAST")
+        return when (thisRef) {
+            is Fragment -> thisRef.arguments?.get(key) as? T ?: def
+            else -> (thisRef as? Activity)?.intent?.extras?.get(key) as? T ?: def
+        }
+    }
+}
+
+class IntentDelegate1<T>(private val key: String,
+                         private val def: T) : ReadOnlyProperty<Any, T> {
+
+    override fun getValue(thisRef: Any, property: KProperty<*>): T {
+        @Suppress("UNCHECKED_CAST")
+        return when (thisRef) {
+            is Fragment -> thisRef.arguments?.get(key) as? T ?: def
+            else -> (thisRef as? Activity)?.intent?.extras?.get(key) as? T ?: def
         }
     }
 }
