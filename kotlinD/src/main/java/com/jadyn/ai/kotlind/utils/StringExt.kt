@@ -1,6 +1,10 @@
 package com.jadyn.ai.kotlind.utils
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.text.*
 import android.text.style.ImageSpan
 import android.text.style.MetricAffectingSpan
@@ -9,6 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.jadyn.ai.kotlind.base.KD
 import com.jadyn.ai.kotlind.function.ui.getResDrawable
+import kotlin.math.abs
 
 /**
  *@version:

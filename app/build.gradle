@@ -37,6 +37,7 @@ androidExtensions {
 //}
 
 dependencies {
+    api project(path: ':kotlinP')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     
@@ -52,7 +53,6 @@ dependencies {
     
     api project(':kotlinD')
     api project(':acrobat')
-    api project(path: ':kotlinP')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 //    implementation 'com.jadyn.trace_tool:TraceDTools:1.1.0'

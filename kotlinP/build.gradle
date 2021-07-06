@@ -42,5 +42,7 @@ dependencies {
     
     // lifeCycle scope
     api 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01'
+    api 'com.google.guava:guava:30.1.1-jre"'
+    api 'com.google.guava:guava:30.1.1-android"'
     implementation "com.google.api-client:google-api-client-gson:1.22.0"
 }
