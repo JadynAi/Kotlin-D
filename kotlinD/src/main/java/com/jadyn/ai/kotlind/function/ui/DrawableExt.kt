@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.*
+import android.util.Size
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
@@ -169,7 +170,7 @@ fun roundDrawable(rArray: FloatArray, solidColors: IntArray = intArrayOf(Color.W
                   dashGap: Float = 0f,
                   orientation: GradientDrawable.Orientation = GradientDrawable.Orientation.TOP_BOTTOM): GradientDrawable {
     require(rArray.size == 4) { "round corner size must is 4!!!" }
-    val gradientDrawable = GradientDrawable()
+    val gradientDrawable = RoundGradientDrawable()
     gradientDrawable.shape = GradientDrawable.RECTANGLE
     if (solidColors.size > 1) {
         gradientDrawable.orientation = orientation
@@ -194,6 +195,45 @@ fun roundDrawable(rArray: FloatArray, solidColors: IntArray = intArrayOf(Color.W
         )
     }
     return gradientDrawable
+}
+
+class RoundGradientDrawable : GradientDrawable() {
+
+    private var roundPath: Path? = null
+    private var size: Size? = null
+    private var radiiC: FloatArray? = null
+
+    override fun setCornerRadii(radii: FloatArray?) {
+        radiiC = radii?.clone()
+        super.setCornerRadii(radii)
+    }
+
+    override fun setCornerRadius(radius: Float) {
+        if (radius != 0f) {
+            radiiC = floatArrayOf(radius, radius, radius, radius, radius, radius, radius, radius)
+        }
+        super.setCornerRadius(radius)
+    }
+
+    override fun draw(canvas: Canvas) {
+        tryInitClipPath()
+        roundPath?.let { canvas.clipPath(it) }
+        super.draw(canvas)
+    }
+
+    private fun tryInitClipPath() {
+        val bounds = bounds
+        val width = bounds.width()
+        val height = bounds.height()
+        if (width != 0 && height != 0 && size == null) {
+            size = Size(width, height)
+            if (roundPath == null && radiiC != null) {
+                val path = Path()
+                path.addRoundRect(0f, 0f, width.toFloat(), height.toFloat(), radiiC!!, Path.Direction.CW)
+                roundPath = path
+            }
+        }
+    }
 }
 
 fun ovalDrawable(solidColor: Int, strokeW: Float = 0f,

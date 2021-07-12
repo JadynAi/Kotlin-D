@@ -238,8 +238,6 @@ fun View.roundInternalArray(r: FloatArray, solidColors: IntArray,
                             dashW: Float = 0f,
                             dashGap: Float = 0f) {
     this.background = roundDrawable(r, solidColors, strokeW, strokeColor, dashW, dashGap, orientation)
-    //避免子View影响到背景
-    this.clipToOutline = true
 }
 
 fun pressColorAll(normalColor: Int, pressColor: Int, vararg views: View) {
