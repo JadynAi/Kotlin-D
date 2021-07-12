@@ -1,5 +1,6 @@
 package com.jadynai.kotlindiary.view
 
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.*
 import android.util.Log
@@ -48,6 +49,11 @@ class ViewActivity : AppCompatActivity() {
         view_wwwww.click {
             p += 10f
             view_wwwww.setProgress(p)
+            Thread {
+                view_wwwww.buildDrawingCache()
+                val bitmap = view_wwwww.drawingCache
+                bitmap
+            }.start()
         }
 //        view_w.setOnTouchListener { v, event -> 
 //            true
