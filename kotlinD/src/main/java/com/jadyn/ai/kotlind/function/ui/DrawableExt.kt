@@ -216,9 +216,19 @@ class RoundGradientDrawable : GradientDrawable() {
     }
 
     override fun draw(canvas: Canvas) {
-        tryInitClipPath()
-        roundPath?.let { canvas.clipPath(it) }
+        if (isNeedClipRound(canvas)) {
+            tryInitClipPath()
+            roundPath?.let { canvas.clipPath(it) }
+        }
         super.draw(canvas)
+    }
+
+    /**
+     * canvas判断是否被添加到关闭了硬件加速的视图中。
+     * 如果硬件加速关闭，round需要clip
+     * */
+    private fun isNeedClipRound(canvas: Canvas): Boolean {
+        return !canvas.isHardwareAccelerated
     }
 
     private fun tryInitClipPath() {

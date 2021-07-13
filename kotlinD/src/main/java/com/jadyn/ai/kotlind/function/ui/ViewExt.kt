@@ -210,7 +210,9 @@ fun View.roundInternal(r: Float = 2f.dp.toFloat(), solidColor: Int = Color.WHITE
     this.background = roundDrawable
     drawableSetCallback.invoke(roundDrawable)
     //避免子View影响到背景
-    this.clipToOutline = true
+    if (isHardwareAccelerated) {
+        this.clipToOutline = true
+    }
 }
 
 fun View.roundInternal(r: Float = 2f.dp.toFloat(), solidColor: IntArray,
@@ -220,7 +222,9 @@ fun View.roundInternal(r: Float = 2f.dp.toFloat(), solidColor: IntArray,
                        dashGap: Float = 0f) {
     this.background = roundDrawable(r, solidColor, orientation, strokeW, strokeColor, dashW, dashGap)
     //避免子View影响到背景
-    this.clipToOutline = true
+    if (isHardwareAccelerated) {
+        this.clipToOutline = true
+    }
 }
 
 fun View.roundInternalArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
@@ -228,7 +232,9 @@ fun View.roundInternalArray(r: FloatArray, solidColor: Int = Color.WHITE, stroke
                             dashGap: Float = 0f) {
     this.background = roundDrawable(r, solidColor, strokeW, strokeColor, dashW, dashGap)
     //避免子View影响到背景
-    this.clipToOutline = true
+    if (isHardwareAccelerated) {
+        this.clipToOutline = true
+    }
 }
 
 fun View.roundInternalArray(r: FloatArray, solidColors: IntArray,
@@ -238,6 +244,10 @@ fun View.roundInternalArray(r: FloatArray, solidColors: IntArray,
                             dashW: Float = 0f,
                             dashGap: Float = 0f) {
     this.background = roundDrawable(r, solidColors, strokeW, strokeColor, dashW, dashGap, orientation)
+    //避免子View影响到背景
+    if (isHardwareAccelerated) {
+        this.clipToOutline = true
+    }
 }
 
 fun pressColorAll(normalColor: Int, pressColor: Int, vararg views: View) {
