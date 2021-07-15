@@ -226,9 +226,10 @@ class RoundGradientDrawable : GradientDrawable() {
     /**
      * canvas判断是否被添加到关闭了硬件加速的视图中。
      * 如果硬件加速关闭，round需要clip
+     * 作为背景时才需要clip
      * */
     private fun isNeedClipRound(canvas: Canvas): Boolean {
-        return !canvas.isHardwareAccelerated
+        return !canvas.isHardwareAccelerated && isNeedClip
     }
 
     private fun tryInitClipPath() {
@@ -237,9 +238,10 @@ class RoundGradientDrawable : GradientDrawable() {
         val height = bounds.height()
         if (width != 0 && height != 0 && size == null) {
             size = Size(width, height)
-            if (roundPath == null && radiiC != null) {
+            val radiiCL = radiiC
+            if (roundPath == null && radiiCL != null) {
                 val path = Path()
-                path.addRoundRect(0f, 0f, width.toFloat(), height.toFloat(), radiiC!!, Path.Direction.CW)
+                path.addRoundRect(0f, 0f, width.toFloat(), height.toFloat(), radiiCL, Path.Direction.CW)
                 roundPath = path
             }
         }

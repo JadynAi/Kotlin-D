@@ -31,7 +31,9 @@
             android:name="com.jadynai.kotlindiary.thread.ThreadActivity"
             android:screenOrientation="portrait" />
         <activity android:name="com.jadynai.kotlindiary.data.DataCodeActivity" />
-        <activity android:name="com.jadynai.kotlindiary.view.ViewActivity" />
+        <activity android:name="com.jadynai.kotlindiary.view.ViewActivity"
+            android:hardwareAccelerated="false"
+            />
         <activity android:name="com.jadynai.kotlindiary.canvas.CanvasActivity" />
         <activity android:name="com.jadynai.kotlindiary.designMode.DesignModeActivity" />
         <activity android:name=".StickyHeaderActivity" />

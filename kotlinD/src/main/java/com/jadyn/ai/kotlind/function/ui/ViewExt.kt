@@ -133,29 +133,39 @@ inline fun View.forSureGetSize(crossinline callback: View.() -> Unit) {
 * */
 fun View.roundHeight(solidColor: Int = Color.WHITE, strokeW: Float = 0f,
                      strokeColor: Int = Color.TRANSPARENT) {
-    roundInternal(screenWidth.toFloat(), solidColor, strokeW, strokeColor)
+    forSureGetSize {
+        roundInternal(height * 0.5f, solidColor, strokeW, strokeColor)
+    }
 }
 
 fun View.roundHeightSelected(normalColor: Int, stateColor: Int) {
-    roundInternal(screenWidth.toFloat(), normalColor, 0f, Color.TRANSPARENT) {
-        background = it.tintSelected(normalColor, stateColor)
+    forSureGetSize {
+        roundInternal(height * 0.5f, normalColor, 0f, Color.TRANSPARENT) {
+            background = it.tintSelected(normalColor, stateColor)
+        }
     }
 }
 
 fun View.roundHeightEnabled(normalColor: Int, stateColor: Int) {
-    roundInternal(screenWidth.toFloat(), normalColor, 0f, Color.TRANSPARENT) {
-        background = it.tintEnable(normalColor, stateColor)
+    forSureGetSize {
+        roundInternal(height * 0.5f, normalColor, 0f, Color.TRANSPARENT) {
+            background = it.tintEnable(normalColor, stateColor)
+        }
     }
 }
 
 fun View.roundHeightEnabled(normalColors: IntArray, stateColors: IntArray) {
-    enabled(roundDrawable(screenWidth.toFloat(), normalColors, GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT),
-            roundDrawable(screenWidth.toFloat(), stateColors, GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT))
+    forSureGetSize {
+        enabled(roundDrawable(height * 0.5f, normalColors, GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT),
+                roundDrawable(height * 0.5f, stateColors, GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT))
+    }
 }
 
 fun View.roundHeightEnabled(normalColors: Array<String>, stateColors: Array<String>) {
-    enabled(roundDrawable(screenWidth.toFloat(), normalColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT),
-            roundDrawable(screenWidth.toFloat(), stateColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT))
+    forSureGetSize {
+        enabled(roundDrawable(height * 0.5f, normalColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT),
+                roundDrawable(height * 0.5f, stateColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.LEFT_RIGHT, 0f, Color.TRANSPARENT))
+    }
 }
 
 fun View.roundHeightLR(vararg solidColors: String,
@@ -167,13 +177,17 @@ fun View.roundHeightLR(vararg solidColors: String,
 fun View.roundHeightTB(vararg solidColors: String,
                        strokeW: Float = 0f,
                        strokeColor: Int = Color.TRANSPARENT) {
-    roundInternal(screenWidth.toFloat(), solidColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.TOP_BOTTOM, strokeW, strokeColor)
+    forSureGetSize {
+        roundInternal(height * 0.5f, solidColors.map { parseColor(it) }.toIntArray(), GradientDrawable.Orientation.TOP_BOTTOM, strokeW, strokeColor)
+    }
 }
 
 fun View.roundHeightLR(solidColors: IntArray,
                        strokeW: Float = 0f,
                        strokeColor: Int = Color.TRANSPARENT) {
-    roundInternal(screenWidth.toFloat(), solidColors, GradientDrawable.Orientation.LEFT_RIGHT, strokeW, strokeColor)
+    forSureGetSize {
+        roundInternal(height * 0.5f, solidColors, GradientDrawable.Orientation.LEFT_RIGHT, strokeW, strokeColor)
+    }
 }
 
 /**
@@ -206,13 +220,7 @@ fun View.roundInternal(r: Float = 2f.dp.toFloat(), solidColor: Int = Color.WHITE
                        dashW: Float = 0f,
                        dashGap: Float = 0f,
                        drawableSetCallback: (Drawable) -> Unit = {}) {
-    val roundDrawable = roundDrawable(r, solidColor, strokeW, strokeColor, dashW, dashGap)
-    this.background = roundDrawable
-    drawableSetCallback.invoke(roundDrawable)
-    //避免子View影响到背景
-    if (isHardwareAccelerated) {
-        this.clipToOutline = true
-    }
+    setRoundBackground(roundDrawable(r, solidColor, strokeW, strokeColor, dashW, dashGap), drawableSetCallback)
 }
 
 fun View.roundInternal(r: Float = 2f.dp.toFloat(), solidColor: IntArray,
@@ -220,21 +228,13 @@ fun View.roundInternal(r: Float = 2f.dp.toFloat(), solidColor: IntArray,
                        strokeW: Float = 0f, strokeColor: Int = Color.TRANSPARENT,
                        dashW: Float = 0f,
                        dashGap: Float = 0f) {
-    this.background = roundDrawable(r, solidColor, orientation, strokeW, strokeColor, dashW, dashGap)
-    //避免子View影响到背景
-    if (isHardwareAccelerated) {
-        this.clipToOutline = true
-    }
+    setRoundBackground(roundDrawable(r, solidColor, orientation, strokeW, strokeColor, dashW, dashGap))
 }
 
 fun View.roundInternalArray(r: FloatArray, solidColor: Int = Color.WHITE, strokeW: Float = 0f,
                             strokeColor: Int = Color.TRANSPARENT, dashW: Float = 0f,
                             dashGap: Float = 0f) {
-    this.background = roundDrawable(r, solidColor, strokeW, strokeColor, dashW, dashGap)
-    //避免子View影响到背景
-    if (isHardwareAccelerated) {
-        this.clipToOutline = true
-    }
+    setRoundBackground(roundDrawable(r, solidColor, strokeW, strokeColor, dashW, dashGap))
 }
 
 fun View.roundInternalArray(r: FloatArray, solidColors: IntArray,
@@ -243,9 +243,15 @@ fun View.roundInternalArray(r: FloatArray, solidColors: IntArray,
                             strokeColor: Int = Color.TRANSPARENT,
                             dashW: Float = 0f,
                             dashGap: Float = 0f) {
-    this.background = roundDrawable(r, solidColors, strokeW, strokeColor, dashW, dashGap, orientation)
-    //避免子View影响到背景
-    if (isHardwareAccelerated) {
+    setRoundBackground(roundDrawable(r, solidColors, strokeW, strokeColor, dashW, dashGap, orientation))
+}
+
+private fun View.setRoundBackground(d: Drawable, drawableSetCallback: (Drawable) -> Unit = {}) {
+    this.background = d
+    drawableSetCallback.invoke(d)
+    (d as? RoundGradientDrawable)?.isNeedClip = true
+    //避免子View影响到背景, 硬件加速打开这个属性，但view没有附着到window的话，那么isHardwareAccelerated返回false
+    if (!isAttachedToWindow || isHardwareAccelerated) {
         this.clipToOutline = true
     }
 }
