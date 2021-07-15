@@ -202,6 +202,7 @@ class RoundGradientDrawable : GradientDrawable() {
     private var roundPath: Path? = null
     private var size: Size? = null
     private var radiiC: FloatArray? = null
+    var isNeedClip = false
 
     override fun setCornerRadii(radii: FloatArray?) {
         radiiC = radii?.clone()
