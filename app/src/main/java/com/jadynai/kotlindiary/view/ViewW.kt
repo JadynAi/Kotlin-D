@@ -6,6 +6,10 @@ import android.graphics.*
 import android.graphics.drawable.*
 import android.os.Build
 import android.os.Looper
+import android.text.DynamicLayout
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.*
@@ -207,15 +211,21 @@ class VideoFrameLoadingView @JvmOverloads constructor(
         p
     }
 
-    private val tv by lazy {
-        val textView = TextView(context)
-        textView.setTextColor(Color.WHITE)
-        textView.textSize = 28f
-        textView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-        textView.gravity = Gravity.CENTER
-        textView.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        textView
+    private val tp by lazy {
+        val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+        textPaint.textSize = 28f.dp.toFloat()
+        textPaint.isFakeBoldText = true
+        textPaint
     }
+
+    private val baseLineGap by lazy {
+        val fontMetrics = tp.fontMetrics
+        abs(fontMetrics.leading) + abs(fontMetrics.ascent)
+    }
+
+    private val rect by lazy { Rect() }
+
+    private var progressText = ""
 
     private var curRound = 0f
 
@@ -243,7 +253,8 @@ class VideoFrameLoadingView @JvmOverloads constructor(
         val curLength = pathMeasure.length * fl / 100
         segmentPath.reset()
         pathMeasure.getSegment(0f, curLength, segmentPath, true)
-        tv.text = "progress $fl"
+        progressText = "progress $fl"
+        tp.getTextBounds(progressText, 0, progressText.length, rect)
         if (Looper.getMainLooper().thread != Thread.currentThread()) {
             postInvalidate()
         } else {
@@ -253,12 +264,10 @@ class VideoFrameLoadingView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        tv.measure(widthMeasureSpec, heightMeasureSpec)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        tv.layout(left, top, right, bottom)
         setPath()
         bgRect.set(0f, 0f, width.toFloat(), height.toFloat())
     }
@@ -279,17 +288,13 @@ class VideoFrameLoadingView @JvmOverloads constructor(
         pathMeasure.setPath(path, true)
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        tv.layout(0, 0, w, h)
-    }
-
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
         if (isPrepareLoading) {
             canvas.drawRect(bgRect, bgPaint)
             canvas.drawPath(segmentPath, paint)
-            tv.draw(canvas)
+            canvas.drawText(progressText, (width - rect.width()) * 0.5f,
+                    (height - rect.height()) * 0.5f + baseLineGap, tp)
         }
     }
 
