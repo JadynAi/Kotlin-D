@@ -214,8 +214,14 @@ class VideoFrameLoadingView @JvmOverloads constructor(
     private val tp by lazy {
         val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
         textPaint.textSize = 28f.dp.toFloat()
+        textPaint.color = Color.WHITE
         textPaint.isFakeBoldText = true
         textPaint
+    }
+
+    private val textH by lazy {
+        val fontMetrics = tp.fontMetrics
+        abs(fontMetrics.bottom - fontMetrics.top)
     }
 
     private val baseLineGap by lazy {
@@ -223,7 +229,7 @@ class VideoFrameLoadingView @JvmOverloads constructor(
         abs(fontMetrics.leading) + abs(fontMetrics.ascent)
     }
 
-    private val rect by lazy { Rect() }
+    private var textW = 0f
 
     private var progressText = ""
 
@@ -254,7 +260,7 @@ class VideoFrameLoadingView @JvmOverloads constructor(
         segmentPath.reset()
         pathMeasure.getSegment(0f, curLength, segmentPath, true)
         progressText = "progress $fl"
-        tp.getTextBounds(progressText, 0, progressText.length, rect)
+        textW = tp.measureText(progressText)
         if (Looper.getMainLooper().thread != Thread.currentThread()) {
             postInvalidate()
         } else {
@@ -293,8 +299,8 @@ class VideoFrameLoadingView @JvmOverloads constructor(
         if (isPrepareLoading) {
             canvas.drawRect(bgRect, bgPaint)
             canvas.drawPath(segmentPath, paint)
-            canvas.drawText(progressText, (width - rect.width()) * 0.5f,
-                    (height - rect.height()) * 0.5f + baseLineGap, tp)
+            canvas.drawText(progressText, (width - textW) * 0.5f,
+                    (height - textH) * 0.5f + baseLineGap, tp)
         }
     }
 
