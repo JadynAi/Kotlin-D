@@ -1,4 +1,4 @@
-package com.jadynai.kotlindiary.designMode;
+package com.jadynai.kotlindiary.designMode.idLesson;
 
 import android.annotation.SuppressLint;
 
@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * JadynAi since 2021/7/19
  */
-public class IdGenerator {
+public class IdGeneratorChangeBefore {
 
     @SuppressLint("DefaultLocale")
     public static String generate() {

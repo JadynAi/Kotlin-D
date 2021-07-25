@@ -15,4 +15,10 @@ class LocalTest_1Test {
         assertThat(convertString)
             .endsWith("]")
     }
+
+    @Test
+    fun testStringAlgorithm() {
+        val i = 'A'
+        println("${i.toInt()}")
+    }
 }
