@@ -43,7 +43,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".workmanager.WorkManagerActivity" />
         <activity android:name=".thread.ThreadJavaActivity" />
-        <activity android:name=".mvredux.MVReduxActivity" />
+        <activity android:name=".mvredux.ReduxKotlinActivity" />
 
         <service
             android:name="com.jadynai.kotlindiary.binder.MessengerService"

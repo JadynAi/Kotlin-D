@@ -59,6 +59,7 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxjava:2.2.6"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    implementation "org.reduxkotlin:redux-kotlin-threadsafe-jvm:0.5.5"
 
     testImplementation(project(path: ':kotlinP', configuration: 'kotlinPTest'))
 }
