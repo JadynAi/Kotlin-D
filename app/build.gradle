@@ -24,6 +24,11 @@ android {
     }
     productFlavors {
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 androidExtensions {
