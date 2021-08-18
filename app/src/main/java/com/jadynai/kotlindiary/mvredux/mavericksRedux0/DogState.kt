@@ -12,4 +12,9 @@ data class DogState(
     val dogs: Async<List<Dog>> = Uninitialized,
     val loveDogId: Long? = null,
     val adoptionRequest: Async<Dog> = Uninitialized
-) : MavericksState 
+) : MavericksState {
+
+    val loveDog = dog(loveDogId)
+
+    fun dog(dogId: Long?): Dog? = dogs.invoke()?.firstOrNull { it.id == dogId }
+}
