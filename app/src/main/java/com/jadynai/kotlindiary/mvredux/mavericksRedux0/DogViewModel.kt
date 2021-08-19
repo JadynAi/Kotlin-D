@@ -19,9 +19,5 @@ class DogViewModel(
         override fun create(viewModelContext: ViewModelContext, state: DogState): DogViewModel? {
             return DogViewModel(state, DogRepository)
         }
-
-        override fun initialState(viewModelContext: ViewModelContext): DogState? {
-            return super.initialState(viewModelContext)
-        }
     }
 }
