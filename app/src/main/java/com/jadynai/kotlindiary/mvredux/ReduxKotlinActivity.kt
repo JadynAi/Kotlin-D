@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_redux.*
+import org.reduxkotlin.Reducer
 import org.reduxkotlin.createStore
 import org.reduxkotlin.createThreadSafeStore
 
@@ -33,6 +34,18 @@ class ReduxKotlinActivity : AppCompatActivity() {
 
     private fun render(state: Int) {
         textView7.text = state.toString()
+    }
+
+    val reducer: Reducer<Int> = { state, action ->
+        when (action) {
+            is Increment -> {
+                state + 1
+            }
+            is Decrement -> {
+                state - 1
+            }
+            else -> state
+        }
     }
 
 }
