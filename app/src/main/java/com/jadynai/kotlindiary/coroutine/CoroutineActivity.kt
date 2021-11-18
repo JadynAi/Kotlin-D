@@ -69,6 +69,16 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
 //            s.acquire()
 //            s.release()
 //            Log.d("cece", "onCreate: click 2 end")
+            launch {
+                val i = withContext(Dispatchers.IO) {
+                    repeat(3) {
+                        if (it == 1) {
+                            return@withContext it
+                        }
+                        Log.d("cecece", "onCreate: repeat $it")
+                    }
+                }
+            }
             Log.d("CoroutineActivity", "onCreate: ${defer.isActive} ${defer.isCompleted} ${defer.isCancelled}")
         }
         textView5.click {

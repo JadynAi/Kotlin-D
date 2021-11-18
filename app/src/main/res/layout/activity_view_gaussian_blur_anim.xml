@@ -7,11 +7,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.jadyn.ai.acrobat.recyclerview.ArcView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:src="@drawable/cat"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_res_drawable_tv"
         android:layout_width="300dp"
         android:layout_height="100dp"
+        android:visibility="gone"
         android:layout_marginTop="60dp"
         android:background="@android:color/black"
         android:gravity="center"
@@ -38,8 +48,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
 
     </com.jadynai.kotlindiary.view.VideoFrameLoadingView>
