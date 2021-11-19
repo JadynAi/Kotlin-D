@@ -7,11 +7,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.jadyn.ai.acrobat.recyclerview.ArcView
+    <com.jadynai.kotlindiary.view.ArcView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:src="@drawable/cat"
         android:scaleType="fitXY"
+        android:src="@drawable/cat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
