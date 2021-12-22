@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="140dp"
+            android:height="160dp"
+            android:viewportWidth="140"
+            android:viewportHeight="160">
+            <path
+                android:name="root"
+                android:pathData="
+                 M0,0
+                 Q20,35 68,48
+                 Q110,62 110,106
+                 Q110,143 140,151
+                 L0,151
+                 Z">
+                <aapt:attr name="android:fillColor">
+                    <gradient
+                        android:endX="152.6"
+                        android:endY="123.126"
+                        android:startX="2.32258"
+                        android:startY="2.41128"
+                        android:type="linear">
+                        <item
+                            android:color="#FFBDBECE"
+                            android:offset="0" />
+                        <item
+                            android:color="#FFD5CFDC"
+                            android:offset="0.140925" />
+                        <item
+                            android:color="#FFC9CDDA"
+                            android:offset="0.230471" />
+                        <item
+                            android:color="#FFB7C3D3"
+                            android:offset="0.537202" />
+                        <item
+                            android:color="#FF94A0B9"
+                            android:offset="0.794276" />
+                        <item
+                            android:color="#FF96A3BD"
+                            android:offset="0.991628" />
+                    </gradient>
+                </aapt:attr>
+            </path>
+<!--            <path-->
+<!--                android:pathData="M4,2.97V1.852V0.007C4,0.007 7.354,17.557 28.597,30.655C41.81,38.801 45.184,39.981 53.581,42.919C58.158,44.52 64.228,46.643 74.197,50.702C75.232,51.088 76.251,51.507 77.254,51.957C77.434,52.031 77.615,52.106 77.797,52.182C97.832,60.495 104.616,77.233 106.885,88.665C107.591,92.023 107.974,95.501 107.999,99.063C108,99.18 108,99.29 108,99.393L108,112.344C108.198,118.062 109.051,127.183 112.193,135.214C117.226,148.074 135.118,151.429 135.118,151.429L133.72,151.422C127.206,150.017 115.269,145.831 110.796,135.214C107.653,127.183 106.52,119.076 106.323,113.358L106.323,100.407C106.323,100.303 106.322,100.193 106.321,100.077C106.297,96.514 105.914,93.037 105.207,89.679C102.939,78.247 96.155,61.509 76.119,53.195C75.937,53.12 75.756,53.045 75.576,52.97C74.574,52.521 73.554,52.102 72.519,51.715C62.55,47.657 56.48,45.534 51.903,43.932C43.506,40.995 40.132,39.814 26.92,31.668C12.796,22.96 6.516,10.239 4,2.97Z">-->
+<!--                <aapt:attr name="android:fillColor">-->
+<!--                    <gradient-->
+<!--                        android:startY="-28.6211"-->
+<!--                        android:startX="0.0860264"-->
+<!--                        android:endY="168.476"-->
+<!--                        android:endX="96.8172"-->
+<!--                        android:type="linear">-->
+<!--                        <item android:offset="0.353558" android:color="#19FFFFFF"/>-->
+<!--                        <item android:offset="0.505872" android:color="#60FFFFFF"/>-->
+<!--                        <item android:offset="0.73633" android:color="#60FFFFFF"/>-->
+<!--                        <item android:offset="0.993707" android:color="#19FFFFFF"/>-->
+<!--                    </gradient>-->
+<!--                </aapt:attr>-->
+<!--            </path>-->
+        </vector>
+    </aapt:attr>
+    <target android:name="root">
+        <aapt:attr name="android:animation">
+            <set
+                android:interpolator="@android:anim/linear_interpolator"
+                android:ordering="sequentially"
+                android:shareInterpolator="true">
+                <objectAnimator
+                    android:duration="300"
+                    android:propertyName="pathData"
+                    android:valueFrom="
+                    M0,0
+                    Q20,35 68,48
+                    Q110,62 110,106
+                    Q110,143 140,151
+                    L0,151
+                    Z"
+                    android:valueTo="
+                    M0,100
+                    Q2,50 50,50
+                    Q110,62 110,106
+                    Q110,143 110,151
+                    L0,151
+                    Z"
+                    android:valueType="pathType" />
+                <objectAnimator
+                    android:duration="300"
+                    android:propertyName="pathData"
+                    android:valueFrom="
+                    M0,100
+                    Q2,50 50,50
+                    Q110,62 110,106
+                    Q110,143 110,151
+                    L0,151
+                    Z"
+                    android:valueTo="
+                    M0,100
+                    Q2,50 50,50
+                    Q98,50 110,86
+                    Q110,143 110,151
+                    L0,151
+                    Z"
+                    android:valueType="pathType" />
+                <objectAnimator
+                    android:duration="300"
+                    android:propertyName="pathData"
+                    android:valueFrom="
+                    M0,100
+                    Q2,50 50,50
+                    Q98,50 110,86
+                    Q110,143 110,151
+                    L0,151
+                    Z"
+                    android:valueTo="
+                    M0,100
+                    Q2,50 50,50
+                    Q98,50 110,0
+                    Q110,0 110,151
+                    L0,151
+                    Z"
+                    android:valueType="pathType" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

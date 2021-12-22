@@ -60,5 +60,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+    
+    <com.jadynai.kotlindiary.view.LineAnimView
+        android:id="@+id/vector_anim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
 </com.jadynai.kotlindiary.view.TestViewGroupMeasureFlow>

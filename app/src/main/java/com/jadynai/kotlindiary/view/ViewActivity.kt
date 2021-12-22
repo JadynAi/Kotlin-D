@@ -1,14 +1,22 @@
 package com.jadynai.kotlindiary.view
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Path
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
 import android.os.*
 import android.util.Log
 import android.util.SparseArray
 import android.view.Choreographer
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.filterViewIsInstanceOnce
@@ -32,7 +40,13 @@ class ViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("MeasureFlow", "onCreate: ")
-        setContentView(R.layout.activity_view_gaussian_blur_anim)
+        setContentView(R.layout.activity_path_touch_region_view)
+        findViewById<View>(R.id.touch_region).setOnClickListener {
+            Log.w("ViewActivity", "onCreate: click ooooo")
+        }
+        findViewById<View>(R.id.touch_region1).setOnClickListener {
+            Log.w("ViewActivity", "onCreate: click GRAY")
+        }
 //        ddddd.click {
 //            val sparseArray = SparseArray<String>(7)
 //            val s = arrayListOf(1, 3, 5, 7, 2, 10, 11, 20, 15, 9)
@@ -43,18 +57,23 @@ class ViewActivity : AppCompatActivity() {
 //            }
 //            s
 //        }
-        var p = 0f
-        view_wwwww.setProgressColor(Color.RED)
-//        view_wwwww.setRound(30f)
-        view_wwwww.click {
-            p += 10f
-            view_wwwww.setProgress(p)
-            Thread {
-                view_wwwww.buildDrawingCache()
-                val bitmap = view_wwwww.drawingCache
-                bitmap
-            }.start()
-        }
+//        var p = 0f
+//        view_wwwww.setProgressColor(Color.RED)
+////        view_wwwww.setRound(30f)
+//        view_wwwww.click {
+//            p += 10f
+//            view_wwwww.setProgress(p)
+//            Thread {
+//                view_wwwww.buildDrawingCache()
+//                val bitmap = view_wwwww.drawingCache
+//                bitmap
+//            }.start()
+//        }
+//        findViewById<LineAnimView>(R.id.vector_anim).apply {
+//            setOnClickListener {
+//                toggle()
+//            }
+//        }
 //        view_w.setOnTouchListener { v, event -> 
 //            true
 //        }

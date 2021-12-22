@@ -54,6 +54,17 @@
             android:text="View"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
+        
+        <TextView
+            android:id="@+id/bezier_tv"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/holo_blue_dark"
+            android:gravity="center"
+            android:text="Bezier DIY"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/design_mode_tv"

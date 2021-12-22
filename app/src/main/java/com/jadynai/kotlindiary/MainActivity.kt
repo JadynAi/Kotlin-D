@@ -16,6 +16,7 @@ import com.jadynai.kotlindiary.mvredux.ReduxKotlinActivity
 import com.jadynai.kotlindiary.show.ShowActivity
 import com.jadynai.kotlindiary.thread.ThreadActivity
 import com.jadynai.kotlindiary.thread.ThreadJavaActivity
+import com.jadynai.kotlindiary.view.DIYBezierActivity
 import com.jadynai.kotlindiary.view.ViewActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -57,6 +58,9 @@ class MainActivity : AppCompatActivity() {
         }
         redux_tv.click {
             start<ReduxKotlinActivity>()
+        }
+        bezier_tv.click {
+            start<DIYBezierActivity>()
         }
     }
 

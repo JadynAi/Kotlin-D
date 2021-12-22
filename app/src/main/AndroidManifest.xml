@@ -44,6 +44,7 @@
         <activity android:name=".workmanager.WorkManagerActivity" />
         <activity android:name=".thread.ThreadJavaActivity" />
         <activity android:name=".mvredux.ReduxKotlinActivity" />
+        <activity android:name=".view.DIYBezierActivity" />
 
         <service
             android:name="com.jadynai.kotlindiary.binder.MessengerService"
