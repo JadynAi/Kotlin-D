@@ -38,8 +38,8 @@ class TouchRegionImageView @JvmOverloads constructor(
             val startD = startRatio * length
             val endD = endRatio * length
             pm.getSegment(startD, endD, segmentPath, true)
-            val startPosArray = floatArrayOf(0f, 0f)
-            val endPosArray = floatArrayOf(0f, 0f)
+            val startPosArray = FloatArray(2) { 0f }
+            val endPosArray = FloatArray(2) { 0f }
             pm.getPosTan(startD, startPosArray, null)
             pm.getPosTan(endD, endPosArray, null)
             val regionPath = Path()

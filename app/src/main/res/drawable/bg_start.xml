@@ -4,14 +4,7 @@
     android:height="160dp"
     android:viewportWidth="140"
     android:viewportHeight="160">
-    <path android:pathData="
-      M0,0
-      Q20,35 68,48
-      Q110,62 110,106
-      Q109,143 140,151
-      L0,151
-      Z
-      ">
+    <path android:pathData="M0,0 V160 H140 L140,0Z">
         <aapt:attr name="android:fillColor">
             <gradient
                 android:endX="152.6"

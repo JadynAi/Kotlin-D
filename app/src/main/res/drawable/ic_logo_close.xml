@@ -1,16 +1,8 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="39dp"
-    android:height="39dp"
-    android:viewportWidth="39"
-    android:viewportHeight="39">
-    <path
-        android:fillColor="#000000"
-        android:pathData="M12.6551,14.684C12.9336,14.9638 13.2998,15.103 13.6659,15.103C14.0321,15.103 14.3982,14.9638 14.6767,14.684C15.2353,14.1257 15.2353,13.22 14.6767,12.6617L3.2404,1.2188C2.6818,0.6605 1.7773,0.6605 1.2187,1.2188C0.6602,1.7771 0.6602,2.6827 1.2187,3.241L12.6551,14.684Z"
-        android:strokeWidth="1"
-        android:strokeColor="#000000" />
-    <path
-        android:fillColor="#000000"
-        android:pathData="M21.5683,19.5373L37.7142,3.3839C38.2728,2.8256 38.2728,1.92 37.7142,1.3617C37.1557,0.8034 36.2511,0.5566 35.6926,1.1163L18.5373,18.0332H18.1123V18.5283L1.1695,35.6907C0.6109,36.2489 0.7172,37.1546 1.2743,37.7129C1.5529,37.9927 1.9721,38.132 2.3382,38.132C2.7044,38.132 3.0964,37.9927 3.3749,37.7129L19.5338,21.561L35.6854,37.7143C35.964,37.9942 36.3344,38.1334 36.6991,38.1334C37.0638,38.1334 37.4328,37.9942 37.7114,37.7143C38.2699,37.156 38.2713,36.2504 37.7128,35.6921L21.5683,19.5373Z"
-        android:strokeWidth="1"
-        android:strokeColor="#000000" />
-</vector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/ic_logo_close_bg" />
+
+    <item
+        android:drawable="@drawable/ic_logo_close_inner"
+        android:gravity="center" />
+</layer-list>
