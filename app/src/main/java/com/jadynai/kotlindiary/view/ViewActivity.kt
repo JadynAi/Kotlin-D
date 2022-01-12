@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.jadynai.kotlindiary.R
+import com.jadynai.kotlindiary.databinding.ActivityPathTransitionBinding
 
 /**
  *@version:
@@ -21,6 +22,7 @@ class ViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_path_transition)
+        ActivityPathTransitionBinding.inflate(layoutInflater)
 //        findViewById<View>(R.id.touch_region).setOnClickListener {
 //            Log.w("ViewActivity", "onCreate: click ooooo")
 //        }

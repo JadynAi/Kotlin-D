@@ -33,6 +33,10 @@ android {
             includeAndroidResources = true
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
+
 }
 
 androidExtensions {
