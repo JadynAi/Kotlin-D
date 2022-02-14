@@ -10,7 +10,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
-    
+
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
@@ -22,6 +22,9 @@ android {
         release {
             minifyEnabled false
         }
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 

@@ -14,6 +14,7 @@ import com.jadynai.kotlindiary.data.DataCodeActivity
 import com.jadynai.kotlindiary.designMode.DesignModeActivity
 import com.jadynai.kotlindiary.mvredux.ReduxKotlinActivity
 import com.jadynai.kotlindiary.show.ShowActivity
+import com.jadynai.kotlindiary.svg.SVGActivity
 import com.jadynai.kotlindiary.thread.ThreadActivity
 import com.jadynai.kotlindiary.thread.ThreadJavaActivity
 import com.jadynai.kotlindiary.view.DIYBezierActivity
@@ -61,6 +62,9 @@ class MainActivity : AppCompatActivity() {
         }
         bezier_tv.click {
             start<DIYBezierActivity>()
+        }
+        svg_text_tv.click {
+            start<SVGActivity>()
         }
     }
 

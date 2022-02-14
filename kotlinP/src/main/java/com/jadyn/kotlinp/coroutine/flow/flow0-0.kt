@@ -5,10 +5,7 @@ import com.jadyn.kotlinp.coroutine.printWithThreadName
 import com.jadyn.kotlinp.coroutine.singleExecutors
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
@@ -24,14 +21,14 @@ class FlowBaseTest : BaseMainTest() {
         launch { 
             val flow = flow<Int> {
                 repeat(5) {
-                    emit(it)
+                    delay(3000)
                     printWithThreadName("emit go")
-                    delay(500)
+                    emit(it)
                 }
             }.flowOn(singleExecutors.asCoroutineDispatcher())
-            flow.collect { 
-                printWithThreadName("collect $it")
-            }
+            printWithThreadName("wait start")
+//            flow.firstOrNull()
+            printWithThreadName("end")
         }
     }
 }

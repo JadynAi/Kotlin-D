@@ -13,29 +13,34 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.jadynai.kotlindiary.binder.BinderActivity"></activity>
         <activity
-            android:name="com.jadynai.kotlindiary.MainActivity"
-            android:launchMode="singleTop">
+            android:name=".svg.SVGActivity"
+            android:exported="true" 
+            />
+        <activity android:name=".binder.BinderActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.jadynai.kotlindiary.RecyclerViewActivity" />
+        <activity android:name=".RecyclerViewActivity" />
         <activity
-            android:name="com.jadynai.kotlindiary.show.ShowActivity"
+            android:name=".show.ShowActivity"
             android:process=":remote" />
         <activity
-            android:name="com.jadynai.kotlindiary.thread.ThreadActivity"
+            android:name=".thread.ThreadActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.jadynai.kotlindiary.data.DataCodeActivity" />
-        <activity android:name="com.jadynai.kotlindiary.view.ViewActivity"
-            android:hardwareAccelerated="false"
+        <activity android:name=".data.DataCodeActivity" />
+        <activity
+            android:name=".view.ViewActivity"
             />
-        <activity android:name="com.jadynai.kotlindiary.canvas.CanvasActivity" />
-        <activity android:name="com.jadynai.kotlindiary.designMode.DesignModeActivity" />
+        <activity android:name=".canvas.CanvasActivity" />
+        <activity android:name=".designMode.DesignModeActivity" />
         <activity android:name=".StickyHeaderActivity" />
         <activity android:name=".coroutine.CoroutineActivity" />
         <activity
@@ -47,14 +52,13 @@
         <activity android:name=".view.DIYBezierActivity" />
 
         <service
-            android:name="com.jadynai.kotlindiary.binder.MessengerService"
+            android:name=".binder.MessengerService"
             android:process=":remote" />
 
         <provider
             android:name=".websocket.TraceProvider"
             android:authorities="${applicationId}.contentprovider"
             android:exported="false" />
-
     </application>
 
 </manifest>
