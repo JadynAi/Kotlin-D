@@ -50,6 +50,7 @@
         <activity android:name=".thread.ThreadJavaActivity" />
         <activity android:name=".mvredux.ReduxKotlinActivity" />
         <activity android:name=".view.DIYBezierActivity" />
+        <activity android:name=".mvredux.mavericksRedux0.DogActivity" />
 
         <service
             android:name=".binder.MessengerService"

@@ -1,6 +1,7 @@
 package com.jadynai.kotlindiary
 
 import android.app.Application
+import com.airbnb.mvrx.Mavericks
 import com.jadyn.ai.kotlind.base.KD
 import com.jadynai.svg.sample.drawables.SVGLoader
 
@@ -13,5 +14,6 @@ class AppApplication : Application() {
         super.onCreate()
         KD.init(this)
         SVGLoader.load(this)
+        Mavericks.initialize(this)
     }
 }

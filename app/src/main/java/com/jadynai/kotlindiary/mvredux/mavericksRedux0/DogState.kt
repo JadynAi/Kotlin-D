@@ -9,6 +9,7 @@ import com.jadynai.kotlindiary.mvredux.mavericksRedux0.data.Dog
  *JadynAi since 2021/7/28
  */
 data class DogState(
+    val ss:Int,
     val dogs: Async<List<Dog>> = Uninitialized,
     val loveDogId: Long? = null,
     val adoptionRequest: Async<Dog> = Uninitialized
