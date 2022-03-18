@@ -14,14 +14,16 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".coroutine.FlowActivity"
+            android:exported="false" />
+        <activity
             android:name=".svg.SVGActivity"
-            android:exported="true" 
-            />
+            android:exported="true" />
         <activity android:name=".binder.BinderActivity" />
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,9 +38,7 @@
             android:name=".thread.ThreadActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".data.DataCodeActivity" />
-        <activity
-            android:name=".view.ViewActivity"
-            />
+        <activity android:name=".view.ViewActivity" />
         <activity android:name=".canvas.CanvasActivity" />
         <activity android:name=".designMode.DesignModeActivity" />
         <activity android:name=".StickyHeaderActivity" />

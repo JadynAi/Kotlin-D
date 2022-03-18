@@ -10,6 +10,7 @@ import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.event
 import com.jadynai.kotlindiary.coroutine.CoroutineActivity
+import com.jadynai.kotlindiary.coroutine.FlowActivity
 import com.jadynai.kotlindiary.data.DataCodeActivity
 import com.jadynai.kotlindiary.designMode.DesignModeActivity
 import com.jadynai.kotlindiary.mvredux.ReduxKotlinActivity
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         coroutine_tv.click {
-            start<CoroutineActivity>()
+            start<FlowActivity>()
         }
         data_code_tv.click {
             start<DataCodeActivity>()
