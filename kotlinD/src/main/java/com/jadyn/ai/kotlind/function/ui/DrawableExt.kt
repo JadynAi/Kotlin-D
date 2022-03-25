@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.*
+import android.graphics.drawable.shapes.RoundRectShape
 import android.util.Size
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
@@ -355,5 +356,28 @@ class ResourceCircleDrawable(r: Float, color: Int, @DrawableRes private val resI
                     canvas.drawBitmap(it, (intrinsicWidth - it.width) * 0.5f,
                             (intrinsicHeight - it.height) * 0.5f, null)
                 }
+    }
+}
+
+class StrokeGradientLRDrawable(colors: IntArray,
+                               radius: Float,
+                               strokeWidth: Float) : ShapeDrawable() {
+
+    init {
+        // 外部矩形弧度
+        val outerR = floatArrayOf(radius, radius, radius, radius, radius, radius, radius, radius)
+        // 内部矩形与外部矩形的距离
+        val inset = RectF(strokeWidth, strokeWidth, strokeWidth, strokeWidth)
+        // 内部矩形弧度
+        val innerRadius = radius - strokeWidth
+        val innerRadii = floatArrayOf(innerRadius, innerRadius, innerRadius, innerRadius, innerRadius, innerRadius, innerRadius, innerRadius)
+        val rr = RoundRectShape(outerR, inset, innerRadii)
+        shape = rr
+        shaderFactory = object : ShaderFactory() {
+            override fun resize(width: Int, height: Int): Shader {
+                return LinearGradient(0f, 0f, width.toFloat(),
+                    0f, colors, null, Shader.TileMode.CLAMP)
+            }
+        }
     }
 }

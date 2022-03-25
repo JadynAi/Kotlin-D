@@ -14,11 +14,12 @@
 
         <TextView
             android:id="@+id/text_one"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:background="@android:color/holo_blue_bright"
+            android:layout_width="300dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="One"
+            android:text="Stroke Gradient"
             />
 
         <com.jadynai.kotlindiary.view.ViewChild
@@ -26,6 +27,7 @@
             android:layout_height="100dp"
             android:background="@android:color/holo_blue_light"
             android:gravity="center"
+            android:visibility="gone"
             android:text="Two"
             />
 
