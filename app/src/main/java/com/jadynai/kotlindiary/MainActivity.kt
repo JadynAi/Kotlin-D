@@ -14,13 +14,25 @@ import com.jadynai.kotlindiary.coroutine.FlowActivity
 import com.jadynai.kotlindiary.data.DataCodeActivity
 import com.jadynai.kotlindiary.designMode.DesignModeActivity
 import com.jadynai.kotlindiary.mvredux.ReduxKotlinActivity
+import com.jadynai.kotlindiary.pdf.PdfActivity
+import com.jadynai.kotlindiary.pdf.PdfViewActivity
+import com.jadynai.kotlindiary.pdf.PdfWebActivity
 import com.jadynai.kotlindiary.show.ShowActivity
 import com.jadynai.kotlindiary.svg.SVGActivity
 import com.jadynai.kotlindiary.thread.ThreadActivity
 import com.jadynai.kotlindiary.thread.ThreadJavaActivity
 import com.jadynai.kotlindiary.view.DIYBezierActivity
 import com.jadynai.kotlindiary.view.ViewActivity
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.ObservableSource
+import io.reactivex.Single
+import io.reactivex.functions.Function
 import kotlinx.android.synthetic.main.activity_main.*
+import org.reactivestreams.Publisher
+import java.util.concurrent.FutureTask
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -66,6 +78,43 @@ class MainActivity : AppCompatActivity() {
         }
         svg_text_tv.click {
             start<SVGActivity>()
+        }
+        pdf_go.setOnClickListener { 
+            start<PdfViewActivity>()
+        }
+    }
+
+    private fun testRxJavaRetry() {
+        thread {
+            Log.d("cece", "onCreate start: ${System.currentTimeMillis()} ")
+            var s = 0
+            var b: Int? = null
+            try {
+                b = Observable.fromCallable {
+                    Log.d("cece", "callable: $s")
+                    s++
+                    if (s <= 2) {
+                        throw Exception("sdsds")
+                    }
+                    s
+                }.retryWhen(object : Function<Observable<Throwable>, ObservableSource<*>> {
+                    var ret = 0
+                    override fun apply(t: Observable<Throwable>): ObservableSource<*> {
+                        return t.flatMap { t ->
+                            ret++
+                            if (ret >= 4) {
+                                Observable.error(t)
+                            } else {
+                                Observable.timer(2, TimeUnit.SECONDS)
+                            }
+                        }
+                    }
+                }).delay(2, TimeUnit.SECONDS)
+                    .blockingLast()
+            } catch (e: Exception) {
+
+            }
+            Log.d("cece", "onCreate: s${b ?: "nan"}")
         }
     }
 

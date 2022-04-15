@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.jadynai.kotlindiary.databinding.ActivityFlowBinding
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -27,6 +28,7 @@ class FlowActivity : AppCompatActivity() {
                 Log.d("FlowActivity", "onCreate: $it old ${stateStore.replayCache}")
             }
         }
+        MutableStateFlow(1)
         var ss = 100
         binding.flowAdd.setOnClickListener {
             ss++
