@@ -2,6 +2,7 @@ package com.jadynai.kotlindiary.pdf
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.whenResumed
 import com.github.barteksc.pdfviewer.util.FitPolicy
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_pdf_view.*
