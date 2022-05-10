@@ -23,6 +23,9 @@ import com.jadynai.kotlindiary.thread.ThreadActivity
 import com.jadynai.kotlindiary.thread.ThreadJavaActivity
 import com.jadynai.kotlindiary.view.DIYBezierActivity
 import com.jadynai.kotlindiary.view.ViewActivity
+import de.robv.android.xposed.DexposedBridge
+import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedBridge
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource

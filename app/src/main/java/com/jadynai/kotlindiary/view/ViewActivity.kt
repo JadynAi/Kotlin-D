@@ -1,17 +1,13 @@
 package com.jadynai.kotlindiary.view
 
 import android.graphics.*
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RoundRectShape
 import android.os.*
 import android.util.Log
-import android.view.View
-import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.ui.StrokeGradientLRDrawable
 import com.jadynai.kotlindiary.R
-import com.jadynai.kotlindiary.databinding.ActivityPathTransitionBinding
 import kotlinx.android.synthetic.main.activity_view.*
+import kotlinx.android.synthetic.main.activity_view_restore_test.*
 
 /**
  *@version:
@@ -26,8 +22,22 @@ class ViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view)
-        testRoundRectDrawable()
+        setContentView(R.layout.activity_view_restore_test)
+        val fragment = GroupFragment()
+        val beginTransaction = supportFragmentManager.beginTransaction()
+        beginTransaction.add(R.id.view_root_layout, fragment)
+        beginTransaction.commit()
+
+        test_fragment.setOnClickListener {
+            fragment.childFragmentManager.apply {
+                fragments.forEach {
+                    beginTransaction().detach(it).commit()
+                    beginTransaction().attach(it).commit()
+                }
+            }
+        }
+
+//        testRoundRectDrawable()
 //        ActivityPathTransitionBinding.inflate(layoutInflater)
 //        findViewById<View>(R.id.touch_region).setOnClickListener {
 //            Log.w("ViewActivity", "onCreate: click ooooo")
