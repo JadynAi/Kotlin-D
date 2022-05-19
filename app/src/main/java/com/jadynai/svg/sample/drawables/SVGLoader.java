@@ -1,8 +1,6 @@
 package com.jadynai.svg.sample.drawables;
 
 
-import com.jadynai.kotlindiary.R;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.LongSparseArray;
@@ -37,8 +35,11 @@ public class SVGLoader  {
         if (sPreloadedDrawables == null) {
             return;
         }
-        add(context, R.drawable.ic_ico_settings_selected, SVGDrawable.SVGDrawableConstantState.create(new ic_ico_settings_selected(context)));
-        add(context, R.drawable.ic_arrow, SVGDrawable.SVGDrawableConstantState.create(new ic_arrow(context)));
+//        add(context, R.drawable.dashboard_btn_bg_end, SVGDrawable.SVGDrawableConstantState.create(new dashboard_btn_bg_end(context)));
+//        add(context, R.drawable.ic_ico_settings_selected, SVGDrawable.SVGDrawableConstantState.create(new ic_ico_settings_selected(context)));
+//        add(context, R.drawable.ic_arrow, SVGDrawable.SVGDrawableConstantState.create(new ic_arrow(context)));
+//        add(context, R.drawable.dashboard_btn_bg_end1, SVGDrawable.SVGDrawableConstantState.create(new dashboard_btn_bg_end1(context)));
+//        add(context, R.drawable.dashboard_btn_bg_start, SVGDrawable.SVGDrawableConstantState.create(new dashboard_btn_bg_start(context)));
     }
 
     private static void add(Context context, int resId, SVGDrawable.SVGDrawableConstantState state) {
