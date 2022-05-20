@@ -8,41 +8,40 @@ import kotlin.system.measureTimeMillis
 /**
  *Jairett since 2022/5/19
  */
-class DashboardEndDrawable : ShapeDrawable() {
+class DashboardStartDrawable : ShapeDrawable() {
     private val matrix by lazy { Matrix() }
     private val path by lazy { android.graphics.Path() }
 
     private val firstLevelPathGradientColors by lazy {
-        intArrayOf(
-            Color.parseColor("#FF96A3BD"),
-            Color.parseColor("#FF96A3BD"),
-            Color.parseColor("#FFE9B7CF"),
-            Color.parseColor("#FFE9B7CF"),
-            Color.parseColor("#FFDDE3EF"),
-            Color.parseColor("#FFD3D9E6"),
+        intArrayOf(Color.parseColor("#FFBDBECE"),
+            Color.parseColor("#FFD5CFDC"),
+            Color.parseColor("#FFC9CDDA"),
+            Color.parseColor("#FFB7C3D3"),
+            Color.parseColor("#FF94A0B9"),
+            Color.parseColor("#FF96A3BD")
         )
     }
     private val secondLevelPathGradientColors by lazy {
         intArrayOf(
-            Color.parseColor("#FFCDCAD8"),
-            Color.parseColor("#00CDCAD8"),
+            Color.parseColor("#00000000"),
+            Color.parseColor("#00000000"),
         )
     }
     private val thirdLevelPathGradientColors by lazy {
         intArrayOf(
-            Color.parseColor("#FFB5BFD2"),
-            Color.parseColor("#00D4D4DF"),
+            Color.parseColor("#00000000"),
+            Color.parseColor("#00000000"),
         )
     }
 
     private val firstLevelGradientPositions by lazy {
-        floatArrayOf(0f, 0.0001f, 0.350484f, 0.351f, 0.732712f, 0.887799f)
+        floatArrayOf(0f, 0.140925f, 0.230471f, 0.537202f, 0.794276f, 0.991628f)
     }
     private val secondLevelGradientPositions by lazy {
-        floatArrayOf(0.187587f, 0.642293f)
+        floatArrayOf(1f, 1f)
     }
     private val thirdLevelGradientPositions by lazy {
-        floatArrayOf(0.468125f, 0.642293f)
+        floatArrayOf(1f, 1f)
     }
 
     override fun draw(canvas: Canvas) {
@@ -54,17 +53,17 @@ class DashboardEndDrawable : ShapeDrawable() {
             if (width == 0 || height == 0) {
                 return
             }
-            val scaleX: Float = width / 105.0f
+            val scaleX: Float = width / 131.0f
             val scaleY: Float = height / 151.0f
             matrix.setValues(floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f))
             matrix.postScale(scaleX, scaleY)
             path.moveTo(0.0f, 0.0f)
             path.lineTo(0.0f, 151.0f)
-            path.lineTo(105.0f, 151.0f)
-            path.lineTo(105.0f, 0.0f)
+            path.lineTo(131.0f, 151.0f)
+            path.lineTo(131.0f, 0.0f)
             path.transform(matrix)
             path.close()
-            paint.shader = LinearGradient(-121.333f, 214.064f, 35.0434f, 236.31f,
+            paint.shader = LinearGradient(2.32258f, 2.41128f, 152.6f, 123.126f,
                 firstLevelPathGradientColors, firstLevelGradientPositions, Shader.TileMode.CLAMP)
                 .apply { setLocalMatrix(matrix) }
             canvas.drawPath(path, paint)

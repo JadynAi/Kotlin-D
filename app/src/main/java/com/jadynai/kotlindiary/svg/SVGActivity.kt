@@ -35,8 +35,8 @@ class SVGActivity : AppCompatActivity() {
                         0.537202f, 0.794276f, 0.991628f), Shader.TileMode.CLAMP)
             }
         }
-        val testSvgDrawable = DashboardEndDrawable()
-        testSvgDrawable.intrinsicWidth = 105f.dp
+        val testSvgDrawable = DashboardStartDrawable()
+        testSvgDrawable.intrinsicWidth = 131f.dp
         testSvgDrawable.intrinsicHeight = 151f.dp
 //        testSvgDrawable.setBounds(0, 0, 131f.dp, 151f.dp)
 

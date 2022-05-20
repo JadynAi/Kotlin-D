@@ -12,7 +12,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/dashboard_btn_bg_end" />
+        android:src="@drawable/dashboard_btn_bg_start" />
 
     <ImageView
         android:layout_marginTop="50dp"
