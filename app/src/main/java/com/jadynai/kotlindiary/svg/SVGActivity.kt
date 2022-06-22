@@ -6,9 +6,12 @@ import android.graphics.Shader
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.os.Bundle
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.utils.dp
 import com.jadynai.kotlindiary.databinding.ActivitySvgactivityBinding
+import java.util.concurrent.Executors
+import java.util.concurrent.ThreadPoolExecutor
 
 class SVGActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,9 +38,7 @@ class SVGActivity : AppCompatActivity() {
                         0.537202f, 0.794276f, 0.991628f), Shader.TileMode.CLAMP)
             }
         }
-        val testSvgDrawable = DashboardStartDrawable()
-        testSvgDrawable.intrinsicWidth = 131f.dp
-        testSvgDrawable.intrinsicHeight = 151f.dp
+//        val testSvgDrawable = DashboardStartDrawable()
 //        testSvgDrawable.setBounds(0, 0, 131f.dp, 151f.dp)
 
 //        val gradientDrawable = GradientDrawable()
@@ -47,6 +48,19 @@ class SVGActivity : AppCompatActivity() {
 //        gradientDrawable.setSize(131f.dp, 151f.dp)
 //        gradientDrawable.setBounds(0, 0, 131f.dp, 151f.dp)
 //        gradientDrawable.orientation = GradientDrawable.Orientation.TL_BR
-        binding.svgDrawable.setImageDrawable(testSvgDrawable)
+//        testSvgDrawable.progress = 1f
+//        binding.svgDrawable.setImageDrawable(testSvgDrawable)
+        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+//                testSvgDrawable.progress = progress / 100f
+                binding.svgDrawable.db.progress = progress / 100f
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
     }
 }

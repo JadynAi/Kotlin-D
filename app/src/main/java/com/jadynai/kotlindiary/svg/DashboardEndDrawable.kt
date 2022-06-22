@@ -39,10 +39,15 @@ class DashboardEndDrawable : ShapeDrawable() {
         floatArrayOf(0f, 0.0001f, 0.350484f, 0.351f, 0.732712f, 0.887799f)
     }
     private val secondLevelGradientPositions by lazy {
-        floatArrayOf(0.187587f, 0.642293f)
+        floatArrayOf(
+            0.187587f, 
+            0.642293f)
     }
     private val thirdLevelGradientPositions by lazy {
-        floatArrayOf(0.468125f, 0.642293f)
+        floatArrayOf(
+            0.468125f,
+            0.642293f
+        )
     }
 
     override fun draw(canvas: Canvas) {

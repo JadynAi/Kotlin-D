@@ -2,6 +2,7 @@ package com.jadynai.kotlindiary.svg
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.os.Trace
 import android.util.AttributeSet
 import android.util.Log
@@ -42,5 +43,29 @@ class TestPngView @JvmOverloads constructor(
         }
         Log.d("TestPngView", "onDraw: cost $t")
         Trace.endSection()
+    }
+}
+
+class DashboardView @JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr){
+
+    val db by lazy { DashboardStartDrawable().apply { 
+        callback = object :Drawable.Callback{
+            override fun invalidateDrawable(who: Drawable) {
+                invalidate()
+            }
+
+            override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
+            }
+
+            override fun unscheduleDrawable(who: Drawable, what: Runnable) {
+            }
+        }
+    } }
+    
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        db.draw(canvas)
     }
 }

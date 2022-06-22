@@ -9,31 +9,22 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.event
-import com.jadynai.kotlindiary.coroutine.CoroutineActivity
 import com.jadynai.kotlindiary.coroutine.FlowActivity
 import com.jadynai.kotlindiary.data.DataCodeActivity
 import com.jadynai.kotlindiary.designMode.DesignModeActivity
 import com.jadynai.kotlindiary.mvredux.ReduxKotlinActivity
-import com.jadynai.kotlindiary.pdf.PdfActivity
 import com.jadynai.kotlindiary.pdf.PdfViewActivity
-import com.jadynai.kotlindiary.pdf.PdfWebActivity
 import com.jadynai.kotlindiary.show.ShowActivity
 import com.jadynai.kotlindiary.svg.SVGActivity
 import com.jadynai.kotlindiary.thread.ThreadActivity
 import com.jadynai.kotlindiary.thread.ThreadJavaActivity
+import com.jadynai.kotlindiary.video.VideoPlayerCompatActivity
 import com.jadynai.kotlindiary.view.DIYBezierActivity
 import com.jadynai.kotlindiary.view.ViewActivity
-import de.robv.android.xposed.DexposedBridge
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
-import io.reactivex.Single
 import io.reactivex.functions.Function
 import kotlinx.android.synthetic.main.activity_main.*
-import org.reactivestreams.Publisher
-import java.util.concurrent.FutureTask
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
@@ -44,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         recycler_tv.event(click = { startActivity(Intent(this, StickyHeaderActivity::class.java)) })
 
+        
         show_tv.click {
             start<ShowActivity>()
         }
@@ -82,8 +74,11 @@ class MainActivity : AppCompatActivity() {
         svg_text_tv.click {
             start<SVGActivity>()
         }
-        pdf_go.setOnClickListener { 
+        pdf_go.setOnClickListener {
             start<PdfViewActivity>()
+        }
+        video_go.setOnClickListener {
+            start<VideoPlayerCompatActivity>()
         }
     }
 

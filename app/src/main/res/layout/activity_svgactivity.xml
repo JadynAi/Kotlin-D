@@ -9,17 +9,40 @@
     android:orientation="vertical"
     tools:context=".svg.SVGActivity">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/dashboard_btn_bg_start" />
 
-    <ImageView
-        android:layout_marginTop="50dp"
-        android:id="@+id/svg_drawable"
-        android:src="@drawable/dashboard_btn_bg_end1"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dashboard_btn_bg_start" />
+
+
+        <com.jadynai.kotlindiary.svg.DashboardView
+            android:id="@+id/svg_drawable"
+            android:layout_width="131dp"
+            android:layout_height="151dp"
+            android:layout_marginHorizontal="20dp"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dashboard_btn_bg_end" />
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:minHeight="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="40dp"
+        android:max="100" />
 
 
 </LinearLayout>

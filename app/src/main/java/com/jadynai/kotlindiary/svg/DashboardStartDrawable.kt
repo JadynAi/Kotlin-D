@@ -3,6 +3,7 @@ package com.jadynai.kotlindiary.svg
 import android.graphics.*
 import android.graphics.drawable.ShapeDrawable
 import android.util.Log
+import com.jadyn.ai.kotlind.utils.dp
 import kotlin.system.measureTimeMillis
 
 /**
@@ -12,37 +13,57 @@ class DashboardStartDrawable : ShapeDrawable() {
     private val matrix by lazy { Matrix() }
     private val path by lazy { android.graphics.Path() }
 
-    private val firstLevelPathGradientColors by lazy {
-        intArrayOf(Color.parseColor("#FFBDBECE"),
-            Color.parseColor("#FFD5CFDC"),
-            Color.parseColor("#FFC9CDDA"),
-            Color.parseColor("#FFB7C3D3"),
-            Color.parseColor("#FF94A0B9"),
-            Color.parseColor("#FF96A3BD")
+    private val firstLevelPathGradientColors: IntArray
+        get() = intArrayOf(
+            getCurrentColor(progress, Color.parseColor("#FFBDBECE"), Color.parseColor("#FF96A3BD")),
+            getCurrentColor(progress, Color.parseColor("#FFD5CFDC"), Color.parseColor("#FF96A3BD")),
+            getCurrentColor(progress, Color.parseColor("#FFC9CDDA"), Color.parseColor("#FFE9B7CF")),
+            getCurrentColor(progress, Color.parseColor("#FFB7C3D3"), Color.parseColor("#FFE9B7CF")),
+            getCurrentColor(progress, Color.parseColor("#FF94A0B9"), Color.parseColor("#FFDDE3EF")),
+            getCurrentColor(progress, Color.parseColor("#FF96A3BD"), Color.parseColor("#FFD3D9E6"))
         )
-    }
-    private val secondLevelPathGradientColors by lazy {
-        intArrayOf(
-            Color.parseColor("#00000000"),
-            Color.parseColor("#00000000"),
+    private val secondLevelPathGradientColors: IntArray
+        get() = intArrayOf(
+            getCurrentColor(progress, Color.parseColor("#00000000"), Color.parseColor("#FFCDCAD8")),
+            getCurrentColor(progress, Color.parseColor("#00000000"), Color.parseColor("#00CDCAD8"))
         )
-    }
-    private val thirdLevelPathGradientColors by lazy {
-        intArrayOf(
-            Color.parseColor("#00000000"),
-            Color.parseColor("#00000000"),
+    private val thirdLevelPathGradientColors: IntArray
+        get() = intArrayOf(
+            getCurrentColor(progress, Color.parseColor("#00000000"), Color.parseColor("#FFB5BFD2")),
+            getCurrentColor(progress, Color.parseColor("#00000000"), Color.parseColor("#00D4D4DF"))
         )
+
+    private val firstLevelGradientPositions: FloatArray
+        get() = floatArrayOf(0f,
+            getCurrentNum(progress, 0.140925f, 0.0001f),
+            getCurrentNum(progress, 0.230471f, 0.350484f),
+            getCurrentNum(progress, 0.537202f, 0.351f),
+            getCurrentNum(progress, 0.794276f, 0.732712f),
+            getCurrentNum(progress, 0.991628f, 0.887799f)
+        )
+    private val secondLevelGradientPositions: FloatArray
+        get() = floatArrayOf(
+            getCurrentNum(progress, 1f, 0.187587f),
+            getCurrentNum(progress, 1f, 0.642293f)
+        )
+    private val thirdLevelGradientPositions: FloatArray
+        get() = floatArrayOf(
+            getCurrentNum(progress, 1f, 0.468125f),
+            getCurrentNum(progress, 1f, 0.642293f)
+        )
+
+    init {
+        intrinsicWidth = getCurrentNum(0f, 131f.dp.toFloat(), 105f.dp.toFloat()).toInt()
+        intrinsicHeight = 151f.dp
     }
 
-    private val firstLevelGradientPositions by lazy {
-        floatArrayOf(0f, 0.140925f, 0.230471f, 0.537202f, 0.794276f, 0.991628f)
-    }
-    private val secondLevelGradientPositions by lazy {
-        floatArrayOf(1f, 1f)
-    }
-    private val thirdLevelGradientPositions by lazy {
-        floatArrayOf(1f, 1f)
-    }
+    var progress: Float = 0f
+        set(value) {
+            val v = value.coerceAtMost(1f).coerceAtLeast(0f)
+            Log.d("DashboardStartDrawable", " progress v: $v")
+            field = v
+            intrinsicWidth = getCurrentNum(v, 131f.dp.toFloat(), 105f.dp.toFloat()).toInt()
+        }
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
@@ -53,17 +74,24 @@ class DashboardStartDrawable : ShapeDrawable() {
             if (width == 0 || height == 0) {
                 return
             }
-            val scaleX: Float = width / 131.0f
+            val fl = getCurrentNum(progress, 131f, 105f)
+            val scaleX: Float = width / fl
             val scaleY: Float = height / 151.0f
+            matrix.reset()
             matrix.setValues(floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f))
-            matrix.postScale(scaleX, scaleY)
+            matrix.setScale(scaleX, scaleY,0f,0f)
             path.moveTo(0.0f, 0.0f)
             path.lineTo(0.0f, 151.0f)
-            path.lineTo(131.0f, 151.0f)
-            path.lineTo(131.0f, 0.0f)
+            path.lineTo(fl, 151.0f)
+            path.lineTo(fl, 0.0f)
             path.transform(matrix)
             path.close()
-            paint.shader = LinearGradient(2.32258f, 2.41128f, 152.6f, 123.126f,
+            paint.alpha = 255
+            paint.shader = LinearGradient(
+                getCurrentNum(progress, 2.32258f, -121.333f),
+                getCurrentNum(progress, 2.41128f, 214.064f),
+                getCurrentNum(progress, 152.6f, 35.0434f),
+                getCurrentNum(progress, 123.126f, 236.31f),
                 firstLevelPathGradientColors, firstLevelGradientPositions, Shader.TileMode.CLAMP)
                 .apply { setLocalMatrix(matrix) }
             canvas.drawPath(path, paint)
@@ -114,11 +142,31 @@ class DashboardStartDrawable : ShapeDrawable() {
         Log.d("TimeTest", "cost: $cost")
     }
 
-    protected fun applyAlpha(color: Int, alpha: Float): Int {
-        var c = color
-        val alphaBytes = Color.alpha(c)
-        c = c and 0x00FFFFFF
-        c = c or ((alphaBytes * alpha).toInt() shl 24)
-        return c
+    private fun getCurrentNum(fraction: Float, start: Float, end: Float): Float {
+        return start + (end - start) * fraction
+    }
+
+    private fun getCurrentColor(fraction: Float, startColor: Int, endColor: Int): Int {
+        val redCurrent: Int
+        val blueCurrent: Int
+        val greenCurrent: Int
+        val alphaCurrent: Int
+        val redStart = Color.red(startColor)
+        val blueStart = Color.blue(startColor)
+        val greenStart = Color.green(startColor)
+        val alphaStart = Color.alpha(startColor)
+        val redEnd = Color.red(endColor)
+        val blueEnd = Color.blue(endColor)
+        val greenEnd = Color.green(endColor)
+        val alphaEnd = Color.alpha(endColor)
+        val redDifference = redEnd - redStart
+        val blueDifference = blueEnd - blueStart
+        val greenDifference = greenEnd - greenStart
+        val alphaDifference = alphaEnd - alphaStart
+        redCurrent = (redStart + fraction * redDifference).toInt()
+        blueCurrent = (blueStart + fraction * blueDifference).toInt()
+        greenCurrent = (greenStart + fraction * greenDifference).toInt()
+        alphaCurrent = (alphaStart + fraction * alphaDifference).toInt()
+        return Color.argb(alphaCurrent, redCurrent, greenCurrent, blueCurrent)
     }
 }

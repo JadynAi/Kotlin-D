@@ -131,6 +131,18 @@
             android:text="PDF Reader"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
+        
+        <TextView
+            android:id="@+id/video_go"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/holo_blue_dark"
+            android:gravity="center"
+            android:text="Video Player"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+        
 
     </LinearLayout>
 </ScrollView>
