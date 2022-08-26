@@ -40,20 +40,25 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         testAsynException()
     }
 
+    private val scope1 = CoroutineScope(Dispatchers.IO )
+    private val scope2 = CoroutineScope(Dispatchers.IO )
+
     private val hashMap = HashMap<Int, String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coroutine)
-        var job = getNewJob()
+//        var job = getNewJob()
+        scope1.launch { testTwoScope() }
         textView2.click {
-            if (job.isCompleted) {
-                job = getNewJob()
-                Log.d("cecece", "onCreate: reset job")
-            } else {
-                Log.d("cecece", "onCreate: cancel")
-                job.cancel("haha", NullPointerException("cancel"))
-            }
+            scope1.cancel()
+//            if (job.isCompleted) {
+//                job = getNewJob()
+//                Log.d("cecece", "onCreate: reset job")
+//            } else {
+//                Log.d("cecece", "onCreate: cancel")
+//                job.cancel("haha", NullPointerException("cancel"))
+//            }
 //            Log.d("cece", "onCreate: click 2")
 ////            lifecycleScope.launch {
 //            // 2021/5/19-16:30 协程的semaphore不会阻塞主线程
@@ -78,6 +83,7 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
             Log.d("CoroutineActivity", "onCreate: ${defer.isActive} ${defer.isCompleted} ${defer.isCancelled}")
         }
         textView5.click {
+            scope2.cancel()
 //            Log.d("cece", "onCreate: click 5")
 //            if (hashMap.containsKey(1000)) {
 //                hashMap.remove(1000)
@@ -85,9 +91,32 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
 //                hashMap[1000] = "test1000"
 //            }
 //            lifecycleScope.coroutineContext.cancel()
-            lifecycleScope.launch {
-                val await = defer.await()
-                Log.d("CoroutineActivity", "onCreate: ${await} hascode ${await.hashCode()}")
+//            lifecycleScope.launch {
+//                val await = defer.await()
+//                Log.d("CoroutineActivity", "onCreate: ${await} hascode ${await.hashCode()}")
+//            }
+        }
+    }
+
+    private suspend fun testTwoScope() {
+        supervisorScope {
+            // 2022/8/26-10:33 测试新scope是否会响应两个scope任意一个的cancel
+            val newScope = this + scope2.coroutineContext
+            val dd = arrayListOf<Deferred<Int>>()
+            for (i in 0..100) {
+                val deferred = newScope.async(start = CoroutineStart.LAZY) {
+                    Log.d("cecece", "testTwoScope async start $i")
+                    delay(10000)
+                    Log.d("cecece", "testTwoScope async end $i")
+                    i
+                }
+                dd.add(deferred)
+            }
+            try {
+                dd.awaitAll()
+                Log.d("cecece", "testTwoScope: finish")
+            } catch (e: Exception) {
+                Log.d("cecece", "testTwoScope: $e")
             }
         }
     }
