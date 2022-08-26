@@ -52,7 +52,7 @@ androidExtensions {
 //}
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation("androidx.datastore:datastore-preferences-rxjava2:1.0.0")

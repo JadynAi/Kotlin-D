@@ -14,13 +14,16 @@ import com.jadynai.kotlindiary.R
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.NonCancellable.invokeOnCompletion
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.sync.Semaphore
 import java.nio.file.Path
+import java.time.LocalDate
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 /**
  *JadynAi since 2020/10/9
@@ -32,15 +35,6 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
 
     private val semaphore by lazy { Semaphore(1) }
 
-    private val asyncTest by lazy {
-        async(start = CoroutineStart.LAZY) {
-            semaphore.acquire()
-            delay(10000)
-            semaphore.release()
-            "wait end"
-        }
-    }
-
     private val defer: Deferred<PointF> = async(start = CoroutineStart.LAZY) {
         delay(3000)
         testAsynException()
@@ -51,13 +45,15 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coroutine)
-        val s = java.util.concurrent.Semaphore(1)
-        Thread {
-            s.acquire()
-            Thread.sleep(10000)
-            s.release()
-        }.start()
+        var job = getNewJob()
         textView2.click {
+            if (job.isCompleted) {
+                job = getNewJob()
+                Log.d("cecece", "onCreate: reset job")
+            } else {
+                Log.d("cecece", "onCreate: cancel")
+                job.cancel("haha", NullPointerException("cancel"))
+            }
 //            Log.d("cece", "onCreate: click 2")
 ////            lifecycleScope.launch {
 //            // 2021/5/19-16:30 协程的semaphore不会阻塞主线程
@@ -69,16 +65,16 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
 //            s.acquire()
 //            s.release()
 //            Log.d("cece", "onCreate: click 2 end")
-            launch {
-                val i = withContext(Dispatchers.IO) {
-                    repeat(3) {
-                        if (it == 1) {
-                            return@withContext it
-                        }
-                        Log.d("cecece", "onCreate: repeat $it")
-                    }
-                }
-            }
+//            launch {
+//                val i = withContext(Dispatchers.IO) {
+//                    repeat(3) {
+//                        if (it == 1) {
+//                            return@withContext it
+//                        }
+//                        Log.d("cecece", "onCreate: repeat $it")
+//                    }
+//                }
+//            }
             Log.d("CoroutineActivity", "onCreate: ${defer.isActive} ${defer.isCompleted} ${defer.isCancelled}")
         }
         textView5.click {
@@ -96,11 +92,44 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         }
     }
 
+    private fun getNewJob() = lifecycleScope.launch(CoroutineExceptionHandler { coroutineContext, throwable ->
+        Log.d("cecece", "CoroutineExceptionHandler: $throwable")
+    }) {
+//        try {
+        testAsyncCancel()
+        while (true) {
+            delay(3000)
+            testAsyncCancel()
+        }
+//        } catch (e: Exception) {
+//            Log.d("cecece", "getNewJob run catch: $e")
+//        }
+    }
+
+    private suspend fun testAsyncCancel() {
+        coroutineScope haha@{
+            val task = this@haha.async(start = CoroutineStart.LAZY) { testAsynException() }
+            task.invokeOnCompletion() {
+                Log.d("cecece", "invokeOnCompletion: $it")
+            }
+//            try {
+            task.await()
+//            } catch (e: Exception) {
+//                Log.d("cecece", "testAsyncCancel catch exception $e")
+//            }
+            // 2022/8/11-16:12 如果上面没有try catch,则这一行end的代码不会允许，一旦try catch
+            // 或者try finally 则end的代码就会执行
+            Log.d("cecece", "testAsyncCancel task await end")
+        }
+    }
+
     private suspend fun testAsynException() = suspendCancellableCoroutine<PointF> {
-        it.invokeOnCancellation { }
+        it.invokeOnCancellation {
+            Log.d("cecece", "testAsynException: ")
+        }
         Schedulers.io().scheduleDirect {
             Thread.sleep(3000)
-            it.resume(PointF(1f, 1f))
+            it.resumeWithException(Exception("haha"))
         }
     }
 

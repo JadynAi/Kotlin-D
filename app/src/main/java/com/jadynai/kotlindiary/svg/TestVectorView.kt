@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import com.jadynai.kotlindiary.R
-import kotlinx.coroutines.withContext
 import kotlin.system.measureTimeMillis
 
 /**
@@ -50,7 +49,7 @@ class DashboardView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr){
 
-    val db by lazy { DashboardStartDrawable().apply { 
+    val db by lazy { DashboardBgDrawable().apply { 
         callback = object :Drawable.Callback{
             override fun invalidateDrawable(who: Drawable) {
                 invalidate()

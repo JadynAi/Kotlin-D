@@ -9,7 +9,7 @@ import kotlin.system.measureTimeMillis
 /**
  *Jairett since 2022/5/19
  */
-class DashboardStartDrawable : ShapeDrawable() {
+class DashboardBgDrawable : ShapeDrawable() {
     private val matrix by lazy { Matrix() }
     private val path by lazy { android.graphics.Path() }
 

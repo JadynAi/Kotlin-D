@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jadyn.ai.kotlind.function.start
 import com.jadyn.ai.kotlind.function.ui.click
 import com.jadyn.ai.kotlind.function.ui.event
+import com.jadynai.kotlindiary.coroutine.CoroutineActivity
 import com.jadynai.kotlindiary.coroutine.FlowActivity
 import com.jadynai.kotlindiary.data.DataCodeActivity
 import com.jadynai.kotlindiary.designMode.DesignModeActivity
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         coroutine_tv.click {
-            start<FlowActivity>()
+            start<CoroutineActivity>()
         }
         data_code_tv.click {
             start<DataCodeActivity>()
