@@ -63,6 +63,7 @@
         <activity android:name=".view.DIYBezierActivity" />
         <activity android:name=".mvredux.mavericksRedux0.DogActivity" />
         <activity android:name=".video.VideoPlayerCompatActivity" />
+        <activity android:name=".websocket.WebActivity"/>
 
         <service
             android:name=".binder.MessengerService"

@@ -9,7 +9,13 @@
     <FrameLayout
         android:id="@+id/view_root_layout"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent" />
+    
+    <com.jadynai.kotlindiary.view.RippleView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        />
 
     <TextView
         android:id="@+id/test_fragment"

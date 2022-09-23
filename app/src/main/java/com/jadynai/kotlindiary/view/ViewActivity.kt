@@ -4,6 +4,9 @@ import android.graphics.*
 import android.os.*
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.dynamicanimation.animation.FloatValueHolder
+import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.dynamicanimation.animation.SpringForce
 import com.jadyn.ai.kotlind.function.ui.StrokeGradientLRDrawable
 import com.jadynai.kotlindiary.R
 import kotlinx.android.synthetic.main.activity_view.*
@@ -37,6 +40,15 @@ class ViewActivity : AppCompatActivity() {
             }
         }
 
+        val sa = SpringAnimation(FloatValueHolder(1f))
+//        sa.setStartValue(0f)
+        sa.setSpring(SpringForce(1f))
+        sa.setStartValue(0f)
+        sa.spring.setDampingRatio(0.25f).stiffness = SpringForce.STIFFNESS_LOW
+        sa.addUpdateListener { animation, value, velocity ->
+            Log.d("cecece", "onCreate: $value")
+        }
+        sa.start()
 //        testRoundRectDrawable()
 //        ActivityPathTransitionBinding.inflate(layoutInflater)
 //        findViewById<View>(R.id.touch_region).setOnClickListener {
