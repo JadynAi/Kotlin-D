@@ -3,7 +3,11 @@ package com.jadynai.kotlindiary.view
 import android.graphics.*
 import android.os.*
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.updateLayoutParams
 import androidx.dynamicanimation.animation.FloatValueHolder
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
@@ -25,30 +29,31 @@ class ViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_restore_test)
-        val fragment = GroupFragment()
-        val beginTransaction = supportFragmentManager.beginTransaction()
-        beginTransaction.add(R.id.view_root_layout, fragment)
-        beginTransaction.commit()
+        setContentView(R.layout.activity_view)
+        testAutoSizeTextView()
+//        val fragment = GroupFragment()
+//        val beginTransaction = supportFragmentManager.beginTransaction()
+//        beginTransaction.add(R.id.view_root_layout, fragment)
+//        beginTransaction.commit()
 
-        test_fragment.setOnClickListener {
-            fragment.childFragmentManager.apply {
-                fragments.forEach {
-                    beginTransaction().detach(it).commit()
-                    beginTransaction().attach(it).commit()
-                }
-            }
-        }
-
-        val sa = SpringAnimation(FloatValueHolder(1f))
+//        test_fragment.setOnClickListener {
+//            fragment.childFragmentManager.apply {
+//                fragments.forEach {
+//                    beginTransaction().detach(it).commit()
+//                    beginTransaction().attach(it).commit()
+//                }
+//            }
+//        }
+//
+//        val sa = SpringAnimation(FloatValueHolder(1f))
+////        sa.setStartValue(0f)
+//        sa.setSpring(SpringForce(1f))
 //        sa.setStartValue(0f)
-        sa.setSpring(SpringForce(1f))
-        sa.setStartValue(0f)
-        sa.spring.setDampingRatio(0.25f).stiffness = SpringForce.STIFFNESS_LOW
-        sa.addUpdateListener { animation, value, velocity ->
-            Log.d("cecece", "onCreate: $value")
-        }
-        sa.start()
+//        sa.spring.setDampingRatio(0.25f).stiffness = SpringForce.STIFFNESS_LOW
+//        sa.addUpdateListener { animation, value, velocity ->
+//            Log.d("cecece", "onCreate: $value")
+//        }
+//        sa.start()
 //        testRoundRectDrawable()
 //        ActivityPathTransitionBinding.inflate(layoutInflater)
 //        findViewById<View>(R.id.touch_region).setOnClickListener {
@@ -107,6 +112,16 @@ class ViewActivity : AppCompatActivity() {
 //        text_res_drawable_tv.setCompoundDrawablesWithIntrinsicBounds(null,
 //                ResourceCircleDrawable(30f, Color.YELLOW, R.drawable.adasd), null, null)
 //        text_res_drawable_tv.roundHeight(Color.RED)
+    }
+
+    private fun testAutoSizeTextView() {
+        val textView = findViewById<TextView>(R.id.text_one)
+        findViewById<View>(R.id.zoom).setOnClickListener {
+            textView.updateLayoutParams<ViewGroup.LayoutParams> {
+                width = (width * 1.2f).toInt()
+                height = (height * 1.2f).toInt()
+            }
+        }
     }
 
     private fun testRoundRectDrawable() {

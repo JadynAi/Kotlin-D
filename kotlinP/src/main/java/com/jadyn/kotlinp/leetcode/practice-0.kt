@@ -5,7 +5,7 @@ package com.jadyn.kotlinp.leetcode
  */
 fun main() {
     val p = isPalindrome(".P")
-    print("result $p")
+    print("result ${5%2}")
 }
 
 /**
