@@ -16,7 +16,14 @@ import kotlinx.android.synthetic.main.activity_coroutine.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.NonCancellable.invokeOnCompletion
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.sync.Semaphore
 import java.nio.file.Path
 import java.time.LocalDate
@@ -40,61 +47,35 @@ class CoroutineActivity : AppCompatActivity(), CoroutineScope by TestScope() {
         testAsynException()
     }
 
-    private val scope1 = CoroutineScope(Dispatchers.IO )
-    private val scope2 = CoroutineScope(Dispatchers.IO )
+    private val scope1 = CoroutineScope(Dispatchers.IO)
+    private val scope2 = CoroutineScope(Dispatchers.IO)
 
     private val hashMap = HashMap<Int, String>()
+
+    private val flow2 = MutableStateFlow(true)
+    private val flow3 = MutableSharedFlow<Boolean>()
+    private val flow1 = flow<Boolean> {
+        var n = 0
+        while (true) {
+            delay(1000)
+            n++
+            if (n <= 3) {
+                emit(true)
+            } else {
+                emit(false)
+            }
+        }
+    }.flowOn(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coroutine)
-//        var job = getNewJob()
-        scope1.launch { testTwoScope() }
-        textView2.click {
-            scope1.cancel()
-//            if (job.isCompleted) {
-//                job = getNewJob()
-//                Log.d("cecece", "onCreate: reset job")
-//            } else {
-//                Log.d("cecece", "onCreate: cancel")
-//                job.cancel("haha", NullPointerException("cancel"))
-//            }
-//            Log.d("cece", "onCreate: click 2")
-////            lifecycleScope.launch {
-//            // 2021/5/19-16:30 协程的semaphore不会阻塞主线程
-//            coroutine_progress.setVisible(true)
-////                semaphore.acquire()
-////                semaphore.release()
-//            coroutine_progress.setVisible(false)
-////            }
-//            s.acquire()
-//            s.release()
-//            Log.d("cece", "onCreate: click 2 end")
-//            launch {
-//                val i = withContext(Dispatchers.IO) {
-//                    repeat(3) {
-//                        if (it == 1) {
-//                            return@withContext it
-//                        }
-//                        Log.d("cecece", "onCreate: repeat $it")
-//                    }
-//                }
-//            }
-            Log.d("CoroutineActivity", "onCreate: ${defer.isActive} ${defer.isCompleted} ${defer.isCancelled}")
-        }
-        textView5.click {
-            scope2.cancel()
-//            Log.d("cece", "onCreate: click 5")
-//            if (hashMap.containsKey(1000)) {
-//                hashMap.remove(1000)
-//            } else {
-//                hashMap[1000] = "test1000"
-//            }
-//            lifecycleScope.coroutineContext.cancel()
-//            lifecycleScope.launch {
-//                val await = defer.await()
-//                Log.d("CoroutineActivity", "onCreate: ${await} hascode ${await.hashCode()}")
-//            }
+        val flowOn = flow<Boolean> {
+            emit(true)
+        }.flowOn(Dispatchers.IO)
+        lifecycleScope.launch { 
+            flowOn.first { !it }
+            Log.d("cecece", "onCreate: latest")
         }
     }
 

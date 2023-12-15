@@ -1,3 +1,0 @@
-include ':kotlinU'
-include ':kotlinP'
-include ':app', ':kotlinD', ':acrobat'

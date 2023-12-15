@@ -1,6 +1,9 @@
 package com.jadyn.kotlinp.coroutine
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.takeWhile
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.suspendCoroutine
 
@@ -36,8 +39,14 @@ class A : CoroutineScope {
 
     fun runCoroutineScope() {
         launch {
-            val runTwoAsync = runTwoAsync()
-            printWithThreadNameAndTime("run fi $runTwoAsync")
+//            val runTwoAsync = runTwoAsync()
+//            printWithThreadNameAndTime("run fi $runTwoAsync")
+            val flow = flowOf(1, 2, 3, 4, 5, 6)
+            flow
+                .takeWhile { it < 4 }
+                .collect { 
+                 println("lien $it")   
+                }
         }
     }
 
